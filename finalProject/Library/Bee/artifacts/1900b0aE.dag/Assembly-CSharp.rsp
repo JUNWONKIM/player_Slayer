@@ -347,8 +347,10 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
 "Assets/Mini Simple Characters Skeleton Demo/Readme/Scripts/Readme.cs"
 "Assets/Script/Camera/MainCamera_Move.cs"
+"Assets/Script/Enemy/EnemySpawner.cs"
 "Assets/Script/Enemy/Enemy_1.cs"
 "Assets/Script/Player/Player_Test.cs"
+"Assets/Script/Player/Shooter/Shooter_1.cs"
 -langversion:9.0
 
 /deterministic
