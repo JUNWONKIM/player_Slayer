@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Player_Test : MonoBehaviour
 {
-    public float moveSpeed = 5f; // 플레이어 이동 속도
+    public float moveSpeed = 100f; // 플레이어 이동 속도
 
     void Update()
     {
@@ -11,7 +11,14 @@ public class Player_Test : MonoBehaviour
         float verticalInput = Input.GetAxis("Player_Vertical");
         Vector3 moveDirection = new Vector3(horizontalInput, 0, verticalInput).normalized;
 
+        // 플레이어가 바라볼 방향을 설정
+        if (moveDirection != Vector3.zero)
+        {
+            Quaternion targetRotation = Quaternion.LookRotation(moveDirection, Vector3.up);
+            transform.rotation = Quaternion.Lerp(transform.rotation, targetRotation, 0.1f);
+        }
+
         // 이동 방향에 따라 이동
-        transform.Translate(moveDirection * moveSpeed * Time.deltaTime);
+        transform.Translate(moveDirection * moveSpeed * Time.deltaTime, Space.World);
     }
 }

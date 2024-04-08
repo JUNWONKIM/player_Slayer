@@ -57,11 +57,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Enemy\Enemy_1.cs" />
+    <Compile Include="Assets\Script\Player\Shooter\Shooter_1.cs" />
     <Compile Include="Assets\Script\Camera\MainCamera_Move.cs" />
-    <Compile Include="Assets\Mini Simple Characters Skeleton Demo\Readme\Scripts\Readme.cs" />
+    <Compile Include="Assets\Assets\Mini Simple Characters Skeleton Demo\Readme\Scripts\Readme.cs" />
+    <Compile Include="Assets\Script\Player\Player_AI_Test.cs" />
+    <Compile Include="Assets\Script\Bullet\Bullet_1.cs" />
+    <Compile Include="Assets\Script\Enemy\EnemyHealth.cs" />
     <Compile Include="Assets\Script\Player\Player_Test.cs" />
     <Compile Include="Assets\Script\Enemy\EnemySpawner.cs" />
-    <Compile Include="Assets\Script\Player\Shooter\Shooter_1.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
