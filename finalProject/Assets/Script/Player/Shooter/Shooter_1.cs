@@ -21,17 +21,6 @@ public class Shooter_1 : MonoBehaviour
         detectionRangeVisual.startWidth = 0.1f;
         detectionRangeVisual.endWidth = 0.1f;
         detectionRangeVisual.positionCount = 37; // 원의 꼭지점 개수
-
-        // 원 모양의 점 생성
-        Vector3[] points = new Vector3[37];
-        for (int i = 0; i < 37; i++)
-        {
-            float angle = i * Mathf.PI * 2f / 36f;
-            points[i] = new Vector3(Mathf.Sin(angle) * detectionRange, 0f, Mathf.Cos(angle) * detectionRange);
-        }
-
-        // 라인 렌더러에 점 설정
-        detectionRangeVisual.SetPositions(points);
     }
 
     void Update()
@@ -42,6 +31,9 @@ public class Shooter_1 : MonoBehaviour
             FireProjectile();
             lastFireTime = Time.time;
         }
+
+        // 탐지 범위를 플레이어의 중심을 따라다니도록 업데이트
+        UpdateDetectionRange();
     }
 
     void FireProjectile()
@@ -79,5 +71,20 @@ public class Shooter_1 : MonoBehaviour
                 Debug.LogWarning("Projectile prefab does not have a Rigidbody component.");
             }
         }
+    }
+
+    // 탐지 범위를 플레이어의 중심을 따라다니도록 업데이트하는 함수
+    private void UpdateDetectionRange()
+    {
+        // 원 모양의 점 생성
+        Vector3[] points = new Vector3[37];
+        for (int i = 0; i < 37; i++)
+        {
+            float angle = i * Mathf.PI * 2f / 36f;
+            points[i] = transform.position + new Vector3(Mathf.Sin(angle) * detectionRange, 0f, Mathf.Cos(angle) * detectionRange);
+        }
+
+        // 라인 렌더러에 점 설정
+        detectionRangeVisual.SetPositions(points);
     }
 }

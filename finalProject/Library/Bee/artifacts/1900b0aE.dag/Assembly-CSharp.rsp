@@ -351,6 +351,7 @@
 "Assets/Script/Enemy/EnemyHealth.cs"
 "Assets/Script/Enemy/EnemySpawner.cs"
 "Assets/Script/Enemy/Enemy_1.cs"
+"Assets/Script/Player/PlayerAI.cs"
 "Assets/Script/Player/Player_AI_Test.cs"
 "Assets/Script/Player/Player_Test.cs"
 "Assets/Script/Player/Shooter/Shooter_1.cs"
