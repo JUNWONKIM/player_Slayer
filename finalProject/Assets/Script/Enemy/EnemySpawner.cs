@@ -3,13 +3,29 @@ using UnityEngine;
 public class EnemySpawner : MonoBehaviour
 {
     public GameObject playerPrefab; // 플레이어 프리팹
-    public GameObject enemyPrefab; // 적 오브젝트 프리팹을 할당할 변수
+    public GameObject enemyPrefab1; // 1번 적 오브젝트 프리팹을 할당할 변수
+    public GameObject enemyPrefab2; // 2번 적 오브젝트 프리팹을 할당할 변수
     public float spawnRange = 5f; // 플레이어와의 최소 소환 범위
+
+    private int selectedEnemy = 1; // 현재 선택된 적의 번호
 
     void Update()
     {
-        // 마우스 우클릭을 감지하는 부분
-        if (Input.GetMouseButtonDown(0)) // 1은 마우스 우클릭을 의미합니다.
+        // 키보드 숫자 1을 누르면 1번 적 선택
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            selectedEnemy = 1;
+            Debug.Log("Selected enemy: " + selectedEnemy);
+        }
+        // 키보드 숫자 2를 누르면 2번 적 선택
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            selectedEnemy = 2;
+            Debug.Log("Selected enemy: " + selectedEnemy);
+        }
+
+        // 마우스 좌클릭을 감지하는 부분
+        if (Input.GetMouseButtonDown(0)) // 0은 마우스 좌클릭을 의미합니다.
         {
             SpawnEnemy();
         }
@@ -33,7 +49,15 @@ public class EnemySpawner : MonoBehaviour
                 // 플레이어와의 거리를 계산하여 특정 범위 밖이면 적을 소환합니다.
                 if (Vector3.Distance(new Vector3(playerPosition.x, 0f, playerPosition.z), new Vector3(spawnPosition.x, 0f, spawnPosition.z)) > spawnRange)
                 {
-                    Instantiate(enemyPrefab, hit.point, Quaternion.identity);
+                    // 현재 선택된 적에 따라 해당 적을 소환합니다.
+                    if (selectedEnemy == 1)
+                    {
+                        Instantiate(enemyPrefab1, hit.point, Quaternion.identity);
+                    }
+                    else if (selectedEnemy == 2)
+                    {
+                        Instantiate(enemyPrefab2, hit.point, Quaternion.identity);
+                    }
                 }
             }
         }

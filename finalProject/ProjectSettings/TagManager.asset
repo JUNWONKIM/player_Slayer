@@ -7,6 +7,7 @@ TagManager:
   - Enemy
   - Bullet
   - ground
+  - E_Bullet
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - UI
   - Player
   - Bullet
-  - 
-  - 
+  - E_Bullet
+  - Enemy
   - 
   - 
   - 
