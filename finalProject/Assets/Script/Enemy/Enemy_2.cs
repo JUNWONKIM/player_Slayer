@@ -6,12 +6,14 @@ public class Enemy_2 : MonoBehaviour
     public float stoppingDistance = 5f; // 플레이어와의 멈추는 거리
     public float retreatDistance = 5f; // 플레이어로부터 후퇴하는 거리
 
+    public float bulletSpeed = 50f;
     public GameObject projectile; // 발사할 투사체
     public Transform firePoint; // 발사 지점
     public float fireRate = 1f; // 발사 속도 (1초당 한 발)
 
     private Transform player; // 플레이어의 위치
     private float nextFireTime = 0f; // 다음 발사 시간
+    
 
     void Start()
     {
@@ -39,7 +41,7 @@ public class Enemy_2 : MonoBehaviour
                     Vector3 direction = player.position - firePoint.position;
                     direction.Normalize();
                     GameObject bullet = Instantiate(projectile, firePoint.position, Quaternion.identity);
-                    bullet.GetComponent<Rigidbody>().velocity = direction * 100f; // 투사체 속도
+                    bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed; // 투사체 속도
                     nextFireTime = Time.time + 1f / fireRate; // 다음 발사 시간 설정
                 }
             }

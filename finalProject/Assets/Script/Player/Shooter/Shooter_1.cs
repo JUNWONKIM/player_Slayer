@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Shooter_1 : MonoBehaviour
@@ -7,6 +8,7 @@ public class Shooter_1 : MonoBehaviour
     public float detectionRange = 100f; // 적을 탐지할 범위
     public float projectileSpeed = 100f;
     private float lastFireTime; // 마지막 발사 시간
+
     private LineRenderer detectionRangeVisual; // 적 탐지 범위를 시각적으로 표시할 라인 렌더러
 
     void Start()
@@ -40,9 +42,15 @@ public class Shooter_1 : MonoBehaviour
     {
         // 가장 가까운 적을 탐지
         GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] enemies2 = GameObject.FindGameObjectsWithTag("Enemy_2");
+        List<GameObject> allEnemies = new List<GameObject>();
+        allEnemies.AddRange(enemies);
+        allEnemies.AddRange(enemies2);
+
         GameObject closestEnemy = null;
         float closestDistance = Mathf.Infinity;
-        foreach (GameObject enemy in enemies)
+
+        foreach (GameObject enemy in allEnemies)
         {
             float distance = Vector3.Distance(transform.position, enemy.transform.position);
             if (distance < closestDistance && distance <= detectionRange)
@@ -72,6 +80,7 @@ public class Shooter_1 : MonoBehaviour
             }
         }
     }
+
 
     // 탐지 범위를 플레이어의 중심을 따라다니도록 업데이트하는 함수
     private void UpdateDetectionRange()

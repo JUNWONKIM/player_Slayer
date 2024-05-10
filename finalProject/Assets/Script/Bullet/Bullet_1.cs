@@ -8,7 +8,7 @@ public class Bullet_1 : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         // 충돌한 객체의 태그가 "Enemy"인 경우
-        if (collision.gameObject.CompareTag("Enemy"))
+        if (collision.gameObject.CompareTag("Enemy") || collision.gameObject.CompareTag("Enemy_2"))
         {
             // 충돌한 객체의 HP를 감소시킴
             EnemyHealth enemyHealth = collision.gameObject.GetComponent<EnemyHealth>();

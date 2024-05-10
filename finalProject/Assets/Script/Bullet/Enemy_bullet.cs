@@ -16,10 +16,10 @@ public class Enemy_bullet : MonoBehaviour
         
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
         // 충돌한 객체가 플레이어인 경우
-        if (collision.gameObject.CompareTag("Player"))
+        if (other.CompareTag("Player"))
         {
             // 플레이어와 충돌하면 총알을 파괴함
             Destroy(gameObject);
