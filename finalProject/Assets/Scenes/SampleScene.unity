@@ -625,7 +625,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 908749489}
   serializedVersion: 2
-  m_Mass: 50
+  m_Mass: 100
   m_Drag: 0
   m_AngularDrag: 0
   m_UseGravity: 0
@@ -1112,6 +1112,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 908749489}
   creaturePrefab1: {fileID: 7307231022892869790, guid: a7c308e6e04e1734eb364998f1aca8b7, type: 3}
   creaturePrefab2: {fileID: 8252175027606189221, guid: be2b656260cb64e4a9d341c9e2293348, type: 3}
+  creaturePrefab3: {fileID: 6462121761625588441, guid: a50c64cb5a7a5c14e91b5c1c3dfd4326, type: 3}
   spawnRange: 20
 --- !u!4 &1678073967
 Transform:

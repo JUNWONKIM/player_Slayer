@@ -5,6 +5,7 @@ public class CreatureSpawner : MonoBehaviour
     public GameObject playerPrefab; // 플레이어 프리팹
     public GameObject creaturePrefab1; // 1번 적 오브젝트 프리팹을 할당할 변수
     public GameObject creaturePrefab2; // 2번 적 오브젝트 프리팹을 할당할 변수
+    public GameObject creaturePrefab3; // 2번 적 오브젝트 프리팹을 할당할 변수
     public float spawnRange = 5f; // 플레이어와의 최소 소환 범위
 
     private int selectedCreature = 1; // 현재 선택된 적의 번호
@@ -21,6 +22,12 @@ public class CreatureSpawner : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             selectedCreature = 2;
+            Debug.Log("Selected creature: " + selectedCreature);
+        }
+
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            selectedCreature = 3;
             Debug.Log("Selected creature: " + selectedCreature);
         }
 
@@ -57,6 +64,11 @@ public class CreatureSpawner : MonoBehaviour
                     else if (selectedCreature == 2)
                     {
                         Instantiate(creaturePrefab2, hit.point, Quaternion.identity);
+                    }
+
+                    else if (selectedCreature == 3)
+                    {
+                        Instantiate(creaturePrefab3, hit.point, Quaternion.identity);
                     }
                 }
             }
