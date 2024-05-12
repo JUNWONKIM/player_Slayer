@@ -454,7 +454,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1001 &762080738
 PrefabInstance:
@@ -849,7 +849,7 @@ Transform:
   - {fileID: 976792146}
   - {fileID: 8248912}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1182487052
 PrefabInstance:
@@ -1110,8 +1110,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 908749489}
-  enemyPrefab1: {fileID: 7307231022892869790, guid: a7c308e6e04e1734eb364998f1aca8b7, type: 3}
-  enemyPrefab2: {fileID: 8252175027606189221, guid: be2b656260cb64e4a9d341c9e2293348, type: 3}
+  creaturePrefab1: {fileID: 7307231022892869790, guid: a7c308e6e04e1734eb364998f1aca8b7, type: 3}
+  creaturePrefab2: {fileID: 8252175027606189221, guid: be2b656260cb64e4a9d341c9e2293348, type: 3}
   spawnRange: 20
 --- !u!4 &1678073967
 Transform:
@@ -1126,7 +1126,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &4048051174758825909
 PrefabInstance:
@@ -1165,11 +1165,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8242737875928064165, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
       propertyPath: m_Name
-      value: MaleCharacterPolyart
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 8732416736972372511, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 8732416736972372511, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
       propertyPath: m_LocalPosition.x

@@ -15,12 +15,12 @@ public class PlayerAI : MonoBehaviour
 
     private enum PlayerState
     {
-        MoveTowardsEnemy,
+        MoveTowardsCreature,
         AvoidBullet,
-        MoveAwayFromEnemy
+        MoveAwayFromCreature
     }
 
-    private PlayerState currentState = PlayerState.MoveTowardsEnemy;
+    private PlayerState currentState = PlayerState.MoveTowardsCreature;
     private float stateChangeTime = 0f;
     private float stateChangeDuration = 0.5f; // 상태 변경 유지 시간
 
@@ -41,12 +41,11 @@ public class PlayerAI : MonoBehaviour
 
     void Update()
     {
-       
-        // 0.2초마다 가장 가까운 적을 찾음
+        // 0.2초마다 가장 가까운 creature을 찾음
         timeSinceLastFind += Time.deltaTime;
         if (timeSinceLastFind >= 0.2f)
         {
-            FindClosestEnemy();
+            FindClosestCreature();
             timeSinceLastFind = 0f;
         }
 
@@ -61,27 +60,27 @@ public class PlayerAI : MonoBehaviour
         // 플레이어의 상태에 따라 다른 행동을 수행
         switch (currentState)
         {
-            case PlayerState.MoveTowardsEnemy:
-                MoveTowardsEnemy();
+            case PlayerState.MoveTowardsCreature:
+                MoveTowardsCreature();
                 break;
             case PlayerState.AvoidBullet:
-                // 가장 가까운 적과 총알 중에서 더 가까운 것을 피하도록 결정
+                // 가장 가까운 creature과 총알 중에서 더 가까운 것을 피하도록 결정
                 if (target != null && nearestBullet != null)
                 {
-                    float enemyDistance = Vector3.Distance(transform.position, target.position);
+                    float creatureDistance = Vector3.Distance(transform.position, target.position);
                     float bulletDistance = Vector3.Distance(transform.position, nearestBullet.position);
-                    if (bulletDistance < enemyDistance)
+                    if (bulletDistance < creatureDistance)
                     {
                         AvoidBullet(nearestBullet.position);
                     }
                     else
                     {
-                        MoveAwayFromEnemy();
+                        MoveAwayFromCreature();
                     }
                 }
                 break;
-            case PlayerState.MoveAwayFromEnemy:
-                MoveAwayFromEnemy();
+            case PlayerState.MoveAwayFromCreature:
+                MoveAwayFromCreature();
                 break;
         }
 
@@ -97,36 +96,35 @@ public class PlayerAI : MonoBehaviour
         {
             if (currentState == PlayerState.AvoidBullet)
             {
-                // 총알을 피하는 상태일 때는 가장 가까운 적이 가까이에 없으면 다시 적을 피하는 상태로 변경
+                // 총알을 피하는 상태일 때는 가장 가까운 creature이 가까이에 없으면 다시 creature을 피하는 상태로 변경
                 if (target == null)
                 {
-                    ChangeState(PlayerState.MoveTowardsEnemy);
+                    ChangeState(PlayerState.MoveTowardsCreature);
                 }
             }
-            else if (currentState == PlayerState.MoveAwayFromEnemy)
+            else if (currentState == PlayerState.MoveAwayFromCreature)
             {
-                // 적을 피하는 상태일 때는 가장 가까운 적이 가까이에 없으면 다시 적을 피는 상태로 변경
+                // creature을 피하는 상태일 때는 가장 가까운 creature이 가까이에 없으면 다시 creature을 피는 상태로 변경
                 if (target == null)
                 {
-                    ChangeState(PlayerState.MoveTowardsEnemy);
+                    ChangeState(PlayerState.MoveTowardsCreature);
                 }
             }
         }
 
         UpdateDetectionRange();
         Debug.Log("Current State: " + currentState);
-
     }
 
-    void MoveTowardsEnemy()
+    void MoveTowardsCreature()
     {
         if (target != null)
         {
-            // 적의 반대 방향으로 이동
+            // creature의 반대 방향으로 이동
             Vector3 moveDirection = (transform.position - target.position).normalized;
             rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.deltaTime);
 
-            // 적 바라보기
+            // creature 바라보기
             Vector3 lookAtDirection = (target.position - transform.position).normalized;
             transform.rotation = Quaternion.LookRotation(lookAtDirection);
         }
@@ -145,45 +143,43 @@ public class PlayerAI : MonoBehaviour
 
         // 플레이어를 해당 방향으로 이동
         rb.MovePosition(transform.position + perpendicular * moveSpeed * Time.deltaTime);
-
-
     }
 
-    void MoveAwayFromEnemy()
+    void MoveAwayFromCreature()
     {
         if (target != null)
         {
-            // 적의 반대 방향으로 이동
+            // creature의 반대 방향으로 이동
             Vector3 moveDirection = (transform.position - target.position).normalized;
             rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.deltaTime);
 
-            // 적을 피하기 위해 후진하므로 시야를 적에게 향하도록 회전하지 않음
+            // creature을 피하기 위해 후진하므로 시야를 creature에게 향하도록 회전하지 않음
         }
     }
 
-    void FindClosestEnemy()
+    void FindClosestCreature()
     {
-        GameObject[] enemies = GameObject.FindGameObjectsWithTag("Enemy");
+        GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
         float closestDistance = Mathf.Infinity;
-        GameObject closestEnemy = null;
+        GameObject closestCreature = null;
 
-        foreach (GameObject enemy in enemies)
+        foreach (GameObject creature in creatures)
         {
-            float distance = Vector3.Distance(transform.position, enemy.transform.position);
+            float distance = Vector3.Distance(transform.position, creature.transform.position);
             if (distance < closestDistance)
             {
                 closestDistance = distance;
-                closestEnemy = enemy;
+                closestCreature = creature;
             }
         }
 
-        if (closestEnemy != null)
+        if (closestCreature != null)
         {
-            if (closestEnemy.transform != target) // 현재 타겟과 가장 가까운 적이 다를 때만 타겟을 변경
+            if (closestCreature.transform != target) // 현재 타겟과 가장 가까운 creature이 다를 때만 타겟을 변경
             {
-                target = closestEnemy.transform;
+                target = closestCreature.transform;
 
-                // 변경된 적을 바라보기
+                // 변경된 creature을 바라보기
                 Vector3 lookAtDirection = (target.position - transform.position).normalized;
                 transform.rotation = Quaternion.LookRotation(lookAtDirection);
             }
@@ -192,7 +188,7 @@ public class PlayerAI : MonoBehaviour
 
     void FindClosestBullet()
     {
-        GameObject[] bullets = GameObject.FindGameObjectsWithTag("E_Bullet");
+        GameObject[] bullets = GameObject.FindGameObjectsWithTag("C_Bullet");
         float closestDistance = Mathf.Infinity;
         GameObject closestBullet = null;
 

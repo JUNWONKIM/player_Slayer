@@ -4,11 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Enemy
   - Bullet
   - ground
-  - E_Bullet
-  - Enemy_2
+  - Creature
+  - Creature_2
+  - C_Bullet
   layers:
   - Default
   - TransparentFX
@@ -17,10 +17,10 @@ TagManager:
   - Water
   - UI
   - Player
-  - Bullet
-  - E_Bullet
+  - P_Bullet
+  - C_Bullet
   - Enemy
-  - 
+  - Creature
   - 
   - 
   - 
