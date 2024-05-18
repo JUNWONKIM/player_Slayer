@@ -9,6 +9,8 @@ TagManager:
   - Creature
   - Creature_2
   - C_Bullet
+  - Enemy
+  - Mummy
   layers:
   - Default
   - TransparentFX

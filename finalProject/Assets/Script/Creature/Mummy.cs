@@ -2,110 +2,121 @@ using UnityEngine;
 
 public class Mummy : MonoBehaviour
 {
-    public enum State
-    {
-        MovingTowardsPlayer,
-        ChargingTowardsPlayer,
-        Retreating,
-        Stopped // 새로 추가된 상태: 멈춤
-    }
+    public Transform player; // 플레이어의 Transform
+    public float normalSpeed = 2f; // 미라의 기본 이동 속도
+    public float chaseSpeed = 5f; // 플레이어를 추격할 때의 속도
+    public float chaseRange = 10f; // 플레이어를 추격하기 시작하는 범위
+    public float explodeRange = 1.5f; // 폭발하는 범위
+    public GameObject explosionPrefab; // 폭발 이펙트 프리팹
+    public float chaseDuration = 3f; // 추격 지속 시간 (초)
 
-    public float moveSpeed = 5f; // 이동 속도
-    public float chargingSpeed = 10f; // 돌진 속도
-    public float chargingDistance = 5f; // 돌진 시작 거리
-    public float retreatDistance = 2f; // 충돌 후 후퇴 거리
-    public float retreatDuration = 2f; // 후퇴 지속 시간
-    private Transform player; // 플레이어의 위치
-    private Rigidbody rb; // 몬스터의 Rigidbody 컴포넌트
-    private State currentState = State.MovingTowardsPlayer; // 현재 상태
-    private Vector3 retreatStartPosition; // 후퇴 시작 위치
-    private float retreatStartTime; // 후퇴 시작 시간
+    private Rigidbody rb;
+    private bool isChasing = false;
+    private bool hasDirectionSet = false; // 방향이 설정되었는지 여부
+    private Vector3 chaseDirection; // 돌진할 때의 방향
+    private float chaseTimer = 0f;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어의 위치 찾기
-        rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
+        rb = GetComponent<Rigidbody>();
+        if (player == null)
+        {
+            player = GameObject.FindGameObjectWithTag("Player").transform;
+        }
     }
 
     void Update()
     {
-        if (player != null)
-        {
-            // 플레이어와 몬스터 간의 거리 계산
-            float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-            switch (currentState)
+        if (distanceToPlayer <= explodeRange)
+        {
+            // 플레이어와의 거리가 폭발 범위 안에 들어오면
+            Explode();
+        }
+        else if (!isChasing && distanceToPlayer <= chaseRange)
+        {
+            // 플레이어와의 거리가 추격 범위 안에 들어오면
+            isChasing = true;
+            chaseTimer = chaseDuration;
+            hasDirectionSet = false; // 방향 초기화
+        }
+
+        if (isChasing)
+        {
+            chaseTimer -= Time.deltaTime;
+
+            if (!hasDirectionSet)
             {
-                case State.MovingTowardsPlayer:
-                    if (distanceToPlayer <= chargingDistance)
-                    {
-                        currentState = State.ChargingTowardsPlayer;
-                    }
-                    else
-                    {
-                        MoveTowardsPlayer();
-                    }
-                    break;
-                case State.ChargingTowardsPlayer:
-                    if (distanceToPlayer >= retreatDistance)
-                    {
-                        currentState = State.Stopped; // 충돌하지 않고 플레이어에게 도달하면 멈춤
-                    }
-                    else
-                    {
-                        ChargeTowardsPlayer();
-                    }
-                    break;
-                case State.Retreating:
-                    if (Time.time - retreatStartTime >= retreatDuration)
-                    {
-                        currentState = State.MovingTowardsPlayer;
-                    }
-                    else
-                    {
-                        Retreat();
-                    }
-                    break;
+                SetChaseDirection();
+            }
+
+            if (chaseTimer <= 0f)
+            {
+                // 추격 시작 후 3초가 지나면 폭발
+                Explode();
             }
         }
     }
 
-    void MoveTowardsPlayer()
+    void FixedUpdate()
     {
-        // 플레이어를 향해 바라보도록 회전
-        Vector3 lookDirection = (player.position - transform.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(lookDirection);
-        rb.MoveRotation(rotation);
-
-        // 플레이어 방향으로 이동
-        rb.MovePosition(transform.position + transform.forward * moveSpeed * Time.deltaTime);
+        if (isChasing)
+        {
+            MoveTowardsChaseDirection(chaseSpeed);
+            RotateTowardsDirection(chaseDirection); // 돌진하는 방향을 바라보도록 회전
+        }
+        else
+        {
+            Vector3 direction = (player.position - transform.position).normalized;
+            MoveTowardsDirection(direction, normalSpeed);
+            RotateTowardsDirection(direction); // 플레이어를 향하는 방향을 바라보도록 회전
+        }
     }
 
-    void ChargeTowardsPlayer()
+    void MoveTowardsDirection(Vector3 direction, float speed)
     {
-        // 플레이어를 향해 바라보도록 회전
-        Vector3 lookDirection = (player.position - transform.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(lookDirection);
-        rb.MoveRotation(rotation);
-
-        // 플레이어 방향으로 돌진
-        rb.MovePosition(transform.position + transform.forward * chargingSpeed * Time.deltaTime);
+        Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
+        rb.MovePosition(newPosition);
     }
 
-    void Retreat()
+    void MoveTowardsChaseDirection(float speed)
     {
-        // 후퇴 시작 위치로 이동
-        rb.MovePosition(Vector3.Lerp(retreatStartPosition, transform.position, (Time.time - retreatStartTime) / retreatDuration));
+        Vector3 newPosition = transform.position + chaseDirection * speed * Time.deltaTime;
+        rb.MovePosition(newPosition);
+    }
+
+    void RotateTowardsDirection(Vector3 direction)
+    {
+        // 해당 방향을 바라보도록 회전
+        Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
+        rb.MoveRotation(targetRotation);
+    }
+
+    void SetChaseDirection()
+    {
+        // 플레이어의 위치를 기준으로 돌진할 랜덤한 방향 설정
+        Vector3 randomDirection = Random.insideUnitSphere * 10f; // 2f는 오차 반경입니다.
+        randomDirection += player.position;
+        randomDirection.y = transform.position.y; // 수직 이동 방지
+        chaseDirection = (randomDirection - transform.position).normalized;
+        hasDirectionSet = true; // 방향이 설정되었음을 표시
+    }
+
+    void Explode()
+    {
+        // 폭발 효과 생성
+        Instantiate(explosionPrefab, transform.position, transform.rotation);
+        // 미라 제거
+        Destroy(gameObject);
     }
 
     void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.CompareTag("Player"))
+        if (collision.gameObject.CompareTag("Bullet"))
         {
-            // 충돌 시 돌진 상태 종료 및 후퇴 상태로 변경
-            currentState = State.Retreating;
-            retreatStartPosition = transform.position;
-            retreatStartTime = Time.time;
+            // 총알에 맞으면 폭발
+            Explode();
         }
     }
 }
