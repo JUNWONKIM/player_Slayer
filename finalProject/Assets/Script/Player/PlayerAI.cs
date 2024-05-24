@@ -2,7 +2,8 @@ using UnityEngine;
 
 public class PlayerAI : MonoBehaviour
 {
-    public float moveSpeed = 5f; // 이동 속도
+    public float moveSpeed = 100f; // 이동 속도
+    public float slowSpeed = 50f;
     public float avoidanceDistance = 3f; // 총알을 피하는 거리
     public float bulletDetectionRange = 20f;
     private Transform target; // 가장 가까운 적의 위치
@@ -111,6 +112,8 @@ public class PlayerAI : MonoBehaviour
                 }
             }
         }
+
+        CheckForSlowObjects();
 
         UpdateDetectionRange();
         Debug.Log("Current State: " + currentState);
@@ -228,4 +231,26 @@ public class PlayerAI : MonoBehaviour
         currentState = newState;
         stateChangeTime = Time.time;
     }
+
+
+
+    private void CheckForSlowObjects()
+    {
+        // 주변에 있는 모든 게임 오브젝트를 가져옵니다.
+        GameObject[] slowObjects = GameObject.FindGameObjectsWithTag("Slow");
+
+        // 주변에 Slow 태그를 가진 오브젝트가 있는지 확인합니다.
+        if (slowObjects.Length > 0)
+        {
+            // Slow 태그를 가진 오브젝트가 존재하면 이동 속도를 감소시킵니다.
+            moveSpeed = slowSpeed; // 이동 속도를 50%로 줄입니다.
+        }
+        else
+        {
+            // Slow 태그를 가진 오브젝트가 존재하지 않으면 원래 이동 속도로 복원합니다.
+            moveSpeed = 100f; // 이동 속도를 100%로 복원합니다.
+        }
+    }
 }
+
+

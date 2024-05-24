@@ -7,10 +7,10 @@ TagManager:
   - Bullet
   - ground
   - Creature
-  - Creature_2
   - C_Bullet
   - Enemy
   - Mummy
+  - Slow
   layers:
   - Default
   - TransparentFX

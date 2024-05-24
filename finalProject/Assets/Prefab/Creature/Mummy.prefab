@@ -283,7 +283,7 @@ MonoBehaviour:
   player: {fileID: 0}
   normalSpeed: 20
   chaseSpeed: 70
-  chaseRange: 40
+  chaseRange: 30
   explodeRange: 5
   explosionPrefab: {fileID: 6746093201346118342, guid: 652aa374564f7964289fa1d65d9bd20c, type: 3}
   chaseDuration: 2

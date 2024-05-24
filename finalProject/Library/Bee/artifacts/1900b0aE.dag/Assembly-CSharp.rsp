@@ -350,6 +350,7 @@
 "Assets/Assets/Ghost/Scripts/GhostScript.cs"
 "Assets/Assets/Skull/Readme/Scripts/Readme.cs"
 "Assets/Script/Bullet/Creature/Ghost_bullet.cs"
+"Assets/Script/Bullet/Creature/Witch_1_bullet.cs"
 "Assets/Script/Bullet/Player/Player_Atk_1.cs"
 "Assets/Script/Camera/MainCamera_Move.cs"
 "Assets/Script/Creature/CreatureHealth.cs"
@@ -357,6 +358,7 @@
 "Assets/Script/Creature/Ghost.cs"
 "Assets/Script/Creature/Mummy.cs"
 "Assets/Script/Creature/Skull.cs"
+"Assets/Script/Creature/Witch_1.cs"
 "Assets/Script/Player/PlayerAI.cs"
 "Assets/Script/Player/Shooter/Player_Shooter.cs"
 -langversion:9.0

@@ -42,10 +42,10 @@ public class Player_Shooter : MonoBehaviour
     {
         // 가장 가까운 적을 탐지
         GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
-        GameObject[] creatures2 = GameObject.FindGameObjectsWithTag("Creature_2");
+        
         List<GameObject> allCreatures = new List<GameObject>();
         allCreatures.AddRange(creatures);
-        allCreatures.AddRange(creatures2);
+
 
         GameObject closestCreature = null;
         float closestDistance = Mathf.Infinity;
