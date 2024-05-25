@@ -5,24 +5,17 @@ public class Player_Shooter : MonoBehaviour
 {
     public GameObject projectilePrefab; // 발사체 프리팹을 할당할 변수
     public float fireInterval = 1f; // 발사 간격
+    public float fireInterval_slow = 2f;
     public float detectionRange = 100f; // 적을 탐지할 범위
     public float projectileSpeed = 100f;
     private float lastFireTime; // 마지막 발사 시간
 
-    private LineRenderer detectionRangeVisual; // 적 탐지 범위를 시각적으로 표시할 라인 렌더러
+  
 
     void Start()
     {
         // LineRenderer 컴포넌트 추가
-        detectionRangeVisual = gameObject.AddComponent<LineRenderer>();
-
-        // 라인 렌더러 설정
-        detectionRangeVisual.material = new Material(Shader.Find("Sprites/Default"));
-        detectionRangeVisual.startColor = Color.red;
-        detectionRangeVisual.endColor = Color.red;
-        detectionRangeVisual.startWidth = 0.1f;
-        detectionRangeVisual.endWidth = 0.1f;
-        detectionRangeVisual.positionCount = 37; // 원의 꼭지점 개수
+     
     }
 
     void Update()
@@ -34,8 +27,6 @@ public class Player_Shooter : MonoBehaviour
             lastFireTime = Time.time;
         }
 
-        // 탐지 범위를 플레이어의 중심을 따라다니도록 업데이트
-        UpdateDetectionRange();
     }
 
     void FireProjectile()
@@ -74,26 +65,30 @@ public class Player_Shooter : MonoBehaviour
                 // 발사할 적의 방향으로 발사체를 이동시킴
                 projectileRigidbody.velocity = targetDirection.normalized * projectileSpeed;
             }
-            else
-            {
-                Debug.LogWarning("Projectile prefab does not have a Rigidbody component.");
-            }
         }
+
+        CheckForSlowObjects();
     }
 
 
     // 탐지 범위를 플레이어의 중심을 따라다니도록 업데이트하는 함수
-    private void UpdateDetectionRange()
+ 
+ 
+    private void CheckForSlowObjects()
     {
-        // 원 모양의 점 생성
-        Vector3[] points = new Vector3[37];
-        for (int i = 0; i < 37; i++)
-        {
-            float angle = i * Mathf.PI * 2f / 36f;
-            points[i] = transform.position + new Vector3(Mathf.Sin(angle) * detectionRange, 0f, Mathf.Cos(angle) * detectionRange);
-        }
+        // 주변에 있는 모든 게임 오브젝트를 가져옵니다.
+        GameObject[] slowObjects = GameObject.FindGameObjectsWithTag("Slow");
 
-        // 라인 렌더러에 점 설정
-        detectionRangeVisual.SetPositions(points);
+        // 주변에 Slow 태그를 가진 오브젝트가 있는지 확인합니다.
+        if (slowObjects.Length > 0)
+        {
+            // Slow 태그를 가진 오브젝트가 존재하면 이동 속도를 감소시킵니다.
+            fireInterval = fireInterval_slow; // 이동 속도를 50%로 줄입니다.
+        }
+        else
+        {
+            // Slow 태그를 가진 오브젝트가 존재하지 않으면 원래 이동 속도로 복원합니다.
+           fireInterval = 1f; // 이동 속도를 100%로 복원합니다.
+        }
     }
 }

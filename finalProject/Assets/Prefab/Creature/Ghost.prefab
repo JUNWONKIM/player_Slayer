@@ -277,7 +277,7 @@ MonoBehaviour:
   stoppingDistance: 50
   retreatDistance: 30
   bulletSpeed: 50
-  projectile: {fileID: 5219074196240893216, guid: 88ec2edfab7677646bc38a91fd689577, type: 3}
+  projectile: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
   firePoint: {fileID: 4244958293321388296}
   fireRate: 1
   nextFireTime: 1

@@ -7,13 +7,14 @@ public class Ghost_bullet : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        // 5초 뒤에 총알을 파괴합니다.
+        Destroy(gameObject, 5f);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 
     void OnTriggerEnter(Collider other)
