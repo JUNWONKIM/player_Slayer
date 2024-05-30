@@ -57,7 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Creature\Skull.cs" />
-    <Compile Include="Assets\Script\Player\Shooter\Player_Shooter.cs" />
+    <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_1.cs" />
     <Compile Include="Assets\Script\Creature\CreatureHealth.cs" />
     <Compile Include="Assets\Script\Creature\Witch_freeze.cs" />
     <Compile Include="Assets\Assets\Ghost\Scripts\GhostScript.cs" />
@@ -70,8 +70,12 @@
     <Compile Include="Assets\Script\Bullet\Creature\Witch_freeze_effect.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_atkSlow_effect.cs" />
     <Compile Include="Assets\Script\Player\PlayerAI.cs" />
+    <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Bullet\Player\Player_Atk_1.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
+    <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_2.cs" />
+    <Compile Include="Assets\Script\Bullet\Player\Player_Atk_2.cs" />
+    <Compile Include="Assets\Script\Bullet\Player\Player_Atk_2_1.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Wizards\Shader\PolyArtMaskTint.shader" />

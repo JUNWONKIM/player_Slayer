@@ -107,6 +107,7 @@ public class Mummy : MonoBehaviour
     {
         // 폭발 효과 생성
         Instantiate(explosionPrefab, transform.position, transform.rotation);
+        PlayerLV.IncrementCreatureDeathCount();
         // 미라 제거
         Destroy(gameObject);
     }

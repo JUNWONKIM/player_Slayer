@@ -3,8 +3,12 @@ using UnityEngine;
 
 public class PlayerAI : MonoBehaviour
 {
+    public static PlayerAI instance;
+
     public float moveSpeed = 100f; // 이동 속도
-    public float slowSpeed = 50f;
+    public float slowSpeed = 2f;
+    public bool isFreezed = false;
+
     public float avoidanceDistance = 3f; // 총알을 피하는 거리
     public float bulletDetectionRange = 20f;
     private Transform target; // 가장 가까운 적의 위치
@@ -21,6 +25,12 @@ public class PlayerAI : MonoBehaviour
     private PlayerState currentState = PlayerState.MoveTowardsCreature;
     private float stateChangeTime = 0f;
     private float stateChangeDuration = 0.5f; // 상태 변경 유지 시간
+
+
+    void Awake()
+    {
+        instance = this;
+    }
 
     void Start()
     {
@@ -186,7 +196,24 @@ public class PlayerAI : MonoBehaviour
 
     private void CheckForSlowObjects()
     {
-        GameObject[] slowObjects = GameObject.FindGameObjectsWithTag("Freeze");
-        moveSpeed = slowObjects.Length > 0 ? slowSpeed : 100f;
+        GameObject[] freezeObjects = GameObject.FindGameObjectsWithTag("Freeze");
+
+        if (freezeObjects.Length > 0 && !isFreezed)
+        {
+            moveSpeed /= slowSpeed; // 발사 간격을 두 배로 늘림
+            isFreezed = true;
+        }
+        else if (freezeObjects.Length == 0 && isFreezed)
+        {
+            moveSpeed *= slowSpeed; // 발사 간격을 두 배로 늘림
+            isFreezed = false;
+        }
+    }
+
+
+    public void IncreaseMoveSpeed(float amount)
+    {
+        moveSpeed *= amount;
+        Debug.Log("Move speed increased to: " + moveSpeed);
     }
 }

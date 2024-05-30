@@ -46,7 +46,7 @@ public class Ghost : MonoBehaviour
             Transform childObject_1 = transform.Find("Ghost");
             Transform childObject_2 = transform.Find("GhostArmature");
 
-            Transform effect = transform.Find("Holy hit");
+            Transform effect = transform.Find("Ghost_die");
 
             childObject_1.gameObject.SetActive(false);
             childObject_2.gameObject.SetActive(false);

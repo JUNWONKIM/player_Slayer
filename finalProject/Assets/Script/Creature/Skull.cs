@@ -47,9 +47,5 @@ public class Skull : MonoBehaviour
     }
 
     // Animator에서 isDie가 true가 될 때 호출되는 함수
-    public void DieAnimationComplete()
-    {
-        // 스크립트를 비활성화하여 이동 및 회전 멈춤
-        enabled = false;
-    }
+   
 }

@@ -2,8 +2,8 @@ using UnityEngine;
 
 public class CreatureHealth : MonoBehaviour
 {
-    public int maxHealth = 1; // 최대 체력
-    private int currentHealth; // 현재 체력
+    public float maxHealth = 1; // 최대 체력
+    public float currentHealth; // 현재 체력
     private Animator animator; // Creature의 애니메이터 컴포넌트
     private bool isDead = false; // 적이 죽었는지 여부
     private Rigidbody rb;
@@ -16,7 +16,7 @@ public class CreatureHealth : MonoBehaviour
     }
 
     // 데미지를 입었을 때 호출되는 함수
-    public void TakeDamage(int amount)
+    public void TakeDamage(float amount)
     {
         if (!isDead)
         {
@@ -36,7 +36,7 @@ public class CreatureHealth : MonoBehaviour
         gameObject.tag = "Untagged";
         // 몇 초 후에 태그를 변경하여 다른 스크립트에서 적임을 인식하지 못하게 함
 
-
+        PlayerLV.IncrementCreatureDeathCount();
         // 적이 죽었음을 표시
         isDead = true;
 
