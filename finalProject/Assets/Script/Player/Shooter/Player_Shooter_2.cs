@@ -10,7 +10,7 @@ public class Player_Shooter_2 : MonoBehaviour
     public float spawnInterval = 3f; // 소환 간격
     public float spawnRadius = 20f; // 소환 범위 반지름
     public float fixedYPosition = 2.5f; // 고정된 Y 축 위치
-    public int projectilesPerFire = 1; // 한 번에 발사할 발사체 수
+    public int projectilesPerFire = 0; // 한 번에 발사할 발사체 수
 
     private float lastSpawnTime; // 마지막 소환 시간
 
@@ -45,6 +45,6 @@ public class Player_Shooter_2 : MonoBehaviour
     public void IncreaseProjectileCount(int amount)
     {
         projectilesPerFire += amount;
-        Debug.Log("Projectile count increased, now firing: " + projectilesPerFire + " projectiles per shot.");
+        Debug.Log("폭탄 개수 " + projectilesPerFire);
     }
 }

@@ -4892,7 +4892,6 @@ GameObject:
   - component: {fileID: 5207987601858127898}
   - component: {fileID: 1720167140720669039}
   - component: {fileID: 534402556447015176}
-  - component: {fileID: 7293737366141985126}
   m_Layer: 0
   m_Name: Player_ATK_1
   m_TagString: Untagged
@@ -5109,7 +5108,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.38679248, g: 0.22058403, b: 0.129539, a: 1}
+      maxColor: {r: 0.8679245, g: 0.8087479, b: 0.21698113, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -9785,19 +9784,6 @@ SphereCollider:
   serializedVersion: 2
   m_Radius: 2.1
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &7293737366141985126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3153472991145048103}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c23430e4dded1a4f86b8413f74bd5de, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 1
 --- !u!1 &3307283671839139976
 GameObject:
   m_ObjectHideFlags: 0
@@ -10021,7 +10007,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.122641504, g: 0.1107823, b: 0.0989231, a: 1}
+      maxColor: {r: 0.8517998, g: 0.8584906, b: 0.61957103, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -19837,7 +19823,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 1, g: 0.45707202, b: 0.13679248, a: 1}
+      maxColor: {r: 0.9622642, g: 0.83021575, b: 0.37673548, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}

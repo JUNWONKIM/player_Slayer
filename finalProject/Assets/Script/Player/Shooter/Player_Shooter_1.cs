@@ -75,8 +75,16 @@ public class Player_Shooter_1 : MonoBehaviour
             {
                 projectileRigidbody.velocity = targetDirection.normalized * projectileSpeed;
             }
+
+            // 발사체에 Player_Atk_1 스크립트 추가
+            Player_Atk_1 projectileAtkScript = projectileInstance.GetComponent<Player_Atk_1>();
+            if (projectileAtkScript == null)
+            {
+                projectileAtkScript = projectileInstance.AddComponent<Player_Atk_1>();
+            }
         }
     }
+
 
     private void CheckForSlowObjects()
     {
@@ -98,12 +106,12 @@ public class Player_Shooter_1 : MonoBehaviour
     {
         fireInterval -= amount;
         if (fireInterval < 0.1f) fireInterval = 0.1f; // 최소 발사 간격 제한
-        Debug.Log("Fire rate increased, interval is now: " + fireInterval);
+        Debug.Log("투사체 발사 속도 :" + fireInterval);
     }
 
     public void IncreaseProjectileCount(int amount)
     {
         projectilesPerFire += amount;
-        Debug.Log("Projectile count increased, now firing: " + projectilesPerFire + " projectiles per shot.");
+        Debug.Log("투사체 개수 : " + projectilesPerFire );
     }
 }
