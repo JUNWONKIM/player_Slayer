@@ -7,14 +7,16 @@ public class Player_Shooter_1 : MonoBehaviour
     public static Player_Shooter_1 instance;
 
     public GameObject projectilePrefab; // 발사체 프리팹을 할당할 변수
+
     public float fireInterval = 1f; // 발사 간격
     public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
     public float detectionRange = 100f; // 적을 탐지할 범위
     public float projectileSpeed = 100f;
     public int projectilesPerFire = 1; // 한 번에 발사할 발사체 수
     public float burstInterval = 0.1f; // 연속 발사 간격
-    private float lastFireTime; // 마지막 발사 시간
+    public float damageAmount = 1; // 데미지 양
 
+    private float lastFireTime; // 마지막 발사 시간
     private bool isSlowed = false; // Slow 상태 여부
 
     void Awake()
@@ -33,11 +35,12 @@ public class Player_Shooter_1 : MonoBehaviour
         CheckForSlowObjects(); // Slow 태그 체크
     }
 
+
     IEnumerator FireProjectileBurst()
     {
         for (int i = 0; i < projectilesPerFire; i++)
         {
-            FireProjectile();
+            Shoot();
             if (i < projectilesPerFire - 1)
             {
                 yield return new WaitForSeconds(burstInterval);
@@ -45,7 +48,7 @@ public class Player_Shooter_1 : MonoBehaviour
         }
     }
 
-    void FireProjectile()
+    void Shoot()
     {
         GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
         List<GameObject> allCreatures = new List<GameObject>();
@@ -68,22 +71,21 @@ public class Player_Shooter_1 : MonoBehaviour
         {
             Vector3 targetDirection = closestCreature.transform.position - transform.position;
             Quaternion rotation = Quaternion.LookRotation(targetDirection);
-            GameObject projectileInstance = Instantiate(projectilePrefab, transform.position, rotation);
+            GameObject bullet = Instantiate(projectilePrefab, transform.position, rotation);
 
-            Rigidbody projectileRigidbody = projectileInstance.GetComponent<Rigidbody>();
-            if (projectileRigidbody != null)
+            Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
+            if (bulletRigidbody != null)
             {
-                projectileRigidbody.velocity = targetDirection.normalized * projectileSpeed;
+                bulletRigidbody.velocity = targetDirection.normalized * projectileSpeed;
             }
 
-            // 발사체에 Player_Atk_1 스크립트 추가
-            Player_Atk_1 projectileAtkScript = projectileInstance.GetComponent<Player_Atk_1>();
-            if (projectileAtkScript == null)
-            {
-                projectileAtkScript = projectileInstance.AddComponent<Player_Atk_1>();
-            }
+            // 충돌 처리 컴포넌트를 동적으로 추가
+            BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
+            collisionHandler.damageAmount = damageAmount;
         }
     }
+
+
 
 
     private void CheckForSlowObjects()
@@ -112,6 +114,40 @@ public class Player_Shooter_1 : MonoBehaviour
     public void IncreaseProjectileCount(int amount)
     {
         projectilesPerFire += amount;
-        Debug.Log("투사체 개수 : " + projectilesPerFire );
+        Debug.Log("투사체 개수 : " + projectilesPerFire);
+    }
+
+    public void IncreaseDamage(float amount)
+    {
+        // Player_Shooter_4 클래스의 damageAmount 값을 변경
+        damageAmount += amount;
+        Debug.Log("투사체  데미지 : " + damageAmount);
+    }
+
+    public class BulletCollisionHandler : MonoBehaviour
+    {
+        public float damageAmount;
+        private Player_Shooter_1 shooterInstance;
+
+        public BulletCollisionHandler(Player_Shooter_1 shooterInstance)
+        {
+            this.shooterInstance = shooterInstance;
+        }
+        void OnTriggerEnter(Collider other)
+        {
+            // 충돌한 객체의 태그가 "Creature"인 경우
+            if (other.gameObject.CompareTag("Creature"))
+            {
+                // 충돌한 객체의 HP를 감소시킴
+                CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(damageAmount);
+                }
+
+                // 총알을 파괴
+                Destroy(gameObject);
+            }
+        }
     }
 }

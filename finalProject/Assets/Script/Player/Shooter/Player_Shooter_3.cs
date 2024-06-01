@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Player_Shooter_3 : MonoBehaviour
 {
@@ -7,7 +8,8 @@ public class Player_Shooter_3 : MonoBehaviour
 
     public GameObject swordPrefab; // 칼 프리팹
     public float summonInterval = 5f; // 칼 소환 간격
-    public float distanceFromPlayer = 30f; // 플레이어로부터의 거리
+    public float distanceFromPlayer = 10f; // 플레이어로부터의 거리
+    public float damageAmount = 0f;
     public int swordNum = 0;
     // Start is called before the first frame update
 
@@ -28,7 +30,6 @@ public class Player_Shooter_3 : MonoBehaviour
 
         if (player != null)
         {
-
             if (swordNum == 1)
             {
                 // 플레이어 위치와 칼의 소환 위치 계산
@@ -36,46 +37,42 @@ public class Player_Shooter_3 : MonoBehaviour
                 Quaternion summonRotation = Quaternion.Euler(90f, 90f, 0f);
 
                 // 칼 소환
-                Instantiate(swordPrefab, summonPosition, summonRotation);
+                GameObject sword = Instantiate(swordPrefab, summonPosition, summonRotation);
+
+                // 충돌 처리 컴포넌트를 동적으로 추가
+                BulletCollisionHandler collisionHandler = sword.AddComponent<BulletCollisionHandler>();
+                collisionHandler.damageAmount = damageAmount;
             }
-
-            if (swordNum == 2)
+            else
             {
-                // 플레이어 위치와 칼의 소환 위치 계산
-                Vector3 summonPosition = player.transform.position + new Vector3(distanceFromPlayer, 0f, 0f);
-                Quaternion summonRotation = Quaternion.Euler(90f, 90f, 0f);
-                Vector3 summonPosition2 = player.transform.position + new Vector3(-distanceFromPlayer, 0f, 0f);
-                Quaternion summonRotation2 = Quaternion.Euler(90f, 90f, 0f);
-
-                // 칼 소환
-                Instantiate(swordPrefab, summonPosition, summonRotation);
-                Instantiate(swordPrefab, summonPosition2, summonRotation2);
-            }
-
-            if (swordNum == 3)
-            {
-                // 각도 간격 설정
-                float angleInterval = 360f / 3f;
-                float currentAngle = 0f;
+                // 원의 반지름 계산
+                float radius = distanceFromPlayer;
 
                 for (int i = 0; i < swordNum; i++)
                 {
-                    // 플레이어 위치와 칼의 소환 위치 계산
-                    float x = distanceFromPlayer * Mathf.Cos(currentAngle * Mathf.Deg2Rad);
-                    float z = distanceFromPlayer * Mathf.Sin(currentAngle * Mathf.Deg2Rad);
+                    // 각 칼의 각도 계산
+                    float angle = i * (360f / swordNum);
+
+                    // 칼의 소환 위치 계산
+                    float x = radius * Mathf.Cos(angle * Mathf.Deg2Rad);
+                    float z = radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                     Vector3 summonPosition = player.transform.position + new Vector3(x, 0f, z);
-                    Quaternion summonRotation = Quaternion.Euler(90f, 90f, 0f);
+                    Quaternion summonRotation = Quaternion.Euler(90f, 90f, angle);
 
                     // 칼 소환
-                    Instantiate(swordPrefab, summonPosition, summonRotation);
+                    GameObject sword = Instantiate(swordPrefab, summonPosition, summonRotation);
 
-                    // 다음 칼을 소환하기 위해 각도 증가
-                    currentAngle += angleInterval;
+                    // 충돌 처리 컴포넌트를 동적으로 추가
+                    BulletCollisionHandler collisionHandler = sword.AddComponent<BulletCollisionHandler>();
+                    collisionHandler.damageAmount = damageAmount;
                 }
-
             }
         }
     }
+
+
+
+
     public void IncreaseSwordNum()
     {
 
@@ -83,4 +80,38 @@ public class Player_Shooter_3 : MonoBehaviour
         Debug.Log("칼 개수 : " + swordNum);
 
     }
+
+    public void IncreaseDamage(float amount)
+    {
+        // Player_Shooter_4 클래스의 damageAmount 값을 변경
+        damageAmount += amount;
+        Debug.Log("칼 데미지 : " + damageAmount);
+    }
+
+
+    public class BulletCollisionHandler : MonoBehaviour
+    {
+        public float damageAmount;
+        private Player_Shooter_3 shooterInstance;
+
+        // 생성자를 이용하여 Player_Shooter_4 인스턴스를 전달받음
+        public BulletCollisionHandler(Player_Shooter_3 shooterInstance)
+        {
+            this.shooterInstance = shooterInstance;
+        }
+
+        void OnTriggerEnter(Collider other)
+        {
+            // 충돌한 객체의 태그가 "Creature"인 경우
+            if (other.gameObject.CompareTag("Creature"))
+            {
+                // 충돌한 객체의 HP를 감소시킴
+                CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
+                if (enemyHealth != null)
+                {
+                    enemyHealth.TakeDamage(damageAmount);
+                }
+            }
+        }
+     }
 }

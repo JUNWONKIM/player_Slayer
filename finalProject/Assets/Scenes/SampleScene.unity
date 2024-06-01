@@ -1137,6 +1137,57 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 8041389307866425754, guid: d808a023680252344871efe6c7d1dd1c, type: 3}
   m_PrefabInstance: {fileID: 340560210}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &365019887
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 365019888}
+  - component: {fileID: 365019889}
+  m_Layer: 6
+  m_Name: Player_Shooter_4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &365019888
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365019887}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 908749496}
+  m_RootOrder: 8
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &365019889
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 365019887}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eafe7fe08a83de74b89a2cae0c64a438, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  bulletPrefab: {fileID: 689667626583958020, guid: ceda43f19a4fec1448f24f3950594c7d, type: 3}
+  firePoint: {fileID: 908749496}
+  bulletSpeed: 40
+  bulletCount: 0
+  fireRate: 1
+  damageAmount: 0
+  lifetime: 1
 --- !u!1001 &375232649
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2124,7 +2175,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   swordPrefab: {fileID: 5610884078883986163, guid: 0cd71b44ac848604c890a57d9287706e, type: 3}
   summonInterval: 9
-  distanceFromPlayer: 10
+  distanceFromPlayer: 3
+  damageAmount: 0
   swordNum: 0
 --- !u!1001 &659855470
 PrefabInstance:
@@ -3035,7 +3087,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 335afa6adfb83da4ab7749175fd678f4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  damageAmount: 1
 --- !u!1001 &921680952
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7000,13 +7051,33 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5106319188411432562, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
+      propertyPath: damageAmount
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106319188411432562, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
+      propertyPath: projectileSpeed
+      value: 70
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106319188411432562, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
       propertyPath: projectilePrefab
       value: 
       objectReference: {fileID: 3153472991145048103, guid: 65002c145c1eb4749b6ef74c52637847, type: 3}
     - target: {fileID: 5106319189065345761, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
+      propertyPath: damageAmount
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5106319189065345761, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
+      propertyPath: projectilePrefab
+      value: 
+      objectReference: {fileID: 8378648546881499446, guid: 150b37074f9b819428ac13fb35922a64, type: 3}
+    - target: {fileID: 5106319189065345761, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
       propertyPath: projectilesPerFire
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5106319189065345761, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
+      propertyPath: explosionColliderPrefab
+      value: 
+      objectReference: {fileID: 1583984075276884799, guid: 150b37074f9b819428ac13fb35922a64, type: 3}
     - target: {fileID: 5106319189065345775, guid: 21e4208ed74aaad40bc621b0818142e8, type: 3}
       propertyPath: m_Name
       value: Player_Shooter_2

@@ -22,12 +22,16 @@ public class PlayerLV : MonoBehaviour
     public int projectileCountIncrease_3 = 1; // 발사체 개수 증가
     public float damageIncrease_3 = 1;
 
+    public int projectileCountIncrease_4 = 3; // 발사체 개수 증가
+    public float damageIncrease_4 = 1;
+
     // 각 case의 실행 횟수를 추적하는 변수
     private int fireRateIncreaseCount = 0;
     private int moveSpeedIncreaseCount = 0;
     private int damageAndProjectileIncreaseCount_1 = 0;
     private int damageAndProjectileIncreaseCount_2 = 0;
     private int damageAndProjectileIncreaseCount_3 = 0;
+    private int damageAndProjectileIncreaseCount_4 = 0;
 
 
     void Awake()
@@ -82,6 +86,8 @@ public class PlayerLV : MonoBehaviour
             availableStats.Add(3);
         if (damageAndProjectileIncreaseCount_3 < 3)
             availableStats.Add(4);
+        if (damageAndProjectileIncreaseCount_4 < 3)
+            availableStats.Add(5);
 
         if (availableStats.Count == 0)
         {
@@ -102,18 +108,25 @@ public class PlayerLV : MonoBehaviour
                 moveSpeedIncreaseCount++;
                 break;
             case 2:
-                Player_Atk_1.Instance.IncreaseDamage(damageIncrease_1);
                 Player_Shooter_1.instance.IncreaseProjectileCount(projectileCountIncrease_1);
+                Player_Shooter_1.instance.IncreaseDamage(damageIncrease_1);
                 damageAndProjectileIncreaseCount_1++;
                 break;
             case 3:
                 Player_Shooter_2.instance.IncreaseProjectileCount(projectileCountIncrease_2);
-                Player_Atk_2.Instance.IncreaseDamage(damageIncrease_2);
+                Player_Shooter_2.instance.IncreaseDamage(damageIncrease_2);
                 damageAndProjectileIncreaseCount_2++;
                 break;
             case 4:
                 Player_Shooter_3.instance.IncreaseSwordNum();
+                Player_Shooter_3.instance.IncreaseDamage(damageIncrease_2);
                 damageAndProjectileIncreaseCount_3++;
+                break;
+            case 5:
+                Player_Shooter_4.instance.IncreaseBulletCount(projectileCountIncrease_4);
+                Player_Shooter_4.instance.IncreaseDamage(damageIncrease_4);
+
+                damageAndProjectileIncreaseCount_4++;
                 break;
         }
     }
