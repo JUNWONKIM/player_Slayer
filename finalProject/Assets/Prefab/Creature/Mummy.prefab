@@ -280,10 +280,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a76b4754f0580044091cc70d2d8613f6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   normalSpeed: 20
   chaseSpeed: 70
   chaseRange: 30
   explodeRange: 5
-  explosionPrefab: {fileID: 6746093201346118342, guid: 652aa374564f7964289fa1d65d9bd20c, type: 3}
+  explosionPrefab: {fileID: 6287953604210959080, guid: 5156d6689efbccb4991059f3a5755566, type: 3}
   chaseDuration: 2
+  maxHealth: 100
+  currentHealth: 0

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2583778869508417611}
   - component: {fileID: 1909170539156047438}
   - component: {fileID: 5923737180725904409}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -4892,9 +4892,9 @@ GameObject:
   - component: {fileID: 5207987601858127898}
   - component: {fileID: 1720167140720669039}
   - component: {fileID: 534402556447015176}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player_ATK_1
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -9795,7 +9795,7 @@ GameObject:
   - component: {fileID: 2433124058619885405}
   - component: {fileID: 1164929265809320628}
   - component: {fileID: 9106208660414403361}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Stones
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14674,7 +14674,7 @@ GameObject:
   - component: {fileID: 52952201501549786}
   - component: {fileID: 2594995196539859584}
   - component: {fileID: 6005707213615860587}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: StonesHit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19611,7 +19611,7 @@ GameObject:
   - component: {fileID: 6588710289760853209}
   - component: {fileID: 6049523058040675291}
   - component: {fileID: 5011368451033548580}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -5,18 +5,21 @@ using UnityEngine;
 public class Player_Shooter_4 : MonoBehaviour
 {
     public static Player_Shooter_4 instance;
-
+    
     public GameObject bulletPrefab; // 탄환 프리팹
     public Transform firePoint; // 탄환 발사 위치
+    public float fireInterval = 1f; // 발사 간격 (초 단위)
+   
     public float bulletSpeed = 20f; // 탄환 속도
     public int bulletCount = 0; // 총알 수
-    public float fireRate = 1f; // 발사 간격 (초 단위)
+    
     public float damageAmount = 10; // 데미지 양
     public float lifetime = 2f; // 탄환의 수명 (초)
 
     private Transform playerTransform; // 플레이어 트랜스폼
 
-
+    private bool isSlowed = false; // Slow 상태 여부
+    public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
     void Awake()
     {
         instance = this;
@@ -35,9 +38,13 @@ public class Player_Shooter_4 : MonoBehaviour
         }
 
         // 일정 시간마다 Shoot 메서드 호출
-        InvokeRepeating("Shoot", 0f, fireRate);
+        InvokeRepeating("Shoot", 0f, fireInterval);
     }
 
+    void Update()
+    {
+        CheckForSlowObjects();
+    }
     void Shoot()
     {
         if (playerTransform == null)
@@ -51,7 +58,7 @@ public class Player_Shooter_4 : MonoBehaviour
 
             // 탄환 확산 설정
             float xSpread = Random.Range(-30f, 30f);
-            float ySpread = Random.Range(2f, 5f); // y축 확산 범위 2에서 5 사이
+            float ySpread = Random.Range(2f, 20f); // y축 확산 범위 2에서 5 사이
 
             // 회전된 방향 벡터 계산
             Quaternion spreadRotation = Quaternion.Euler(Random.Range(-30f, 30f), Random.Range(-30f, 30f), 0);
@@ -74,6 +81,22 @@ public class Player_Shooter_4 : MonoBehaviour
         }
     }
 
+    private void CheckForSlowObjects()
+    {
+        GameObject[] slowObjects = GameObject.FindGameObjectsWithTag("Slow");
+
+        if (slowObjects.Length > 0 && !isSlowed)
+        {
+            fireInterval *= fireIntervalSlowMultiplier; // 발사 간격을 두 배로 늘림
+            isSlowed = true;
+        }
+        else if (slowObjects.Length == 0 && isSlowed)
+        {
+            fireInterval /= fireIntervalSlowMultiplier; // 발사 간격을 원래대로 돌림
+            isSlowed = false;
+        }
+    }
+
     public void IncreaseBulletCount(int amount)
     {
 
@@ -87,6 +110,13 @@ public class Player_Shooter_4 : MonoBehaviour
         // Player_Shooter_4 클래스의 damageAmount 값을 변경
         damageAmount += amount;
         Debug.Log("샷건 데미지 : " + damageAmount);
+    }
+
+    public void IncreaseFireRate(float amount)
+    {
+        fireInterval /= amount;
+        if (fireInterval < 0.1f) fireInterval = 0.1f; // 최소 발사 간격 제한
+        Debug.Log("샷건 발사 속도 :" + fireInterval);
     }
 
     public class BulletCollisionHandler : MonoBehaviour
@@ -111,9 +141,16 @@ public class Player_Shooter_4 : MonoBehaviour
                 {
                     enemyHealth.TakeDamage(damageAmount);
                 }
+
+                Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
+                if (enemyHealth2 != null)
+                {
+                    enemyHealth2.TakeDamage(damageAmount);
+                }
             }
+
         }
 
-      
+
     }
 }

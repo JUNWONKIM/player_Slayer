@@ -5,8 +5,8 @@ public class Player_Shooter_2 : MonoBehaviour
 {
     public static Player_Shooter_2 instance;
 
-    public GameObject objectToSpawn; // 총알 프리팹
-    public float spawnInterval = 3f; // 총알 소환 간격
+    public GameObject spawnPrefab; // 총알 프리팹
+    public float spawnInterval = 5f; // 총알 소환 간격
     public float spawnRadius = 20f; // 총알 소환 범위 반지름
     public float fixedYPosition = 2.5f; // 고정된 Y 축 위치
     public int projectilesPerFire = 0; // 한 번에 발사할 발사체 수
@@ -16,16 +16,23 @@ public class Player_Shooter_2 : MonoBehaviour
 
     private float lastSpawnTime; // 마지막 소환 시간
 
+    private bool isSlowed = false; // Slow 상태 여부
+    public float spawnIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
+
     void Awake()
     {
         instance = this;
     }
 
-    private void Start()
+    void Start()
     {
         InvokeRepeating("SpawnBulletWithExplosion", 0f, spawnInterval);
     }
 
+    void Update()
+    {
+        CheckForSlowObjects();
+    }
     void SpawnBulletWithExplosion()
     {
         for (int i = 0; i < projectilesPerFire; i++)
@@ -34,7 +41,7 @@ public class Player_Shooter_2 : MonoBehaviour
             Vector3 spawnPosition = transform.position + Random.insideUnitSphere * spawnRadius;
             spawnPosition.y = fixedYPosition;
 
-            GameObject bullet = Instantiate(objectToSpawn, spawnPosition, Quaternion.identity);
+            GameObject bullet = Instantiate(spawnPrefab, spawnPosition, Quaternion.identity);
 
             // 총알 파괴 타이머 설정
             Destroy(bullet, bulletLifetime);
@@ -58,6 +65,22 @@ public class Player_Shooter_2 : MonoBehaviour
         collider.enabled = true;
     }
 
+    private void CheckForSlowObjects()
+    {
+        GameObject[] slowObjects = GameObject.FindGameObjectsWithTag("Slow");
+
+        if (slowObjects.Length > 0 && !isSlowed)
+        {
+            spawnInterval *= spawnIntervalSlowMultiplier; // 발사 간격을 두 배로 늘림
+            isSlowed = true;
+        }
+        else if (slowObjects.Length == 0 && isSlowed)
+        {
+            spawnInterval /= spawnIntervalSlowMultiplier; // 발사 간격을 원래대로 돌림
+            isSlowed = false;
+        }
+    }
+
     public void IncreaseProjectileCount(int amount)
     {
         projectilesPerFire += amount;
@@ -70,6 +93,14 @@ public class Player_Shooter_2 : MonoBehaviour
         damageAmount += amount;
         Debug.Log("폭탄 데미지 : " + damageAmount);
     }
+
+    public void IncreaseFireRate(float amount)
+    {
+        spawnInterval /= amount;
+        if (spawnInterval < 0.1f) spawnInterval = 0.1f; 
+        Debug.Log("폭탄 발사 속도 :" + spawnInterval);
+    }
+
 
 
     public class BulletCollisionHandler : MonoBehaviour
@@ -94,7 +125,14 @@ public class Player_Shooter_2 : MonoBehaviour
                 {
                     enemyHealth.TakeDamage(damageAmount);
                 }
+
+                Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
+                if (enemyHealth2 != null)
+                {
+                    enemyHealth2.TakeDamage(damageAmount);
+                }
             }
+
         }
     }
 }

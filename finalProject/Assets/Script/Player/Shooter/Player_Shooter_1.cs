@@ -6,10 +6,10 @@ public class Player_Shooter_1 : MonoBehaviour
 {
     public static Player_Shooter_1 instance;
 
-    public GameObject projectilePrefab; // 발사체 프리팹을 할당할 변수
+    public GameObject bulletPrefab; // 발사체 프리팹을 할당할 변수
 
     public float fireInterval = 1f; // 발사 간격
-    public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
+   
     public float detectionRange = 100f; // 적을 탐지할 범위
     public float projectileSpeed = 100f;
     public int projectilesPerFire = 1; // 한 번에 발사할 발사체 수
@@ -17,7 +17,9 @@ public class Player_Shooter_1 : MonoBehaviour
     public float damageAmount = 1; // 데미지 양
 
     private float lastFireTime; // 마지막 발사 시간
+
     private bool isSlowed = false; // Slow 상태 여부
+    public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
 
     void Awake()
     {
@@ -71,7 +73,7 @@ public class Player_Shooter_1 : MonoBehaviour
         {
             Vector3 targetDirection = closestCreature.transform.position - transform.position;
             Quaternion rotation = Quaternion.LookRotation(targetDirection);
-            GameObject bullet = Instantiate(projectilePrefab, transform.position, rotation);
+            GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
 
             Rigidbody bulletRigidbody = bullet.GetComponent<Rigidbody>();
             if (bulletRigidbody != null)
@@ -106,7 +108,7 @@ public class Player_Shooter_1 : MonoBehaviour
 
     public void IncreaseFireRate(float amount)
     {
-        fireInterval -= amount;
+        fireInterval /= amount;
         if (fireInterval < 0.1f) fireInterval = 0.1f; // 최소 발사 간격 제한
         Debug.Log("투사체 발사 속도 :" + fireInterval);
     }
@@ -145,9 +147,13 @@ public class Player_Shooter_1 : MonoBehaviour
                     enemyHealth.TakeDamage(damageAmount);
                 }
 
-                // 총알을 파괴
-                Destroy(gameObject);
+                Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
+                if (enemyHealth2 != null)
+                {
+                    enemyHealth2.TakeDamage(damageAmount);
+                }
             }
+
         }
     }
 }

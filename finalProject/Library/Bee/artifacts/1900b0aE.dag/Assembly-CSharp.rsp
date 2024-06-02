@@ -353,7 +353,6 @@
 "Assets/Script/Bullet/Creature/Ghost_bullet.cs"
 "Assets/Script/Bullet/Creature/Witch_atkSlow_effect.cs"
 "Assets/Script/Bullet/Creature/Witch_freeze_effect.cs"
-"Assets/Script/Bullet/Player/Player_Atk_3.cs"
 "Assets/Script/Camera/MainCamera_Move.cs"
 "Assets/Script/Creature/CreatureHealth.cs"
 "Assets/Script/Creature/CreatureSpawner.cs"
@@ -363,11 +362,13 @@
 "Assets/Script/Creature/Witch_atkSlow.cs"
 "Assets/Script/Creature/Witch_freeze.cs"
 "Assets/Script/Player/PlayerAI.cs"
+"Assets/Script/Player/PlayerHP.cs"
 "Assets/Script/Player/PlayerLV.cs"
 "Assets/Script/Player/Shooter/Player_Shooter_1.cs"
 "Assets/Script/Player/Shooter/Player_Shooter_2.cs"
 "Assets/Script/Player/Shooter/Player_Shooter_3.cs"
 "Assets/Script/Player/Shooter/Player_Shooter_4.cs"
+"Assets/Script/UI/UI_playerHP.cs"
 -langversion:9.0
 
 /deterministic

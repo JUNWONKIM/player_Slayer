@@ -1,6 +1,5 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
 public class Player_Shooter_3 : MonoBehaviour
 {
@@ -11,16 +10,25 @@ public class Player_Shooter_3 : MonoBehaviour
     public float distanceFromPlayer = 10f; // 플레이어로부터의 거리
     public float damageAmount = 0f;
     public int swordNum = 0;
-    // Start is called before the first frame update
+    public float orbitSpeed = 50f; // 칼의 회전 속도
+
+    private bool isSlowed = false; // Slow 상태 여부
+    public float summonIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
 
     void Awake()
     {
         instance = this;
     }
+
     void Start()
     {
         // 일정 간격마다 칼을 소환하는 코루틴 시작
         InvokeRepeating("SummonSword", 0f, summonInterval);
+    }
+
+    void Update()
+    {
+        CheckForSlowObjects();
     }
 
     void SummonSword()
@@ -34,14 +42,18 @@ public class Player_Shooter_3 : MonoBehaviour
             {
                 // 플레이어 위치와 칼의 소환 위치 계산
                 Vector3 summonPosition = player.transform.position + new Vector3(distanceFromPlayer, 0f, 0f);
-                Quaternion summonRotation = Quaternion.Euler(90f, 90f, 0f);
+                Quaternion summonRotation = Quaternion.Euler(90f, 0f, 0f);
 
                 // 칼 소환
                 GameObject sword = Instantiate(swordPrefab, summonPosition, summonRotation);
+                sword.AddComponent<SwordOrbit>().Initialize(player.transform, distanceFromPlayer, 1, 0, orbitSpeed);
 
                 // 충돌 처리 컴포넌트를 동적으로 추가
                 BulletCollisionHandler collisionHandler = sword.AddComponent<BulletCollisionHandler>();
                 collisionHandler.damageAmount = damageAmount;
+
+                // 3초 후에 칼 파괴
+                Destroy(sword, 3f);
             }
             else
             {
@@ -57,28 +69,43 @@ public class Player_Shooter_3 : MonoBehaviour
                     float x = radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                     float z = radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                     Vector3 summonPosition = player.transform.position + new Vector3(x, 0f, z);
-                    Quaternion summonRotation = Quaternion.Euler(90f, 90f, angle);
+                    Quaternion summonRotation = Quaternion.Euler(90f, 0f, angle);
 
                     // 칼 소환
                     GameObject sword = Instantiate(swordPrefab, summonPosition, summonRotation);
+                    sword.AddComponent<SwordOrbit>().Initialize(player.transform, distanceFromPlayer, swordNum, i, orbitSpeed);
 
                     // 충돌 처리 컴포넌트를 동적으로 추가
                     BulletCollisionHandler collisionHandler = sword.AddComponent<BulletCollisionHandler>();
                     collisionHandler.damageAmount = damageAmount;
+
+                    // 3초 후에 칼 파괴
+                    Destroy(sword, 3f);
                 }
             }
         }
     }
 
+    private void CheckForSlowObjects()
+    {
+        GameObject[] slowObjects = GameObject.FindGameObjectsWithTag("Slow");
 
-
+        if (slowObjects.Length > 0 && !isSlowed)
+        {
+            summonInterval *= summonIntervalSlowMultiplier; // 발사 간격을 두 배로 늘림
+            isSlowed = true;
+        }
+        else if (slowObjects.Length == 0 && isSlowed)
+        {
+            summonInterval /= summonIntervalSlowMultiplier; // 발사 간격을 원래대로 돌림
+            isSlowed = false;
+        }
+    }
 
     public void IncreaseSwordNum()
     {
-
         swordNum++;
         Debug.Log("칼 개수 : " + swordNum);
-
     }
 
     public void IncreaseDamage(float amount)
@@ -88,17 +115,9 @@ public class Player_Shooter_3 : MonoBehaviour
         Debug.Log("칼 데미지 : " + damageAmount);
     }
 
-
     public class BulletCollisionHandler : MonoBehaviour
     {
         public float damageAmount;
-        private Player_Shooter_3 shooterInstance;
-
-        // 생성자를 이용하여 Player_Shooter_4 인스턴스를 전달받음
-        public BulletCollisionHandler(Player_Shooter_3 shooterInstance)
-        {
-            this.shooterInstance = shooterInstance;
-        }
 
         void OnTriggerEnter(Collider other)
         {
@@ -111,7 +130,59 @@ public class Player_Shooter_3 : MonoBehaviour
                 {
                     enemyHealth.TakeDamage(damageAmount);
                 }
+
+                Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
+                if (enemyHealth2 != null)
+                {
+                    enemyHealth2.TakeDamage(damageAmount);
+                }
             }
+
+           
         }
-     }
+    }
+}
+
+public class SwordOrbit : MonoBehaviour
+{
+    private Transform playerTransform;
+    private float orbitRadius;
+    private int totalSwords;
+    private int swordIndex;
+    private float orbitSpeed;
+
+    public void Initialize(Transform player, float radius, int swordCount, int index, float speed)
+    {
+        playerTransform = player;
+        orbitRadius = radius;
+        totalSwords = swordCount;
+        swordIndex = index;
+        orbitSpeed = speed;
+    }
+
+    void Start()
+    {
+        // 3초 후에 칼 파괴
+        Destroy(gameObject, 3f);
+    }
+
+    void Update()
+    {
+        if (playerTransform == null)
+            return;
+
+        // 각도를 증가시키면서 회전
+        float angle = swordIndex * (360f / totalSwords) + (Time.time * orbitSpeed);
+        float x = orbitRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
+        float z = orbitRadius * Mathf.Sin(angle * Mathf.Deg2Rad);
+
+        // 새로운 위치 계산
+        Vector3 newPosition = playerTransform.position + new Vector3(x, 0f, z);
+        transform.position = newPosition;
+
+        // 칼이 플레이어 반대 방향을 바라보도록 회전 설정
+        Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(-directionToPlayer);
+        transform.rotation = lookRotation * Quaternion.Euler(90, 0, 0);
+    }
 }

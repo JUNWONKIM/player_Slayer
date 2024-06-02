@@ -12,9 +12,9 @@ GameObject:
   - component: {fileID: 2901665419787407899}
   - component: {fileID: 9212833412386566060}
   - component: {fileID: 6812183869727017780}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Player_ATK_4
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4904,7 +4904,7 @@ GameObject:
   - component: {fileID: 1595746648861366345}
   - component: {fileID: 2372584074572498213}
   - component: {fileID: 3670658897589194248}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Glow
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -9805,7 +9805,7 @@ GameObject:
   - component: {fileID: 3396847172213223623}
   - component: {fileID: 2864274740693678021}
   - component: {fileID: 3584934117744274234}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Flares
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -14684,7 +14684,7 @@ GameObject:
   - component: {fileID: 8889657401428045141}
   - component: {fileID: 983296534774999383}
   - component: {fileID: 7160783592763126056}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Sparks
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -19612,7 +19612,7 @@ GameObject:
   - component: {fileID: 4634052894817328585}
   - component: {fileID: 7585976143170097536}
   - component: {fileID: 2824005854877838304}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Slash
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -24482,7 +24482,7 @@ GameObject:
   - component: {fileID: 2858295213021141964}
   - component: {fileID: 1759838996291170385}
   - component: {fileID: 2732099183714700759}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: RotatePart
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -1,3 +1,6 @@
+using JetBrains.Annotations;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class Skull : MonoBehaviour
@@ -8,7 +11,9 @@ public class Skull : MonoBehaviour
     private Transform player; // 플레이어의 위치
     private Rigidbody rb; // 적의 Rigidbody 컴포넌트
     private Animator animator; // 적의 Animator 컴포넌트
+    private bool canDealDamage = true; // 데미지를 줄 수 있는 상태 여부
 
+    public float damageAmount = 1f;
     void Start()
     {
         // 플레이어 게임 오브젝트를 찾아 트랜스폼을 할당
@@ -46,6 +51,28 @@ public class Skull : MonoBehaviour
         }
     }
 
+    private void OnCollisionEnter(Collision collision)
+    {
+        
+        if (collision.gameObject.CompareTag("Player") && canDealDamage)
+        {
+            PlayerHP playerHP = collision.gameObject.GetComponent<PlayerHP>();
+            if (playerHP != null)
+            {
+                playerHP.hp -= damageAmount; // 플레이어의 체력을 1 감소
+                StartCoroutine(DamageCooldown());
+               
+
+            }
+        }
+    }
+
+    private IEnumerator DamageCooldown()
+    {
+        canDealDamage = false;
+        yield return new WaitForSeconds(0.5f);
+        canDealDamage = true;
+    }
+
     // Animator에서 isDie가 true가 될 때 호출되는 함수
-   
 }

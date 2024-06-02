@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Ghost : MonoBehaviour
 {
@@ -7,10 +8,12 @@ public class Ghost : MonoBehaviour
     public float retreatDistance = 5f; // 플레이어로부터 후퇴하는 거리
 
     public float bulletSpeed = 50f;
-    public GameObject projectile; // 발사할 투사체
+    public GameObject projectilePrefab; // 발사할 투사체 프리팹
     public Transform firePoint; // 발사 지점
     public float fireRate = 1f; // 발사 속도 (1초당 한 발)
     public float nextFireTime = 0f;
+
+    public float damageAmount = 1f;
 
     private Transform player; // 플레이어의 위치
     private Rigidbody rb; // 고스트의 Rigidbody 컴포넌트
@@ -40,7 +43,7 @@ public class Ghost : MonoBehaviour
                 // 공격 상태로 전환
                 Attack();
             }
-         }
+        }
         else
         {
             Transform childObject_1 = transform.Find("Ghost");
@@ -80,13 +83,15 @@ public class Ghost : MonoBehaviour
             transform.LookAt(player);
             Vector3 direction = player.position - firePoint.position;
             direction.Normalize();
-            GameObject bullet = Instantiate(projectile, firePoint.position, Quaternion.identity);
+            GameObject bullet = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed; // 투사체 속도
+            Destroy(bullet, 3f); // 3초 후에 파괴
             nextFireTime = Time.time + 1f / fireRate; // 다음 발사 시간 설정
+
+            BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
+            collisionHandler.damageAmount = damageAmount;
         }
     }
-
- 
 
     public void DieAnimationComplete()
     {
@@ -94,5 +99,19 @@ public class Ghost : MonoBehaviour
         enabled = false;
     }
 
-
+    public class BulletCollisionHandler : MonoBehaviour
+    {
+        public float damageAmount;
+        void OnTriggerEnter(Collider other)
+        {
+            PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
+            if (playerHP != null)
+            {
+                playerHP.hp -= damageAmount; // 플레이어의 체력을 1 감소
+                
+            
+            Destroy(gameObject);
+            }
+        }
+    }
 }

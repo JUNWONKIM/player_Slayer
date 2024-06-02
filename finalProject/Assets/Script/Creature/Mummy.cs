@@ -2,13 +2,16 @@ using UnityEngine;
 
 public class Mummy : MonoBehaviour
 {
-    public Transform player; // 플레이어의 Transform
+    private Transform player; // 플레이어의 Transform
     public float normalSpeed = 2f; // 미라의 기본 이동 속도
     public float chaseSpeed = 5f; // 플레이어를 추격할 때의 속도
     public float chaseRange = 10f; // 플레이어를 추격하기 시작하는 범위
     public float explodeRange = 1.5f; // 폭발하는 범위
     public GameObject explosionPrefab; // 폭발 이펙트 프리팹
     public float chaseDuration = 3f; // 추격 지속 시간 (초)
+    public float damageAmount = 1f;
+    public float maxHealth = 1; // 최대 체력
+    public float currentHealth; // 현재 체력
 
     private Rigidbody rb;
     private bool isChasing = false;
@@ -18,6 +21,8 @@ public class Mummy : MonoBehaviour
 
     void Start()
     {
+        currentHealth = maxHealth; // 시작할 때 최대 체력으로 설정
+
         rb = GetComponent<Rigidbody>();
         if (player == null)
         {
@@ -28,6 +33,8 @@ public class Mummy : MonoBehaviour
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
+      
 
         if (distanceToPlayer <= explodeRange)
         {
@@ -106,18 +113,42 @@ public class Mummy : MonoBehaviour
     void Explode()
     {
         // 폭발 효과 생성
-        Instantiate(explosionPrefab, transform.position, transform.rotation);
+        GameObject explosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
         PlayerLV.IncrementCreatureDeathCount();
         // 미라 제거
         Destroy(gameObject);
+
+        
+
+        BulletCollisionHandler collisionHandler = explosion.AddComponent<BulletCollisionHandler>();
+        collisionHandler.damageAmount = damageAmount;
     }
 
-    void OnCollisionEnter(Collision collision)
+    // 이펙트와의 충돌 처리
+    
+
+    public void TakeDamage(float amount)
     {
-        if (collision.gameObject.CompareTag("Bullet"))
+
+            currentHealth -= amount; // 데미지만큼 체력 감소
+
+            if (currentHealth <= 0)
+            {
+                Explode(); // 체력이 0 이하이면 사망 처리
+            }
+     }
+
+    public class BulletCollisionHandler : MonoBehaviour
+    {
+        public float damageAmount;
+        void OnTriggerEnter(Collider other)
         {
-            // 총알에 맞으면 폭발
-            Explode();
+            PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
+            if (playerHP != null)
+            {
+                playerHP.hp -= damageAmount; // 플레이어의 체력을 1 감소
+            }
         }
     }
+
 }

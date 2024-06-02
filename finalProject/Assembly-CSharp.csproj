@@ -66,17 +66,18 @@
     <Compile Include="Assets\Script\Creature\Ghost.cs" />
     <Compile Include="Assets\Script\Camera\MainCamera_Move.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Ghost_bullet.cs" />
+    <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_4.cs" />
     <Compile Include="Assets\Assets\Skull\Readme\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\Creature\Mummy.cs" />
     <Compile Include="Assets\Script\Bullet\BulletPool.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_freeze_effect.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_atkSlow_effect.cs" />
-    <Compile Include="Assets\Script\Bullet\Player\Player_Atk_3.cs" />
     <Compile Include="Assets\Script\Player\PlayerAI.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_3.cs" />
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
-    <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_4.cs" />
+    <Compile Include="Assets\Script\Player\PlayerHP.cs" />
+    <Compile Include="Assets\Script\UI\UI_playerHP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Wizards\Shader\PolyArtMaskTint.shader" />

@@ -10,7 +10,7 @@ public class PlayerLV : MonoBehaviour
     public int killsForNextLevel = 10; // 다음 레벨까지 필요한 킬 수
 
     // 능력치 상승 폭
-    public float fireRateIncrease = 0.2f;
+    public float fireRateIncrease = 0.8f;
     public float moveSpeedIncrease = 30f;
 
     public int projectileCountIncrease_1 = 1; // 발사체 개수 증가
@@ -101,6 +101,7 @@ public class PlayerLV : MonoBehaviour
         {
             case 0:
                 Player_Shooter_1.instance.IncreaseFireRate(fireRateIncrease);
+                Player_Shooter_4.instance.IncreaseFireRate(fireRateIncrease);
                 fireRateIncreaseCount++;
                 break;
             case 1:
