@@ -56,18 +56,20 @@
     <Analyzer Include="C:\Program Files\Microsoft Visual Studio\2022\Community\Common7\IDE\Extensions\Microsoft\Visual Studio Tools for Unity\Analyzers\Microsoft.Unity.Analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Script\Player\PlayerHP.cs" />
     <Compile Include="Assets\Script\Creature\Skull.cs" />
+    <Compile Include="Assets\Script\UI\UI_playerHP.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_1.cs" />
     <Compile Include="Assets\Script\Creature\CreatureHealth.cs" />
     <Compile Include="Assets\Script\Creature\Witch_freeze.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_2.cs" />
-    <Compile Include="Assets\Assets\Ghost\Scripts\GhostScript.cs" />
+    <Compile Include="Assets\Assets\Creatures\Ghost\Scripts\GhostScript.cs" />
     <Compile Include="Assets\Script\Creature\Witch_atkSlow.cs" />
     <Compile Include="Assets\Script\Creature\Ghost.cs" />
     <Compile Include="Assets\Script\Camera\MainCamera_Move.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Ghost_bullet.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_4.cs" />
-    <Compile Include="Assets\Assets\Skull\Readme\Scripts\Readme.cs" />
+    <Compile Include="Assets\Assets\Creatures\Skull\Readme\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\Creature\Mummy.cs" />
     <Compile Include="Assets\Script\Bullet\BulletPool.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_freeze_effect.cs" />
@@ -76,12 +78,13 @@
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_3.cs" />
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
-    <Compile Include="Assets\Script\Player\PlayerHP.cs" />
-    <Compile Include="Assets\Script\UI\UI_playerHP.cs" />
+    <Compile Include="Assets\Script\UI\UI_playerLV.cs" />
+    <Compile Include="Assets\Script\UI\UI_time.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Assets\Wizards\Shader\PolyArtMaskTint.shader" />
-    <None Include="Assets\Assets\Ghost\Documents\readme_txt.txt" />
+    <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
+    <None Include="Assets\Assets\UI\Font\_README.txt" />
+    <None Include="Assets\Assets\Creatures\Ghost\Documents\readme_txt.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

@@ -6,7 +6,7 @@ public class PlayerLV : MonoBehaviour
     public static PlayerLV instance;
 
     private static int creatureDeathCount = 0; // 죽은 크리처의 수
-    private int level = 0; // 현재 레벨
+    public int LV = 1; // 현재 레벨
     public int killsForNextLevel = 10; // 다음 레벨까지 필요한 킬 수
 
     // 능력치 상승 폭
@@ -65,10 +65,10 @@ public class PlayerLV : MonoBehaviour
 
     void LevelUp()
     {
-        level++;
+        LV++;
         creatureDeathCount -= killsForNextLevel; // 현재 킬 카운트에서 필요 킬 수만큼 빼줌
         killsForNextLevel += 0; // 다음 레벨업에 필요한 킬 수 증가
-        Debug.Log("Level Up! Current Level: " + level); // 레벨업 시 현재 레벨을 출력
+        Debug.Log("Level Up! Current Level: " + LV); // 레벨업 시 현재 레벨을 출력
         IncreaseRandomStat(); // 레벨업 시 랜덤 능력치 증가
     }
 

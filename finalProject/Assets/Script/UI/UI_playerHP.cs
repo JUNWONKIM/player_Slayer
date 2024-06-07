@@ -3,29 +3,20 @@ using UnityEngine.UI;
 
 public class UI_playerHP : MonoBehaviour
 {
-    public Text playerHPText; // UI Text 요소
-
-    private PlayerHP playerHP; // 플레이어의 HP를 관리하는 스크립트
+    public Slider healthSlider;
+    public PlayerHP playerHP;
 
     void Start()
     {
-        // 플레이어 오브젝트에서 PlayerHP 스크립트를 가져옴
-        playerHP = FindObjectOfType<PlayerHP>();
-
-        // 만약 PlayerHP 스크립트를 찾을 수 없으면 에러를 출력하고 스크립트를 비활성화
-        if (playerHP == null)
-        {
-            Debug.LogError("PlayerHP 스크립트를 찾을 수 없습니다!");
-            enabled = false;
-        }
+        // 최대 체력을 슬라이더의 최대 값으로 설정
+        healthSlider.maxValue = playerHP.max_hp;
+        // 현재 체력을 슬라이더의 초기 값으로 설정
+        healthSlider.value = playerHP.hp;
     }
 
     void Update()
     {
-        // UI Text 요소에 플레이어의 HP를 표시
-        if (playerHPText != null && playerHP != null)
-        {
-            playerHPText.text = "HP: " + playerHP.hp.ToString(); // HP 값을 문자열로 변환하여 표시
-        }
+        // 매 프레임마다 슬라이더의 값을 플레이어의 현재 체력으로 업데이트
+        healthSlider.value = playerHP.hp;
     }
 }
