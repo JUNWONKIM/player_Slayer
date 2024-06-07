@@ -66,7 +66,9 @@
     <Compile Include="Assets\Assets\Creatures\Ghost\Scripts\GhostScript.cs" />
     <Compile Include="Assets\Script\Creature\Witch_atkSlow.cs" />
     <Compile Include="Assets\Script\Creature\Ghost.cs" />
+    <Compile Include="Assets\Script\UI\UI_playerLV.cs" />
     <Compile Include="Assets\Script\Camera\MainCamera_Move.cs" />
+    <Compile Include="Assets\Script\UI\UI_time.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Ghost_bullet.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_4.cs" />
     <Compile Include="Assets\Assets\Creatures\Skull\Readme\Scripts\Readme.cs" />
@@ -78,8 +80,7 @@
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_3.cs" />
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
-    <Compile Include="Assets\Script\UI\UI_playerLV.cs" />
-    <Compile Include="Assets\Script\UI\UI_time.cs" />
+    <Compile Include="Assets\Script\UI\UI_selectCreature.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />

@@ -8,7 +8,7 @@ public class CreatureSpawner : MonoBehaviour
 
     private const string GroundTag = "ground";
     private const int LeftMouseButton = 0;
-    private int selectedCreature = 1;
+    public int selectedCreature = 1;
 
     void Update()
     {
