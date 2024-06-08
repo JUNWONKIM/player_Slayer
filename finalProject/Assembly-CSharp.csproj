@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Script\Player\PlayerHP.cs" />
+    <Compile Include="Assets\Script\UI\UI_selectCreature.cs" />
     <Compile Include="Assets\Script\Creature\Skull.cs" />
     <Compile Include="Assets\Script\UI\UI_playerHP.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_1.cs" />
@@ -80,7 +81,7 @@
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_3.cs" />
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
-    <Compile Include="Assets\Script\UI\UI_selectCreature.cs" />
+    <Compile Include="Assets\Script\UI\UI_cursor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
