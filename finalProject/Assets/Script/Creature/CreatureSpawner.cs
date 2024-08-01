@@ -1,4 +1,7 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CreatureSpawner : MonoBehaviour
 {
@@ -12,6 +15,8 @@ public class CreatureSpawner : MonoBehaviour
 
     private LineRenderer lineRenderer;
 
+    public UI_selectCreature[] uiButtons; // UI 버튼 스크립트 배열
+
     void Start()
     {
         lineRenderer = GetComponent<LineRenderer>();
@@ -23,11 +28,13 @@ public class CreatureSpawner : MonoBehaviour
         lineRenderer.startColor = Color.red;
         lineRenderer.endColor = Color.red;
     }
+
     public bool IsWithinSpawnRange(Vector3 position)
     {
         Vector3 playerPosition = playerPrefab.transform.position;
         return Vector3.Distance(playerPosition, position) <= spawnRange;
     }
+
     void Update()
     {
         HandleCreatureSelection();
@@ -85,16 +92,28 @@ public class CreatureSpawner : MonoBehaviour
     {
         if (index < creaturePrefabs.Length)
         {
-            GameObject creatureToSpawn = creaturePrefabs[index];
-            SpawnCreature(creatureToSpawn);
+            if (!uiButtons[index].IsOnCooldown())
+            {
+                GameObject creatureToSpawn = creaturePrefabs[index];
+                SpawnCreature(creatureToSpawn);
+
+                // 버튼의 쿨타임 시작
+                TriggerButtonCooldown(index);
+            }
         }
     }
 
     void SpawnRandomCreature()
     {
         int randomIndex = Random.Range(3, creaturePrefabs.Length);
-        GameObject creatureToSpawn = creaturePrefabs[randomIndex];
-        SpawnCreature(creatureToSpawn);
+        if (!uiButtons[randomIndex].IsOnCooldown())
+        {
+            GameObject creatureToSpawn = creaturePrefabs[randomIndex];
+            SpawnCreature(creatureToSpawn);
+
+            // 버튼의 쿨타임 시작
+            TriggerButtonCooldown(randomIndex);
+        }
     }
 
     void SpawnCreature(GameObject creaturePrefab)
@@ -113,6 +132,14 @@ public class CreatureSpawner : MonoBehaviour
                     Instantiate(creaturePrefab, spawnPosition, Quaternion.identity);
                 }
             }
+        }
+    }
+
+    void TriggerButtonCooldown(int index)
+    {
+        if (index < uiButtons.Length)
+        {
+            uiButtons[index].StartCooldown();
         }
     }
 }

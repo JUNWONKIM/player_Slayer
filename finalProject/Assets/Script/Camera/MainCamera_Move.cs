@@ -34,28 +34,28 @@ public class MainCamera_Move : MonoBehaviour
         transform.Translate(0, scroll * -zoomSpeed * Time.deltaTime, 0, Space.World);
 
 
-        // 마우스를 화면 끝으로 밀면 그 방향으로 이동
-       /* Vector3 mousePosition = Input.mousePosition;
-        Vector3 moveVector = Vector3.zero;
+        //// 마우스를 화면 끝으로 밀면 그 방향으로 이동
+        //Vector3 mousePosition = Input.mousePosition;
+        //Vector3 moveVector = Vector3.zero;
 
-        if (mousePosition.x < mouseBorderWidth) // 왼쪽으로 이동
-        {
-            moveVector -= right;
-        }
-        else if (mousePosition.x > Screen.width - mouseBorderWidth) // 오른쪽으로 이동
-        {
-            moveVector += right;
-        }
+        //if (mousePosition.x < mouseBorderWidth) // 왼쪽으로 이동
+        //{
+        //    moveVector -= right;
+        //}
+        //else if (mousePosition.x > Screen.width - mouseBorderWidth) // 오른쪽으로 이동
+        //{
+        //    moveVector += right;
+        //}
 
-        if (mousePosition.y < mouseBorderWidth) // 아래로 이동
-        {
-            moveVector -= forward;
-        }
-        else if (mousePosition.y > Screen.height - mouseBorderWidth) // 위로 이동
-        {
-            moveVector += forward;
-        }
+        //if (mousePosition.y < mouseBorderWidth) // 아래로 이동
+        //{
+        //    moveVector -= forward;
+        //}
+        //else if (mousePosition.y > Screen.height - mouseBorderWidth) // 위로 이동
+        //{
+        //    moveVector += forward;
+        //}
 
-        transform.Translate(moveVector.normalized * moveSpeed * Time.deltaTime, Space.World);*/
+        //transform.Translate(moveVector.normalized * moveSpeed * Time.deltaTime, Space.World);
     }
 }

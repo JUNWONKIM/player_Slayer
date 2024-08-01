@@ -145,12 +145,14 @@ public class Player_Shooter_1 : MonoBehaviour
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamage(damageAmount);
+                    Destroy(gameObject);
                 }
 
                 Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
                 if (enemyHealth2 != null)
                 {
                     enemyHealth2.TakeDamage(damageAmount);
+                    Destroy(gameObject);
                 }
             }
 

@@ -82,6 +82,11 @@
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_3.cs" />
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
+    <Compile Include="Assets\Assets\Tortoise Boss\Demo\CreateTransformAfter.cs" />
+    <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Assets\Tortoise Boss\Demo\Turtle_AnimationEvents.cs" />
+    <Compile Include="Assets\Assets\Tortoise Boss\Demo\AssetController.cs" />
+    <Compile Include="Assets\Script\Boss.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
