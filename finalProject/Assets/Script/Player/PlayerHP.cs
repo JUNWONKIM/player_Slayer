@@ -19,5 +19,9 @@ public class PlayerHP : MonoBehaviour
         
     }
 
-   
+    public void TakeDamage(float damage)
+    {
+        hp -= damage;
+        Debug.Log("Player HP: " + hp);
+    }
 }
