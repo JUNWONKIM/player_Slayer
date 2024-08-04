@@ -161,3 +161,4 @@ MonoBehaviour:
   moveSpeed: 10
   retreatDistance: 2
   retreatSpeed: 10
+  damageAmount: 1

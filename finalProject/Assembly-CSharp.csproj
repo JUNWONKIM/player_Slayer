@@ -79,6 +79,7 @@
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_4.cs" />
     <Compile Include="Assets\Assets\Creatures\Skull\Readme\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\Creature\Mummy.cs" />
+    <Compile Include="Assets\Script\Boss\ATK1.cs" />
     <Compile Include="Assets\Script\Bullet\BulletPool.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_freeze_effect.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_atkSlow_effect.cs" />
@@ -87,7 +88,7 @@
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Script\Boss\ATK1.cs" />
+    <Compile Include="Assets\Script\Boss\ATK2.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />

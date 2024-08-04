@@ -354,6 +354,7 @@
 "Assets/Assets/Tortoise Boss/Demo/CreateTransformAfter.cs"
 "Assets/Assets/Tortoise Boss/Demo/Turtle_AnimationEvents.cs"
 "Assets/Script/Boss/ATK1.cs"
+"Assets/Script/Boss/ATK2.cs"
 "Assets/Script/Boss/Boss.cs"
 "Assets/Script/Bullet/BulletPool.cs"
 "Assets/Script/Bullet/Creature/Ghost_bullet.cs"

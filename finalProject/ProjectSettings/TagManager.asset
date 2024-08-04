@@ -9,7 +9,6 @@ TagManager:
   - Creature
   - C_Bullet
   - Enemy
-  - Mummy
   - Slow
   - Freeze
   layers:
