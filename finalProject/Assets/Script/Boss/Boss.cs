@@ -10,7 +10,10 @@ public class Boss : MonoBehaviour
     public float rotationSpeed = 5.0f; // 보스가 회전할 속도
     public GameObject atk1Prefab; // ATK1 프리팹
     public GameObject replacementPrefab; // 교체할 프리팹
+    public GameObject firePrefab; // 보스가 이동한 자리에 남길 불 프리팹
+    public float keepDistance = 5.0f; // 플레이어와 유지할 최소 거리
     private bool isAttacking = false; // 보스가 공격 중인지 여부
+    private bool isControlled = false; // 보스가 플레이어에 의해 제어되는지 여부
     private Animator animator; // 애니메이터 컴포넌트
 
     void Start()
@@ -20,19 +23,24 @@ public class Boss : MonoBehaviour
 
     void Update()
     {
-        // 공격 중일 때는 이동하지 않음
-        if (isAttacking)
+        // 공격 중이거나 플레이어에 의해 제어되는 중일 때는 이동하지 않음
+        if (isAttacking || isControlled)
             return;
 
-        // 플레이어를 향해 다가가기
-        Vector3 direction = (player.position - transform.position).normalized;
+        // 플레이어와의 거리 확인
+        float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+        if (distanceToPlayer > keepDistance)
+        {
+            // 플레이어를 향해 다가가기
+            Vector3 direction = (player.position - transform.position).normalized;
 
-        // 플레이어를 바라보기
-        Quaternion lookRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+            // 플레이어를 바라보기
+            Quaternion lookRotation = Quaternion.LookRotation(direction);
+            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
 
-        // 플레이어를 향해 이동하기
-        transform.position += transform.forward * speed * Time.deltaTime;
+            // 플레이어를 향해 이동하기
+            transform.position += transform.forward * speed * Time.deltaTime;
+        }
 
         // Z 키를 눌렀을 때 공격 시작
         if (Input.GetKeyDown(KeyCode.Z))
@@ -44,6 +52,12 @@ public class Boss : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.X))
         {
             StartCoroutine(ReplaceClosestCreatures());
+        }
+
+        // C 키를 눌렀을 때 10초 동안 플레이어에 의해 제어
+        if (Input.GetKeyDown(KeyCode.C))
+        {
+            StartCoroutine(ControlBoss());
         }
     }
 
@@ -72,6 +86,8 @@ public class Boss : MonoBehaviour
 
     IEnumerator ReplaceClosestCreatures()
     {
+        isAttacking = true;
+
         // 애니메이션 트리거 설정
         animator.SetTrigger("ATK2");
 
@@ -110,5 +126,65 @@ public class Boss : MonoBehaviour
         speed = originalSpeed;
         rotationSpeed = originalRotationSpeed;
         animator.ResetTrigger("ATK2");
+
+        isAttacking = false;
+    }
+
+    IEnumerator ControlBoss()
+    {
+        isControlled = true;
+        float originalSpeed = speed;
+        float originalRotationSpeed = rotationSpeed;
+        float controlSpeed = 20.0f; // 플레이어가 제어할 때 보스의 속도
+        float controlRotationSpeed = 720.0f; // 플레이어가 제어할 때 보스의 회전 속도
+
+        // 애니메이터의 속도를 2배로 설정
+        float originalAnimatorSpeed = animator.speed;
+        animator.speed = 2.0f;
+
+        float startTime = Time.time;
+        while (Time.time - startTime < 10.0f)
+        {
+            // 방향키로 보스 제어
+            float moveHorizontal = Input.GetAxis("Boss_Horizontal");
+            float moveVertical = Input.GetAxis("Boss_Vertical");
+
+            Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
+
+            // 현재 위치와 이동 방향 계산
+            Vector3 newPosition = transform.position + movement * controlSpeed * Time.deltaTime;
+
+            // 플레이어와의 거리 확인
+            float distanceToPlayer = Vector3.Distance(newPosition, player.position);
+            if (distanceToPlayer <= keepDistance)
+            {
+                // 플레이어 반대편으로 순간이동
+                Vector3 directionToPlayer = (newPosition - player.position).normalized;
+                newPosition = player.position + directionToPlayer * keepDistance;
+            }
+
+            // 보스 위치 업데이트
+            transform.position = newPosition;
+
+            // 이동 방향으로 보스 회전
+            if (movement != Vector3.zero)
+            {
+                Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
+                transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, controlRotationSpeed * Time.deltaTime);
+            }
+
+            // 보스가 이동한 자리에 불 프리팹 생성
+            Instantiate(firePrefab, transform.position, Quaternion.identity);
+
+            yield return null;
+        }
+
+        // 애니메이터 속도를 원래대로 복구
+        animator.speed = originalAnimatorSpeed;
+
+        // 원래 상태로 돌아가기
+        speed = originalSpeed;
+        rotationSpeed = originalRotationSpeed;
+        isControlled = false;
     }
 }

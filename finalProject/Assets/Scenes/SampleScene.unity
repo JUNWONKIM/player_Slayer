@@ -3822,7 +3822,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.5735764, y: 0, z: 0, w: 0.8191521}
-  m_LocalPosition: {x: 3.1, y: 74.38, z: -37.42}
+  m_LocalPosition: {x: 3.1, y: 100, z: -37.42}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8687,6 +8687,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 5352958571237849345}
+    - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
+      propertyPath: firePrefab
+      value: 
+      objectReference: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
+    - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
+      propertyPath: keepDistance
+      value: 50
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
 --- !u!1 &5352958571237849337 stripped
