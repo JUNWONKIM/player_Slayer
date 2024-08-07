@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.UI; // UI 관련 클래스
 
 public class Boss : MonoBehaviour
 {
@@ -9,16 +10,23 @@ public class Boss : MonoBehaviour
     public float speed = 5.0f; // 보스가 이동할 속도
     public float rotationSpeed = 5.0f; // 보스가 회전할 속도
     public GameObject atk1Prefab; // ATK1 프리팹
-    public GameObject replacementPrefab; // 교체할 프리팹
-    public GameObject firePrefab; // 보스가 이동한 자리에 남길 불 프리팹
+    public GameObject atk2Prefab; // 교체할 프리팹
+    public GameObject atk3Prefab; // 보스가 이동한 자리에 남길 불 프리팹
     public float keepDistance = 5.0f; // 플레이어와 유지할 최소 거리
     private bool isAttacking = false; // 보스가 공격 중인지 여부
     private bool isControlled = false; // 보스가 플레이어에 의해 제어되는지 여부
     private Animator animator; // 애니메이터 컴포넌트
+    public Slider uiSlider; // UISliderController에서 가져온 Slider 컴포넌트
 
     void Start()
     {
         animator = GetComponent<Animator>();
+
+        // 슬라이더를 처음에 비활성화 상태로 설정
+        if (uiSlider != null)
+        {
+            uiSlider.gameObject.SetActive(false);
+        }
     }
 
     void Update()
@@ -58,6 +66,11 @@ public class Boss : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.C))
         {
             StartCoroutine(ControlBoss());
+            if (uiSlider != null)
+            {
+                uiSlider.gameObject.SetActive(true); // 슬라이더를 활성화
+                StartCoroutine(StartSliderCountdown()); // 슬라이더의 값을 줄이기 시작
+            }
         }
     }
 
@@ -115,7 +128,7 @@ public class Boss : MonoBehaviour
             Vector3 position = closestCreature.transform.position;
             Quaternion rotation = closestCreature.transform.rotation;
             Destroy(closestCreature);
-            Instantiate(replacementPrefab, position, rotation);
+            Instantiate(atk2Prefab, position, rotation);
         }
 
         // 애니메이션이 끝날 때까지 기다림
@@ -138,12 +151,11 @@ public class Boss : MonoBehaviour
         float controlSpeed = 20.0f; // 플레이어가 제어할 때 보스의 속도
         float controlRotationSpeed = 720.0f; // 플레이어가 제어할 때 보스의 회전 속도
 
-        // 애니메이터의 속도를 2배로 설정
-        float originalAnimatorSpeed = animator.speed;
-        animator.speed = 2.0f;
+        float lastFireTime = Time.time;
+        float controlDuration = 10.0f; // 제어 시간 10초
+        float controlEndTime = Time.time + controlDuration;
 
-        float startTime = Time.time;
-        while (Time.time - startTime < 10.0f)
+        while (Time.time < controlEndTime)
         {
             // 방향키로 보스 제어
             float moveHorizontal = Input.GetAxis("Boss_Horizontal");
@@ -151,40 +163,65 @@ public class Boss : MonoBehaviour
 
             Vector3 movement = new Vector3(moveHorizontal, 0.0f, moveVertical).normalized;
 
-            // 현재 위치와 이동 방향 계산
-            Vector3 newPosition = transform.position + movement * controlSpeed * Time.deltaTime;
-
-            // 플레이어와의 거리 확인
-            float distanceToPlayer = Vector3.Distance(newPosition, player.position);
-            if (distanceToPlayer <= keepDistance)
-            {
-                // 플레이어 반대편으로 순간이동
-                Vector3 directionToPlayer = (newPosition - player.position).normalized;
-                newPosition = player.position + directionToPlayer * keepDistance;
-            }
-
-            // 보스 위치 업데이트
-            transform.position = newPosition;
-
-            // 이동 방향으로 보스 회전
             if (movement != Vector3.zero)
             {
+                // 보스 위치 업데이트
+                transform.position += movement * controlSpeed * Time.deltaTime;
+
+                // 이동 방향으로 보스 회전
                 Quaternion toRotation = Quaternion.LookRotation(movement, Vector3.up);
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, controlRotationSpeed * Time.deltaTime);
-            }
 
-            // 보스가 이동한 자리에 불 프리팹 생성
-            Instantiate(firePrefab, transform.position, Quaternion.identity);
+                // 애니메이션 트리거 설정
+                animator.ResetTrigger("isIdle");
+                animator.SetTrigger("isRun");
+
+                // 1초마다 불 프리팹 생성
+                if (Time.time - lastFireTime >= 0.1f)
+                {
+                    Vector3 firePosition = transform.position - transform.forward * 20f; // 보스 뒤쪽에 불 생성
+                    Instantiate(atk3Prefab, firePosition, Quaternion.identity);
+                    lastFireTime = Time.time;
+                }
+            }
+            else
+            {
+                // 이동하지 않으면 Idle 상태로 변경
+                animator.ResetTrigger("isRun");
+                animator.SetTrigger("isIdle");
+            }
 
             yield return null;
         }
 
-        // 애니메이터 속도를 원래대로 복구
-        animator.speed = originalAnimatorSpeed;
+        // 애니메이션 트리거를 모두 false로 설정
+        animator.ResetTrigger("isRun");
+        animator.ResetTrigger("isIdle");
 
         // 원래 상태로 돌아가기
         speed = originalSpeed;
         rotationSpeed = originalRotationSpeed;
         isControlled = false;
+    }
+
+    private IEnumerator StartSliderCountdown()
+    {
+        // 슬라이더를 활성화하고 값 줄이기 시작
+        uiSlider.gameObject.SetActive(true);
+        uiSlider.value = 1.0f; // 슬라이더를 꽉 찬 상태로 설정
+
+        float startTime = Time.time;
+
+        while (Time.time < startTime + 10.0f) // 10초 동안 슬라이더 값을 줄임
+        {
+            uiSlider.value = Mathf.Lerp(1.0f, 0.0f, (Time.time - startTime) / 10.0f);
+            yield return null;
+        }
+
+        // 슬라이더가 완전히 빈 상태로 설정
+        uiSlider.value = 0.0f;
+
+        // 슬라이더의 게임 오브젝트를 비활성화
+        uiSlider.gameObject.SetActive(false);
     }
 }

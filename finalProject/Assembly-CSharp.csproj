@@ -89,6 +89,10 @@
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Script\Boss\ATK3.cs" />
+    <Compile Include="Assets\Script\Boss\ATK3_1.cs" />
+    <Compile Include="Assets\Script\Player\PlayerBurn.cs" />
+    <Compile Include="Assets\Script\UI\UI_ATK3_cooldown.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
