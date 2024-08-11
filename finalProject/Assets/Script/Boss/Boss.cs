@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
-using UnityEngine.UI; // UI 관련 클래스
+using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
@@ -12,7 +12,9 @@ public class Boss : MonoBehaviour
     public GameObject atk1Prefab; // ATK1 프리팹
     public GameObject atk2Prefab; // 교체할 프리팹
     public GameObject atk3Prefab; // 보스가 이동한 자리에 남길 불 프리팹
+    public GameObject atk0Prefab; // 폭탄 프리팹
     public float keepDistance = 5.0f; // 플레이어와 유지할 최소 거리
+    public float attackRange = 3.0f; // 폭탄 공격을 할 거리
     private bool isAttacking = false; // 보스가 공격 중인지 여부
     private bool isControlled = false; // 보스가 플레이어에 의해 제어되는지 여부
     private Animator animator; // 애니메이터 컴포넌트
@@ -37,6 +39,7 @@ public class Boss : MonoBehaviour
 
         // 플레이어와의 거리 확인
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
+
         if (distanceToPlayer > keepDistance)
         {
             // 플레이어를 향해 다가가기
@@ -48,6 +51,12 @@ public class Boss : MonoBehaviour
 
             // 플레이어를 향해 이동하기
             transform.position += transform.forward * speed * Time.deltaTime;
+        }
+
+        // 플레이어와의 거리가 공격 범위 이내일 경우 기본 공격 실행
+        if (distanceToPlayer <= attackRange && !isAttacking && !Input.GetKey(KeyCode.Z) && !Input.GetKey(KeyCode.X) && !Input.GetKey(KeyCode.C))
+        {
+            StartCoroutine(BasicAttack());
         }
 
         // Z 키를 눌렀을 때 공격 시작
@@ -73,6 +82,35 @@ public class Boss : MonoBehaviour
             }
         }
     }
+
+    IEnumerator BasicAttack()
+    {
+        if (isAttacking) yield break; // 이미 공격 중이면 실행되지 않도록 함
+
+        isAttacking = true;
+
+        // 애니메이션 트리거 설정
+        animator.SetBool("ATK0", true);
+
+        // 보스가 멈추도록 속도 설정
+        float originalSpeed = speed;
+        speed = 0;
+
+        // 애니메이션 길이만큼 대기
+        float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
+        yield return new WaitForSeconds(animationLength);
+
+        // 폭탄을 플레이어 위치에 생성
+        Instantiate(atk0Prefab, player.position, Quaternion.identity);
+
+        // 애니메이션 종료
+        animator.SetBool("ATK0", false);
+
+        // 원래 속도로 복귀
+        speed = originalSpeed;
+        isAttacking = false;
+    }
+
 
     IEnumerator Attack()
     {

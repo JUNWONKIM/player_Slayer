@@ -353,6 +353,7 @@
 "Assets/Assets/Tortoise Boss/Demo/CameraController/Scripts/CameraController.cs"
 "Assets/Assets/Tortoise Boss/Demo/CreateTransformAfter.cs"
 "Assets/Assets/Tortoise Boss/Demo/Turtle_AnimationEvents.cs"
+"Assets/Script/Boss/ATK0.cs"
 "Assets/Script/Boss/ATK1.cs"
 "Assets/Script/Boss/ATK2.cs"
 "Assets/Script/Boss/ATK3.cs"

@@ -8986,6 +8986,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 4867106674023615435, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
     - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
       propertyPath: player
       value: 
@@ -8995,6 +8999,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1214243798}
     - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
+      propertyPath: atk0Prefab
+      value: 
+      objectReference: {fileID: 7815819902453335873, guid: 3a8776d65b1cc5543bf62c52dc72081a, type: 3}
+    - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
       propertyPath: atk2Prefab
       value: 
       objectReference: {fileID: 5498239063110878189, guid: 70988b631e25e73428425eaa7ca6575f, type: 3}
@@ -9003,9 +9011,17 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
     - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
+      propertyPath: bombPrefab
+      value: 
+      objectReference: {fileID: 7815819902453335873, guid: 3a8776d65b1cc5543bf62c52dc72081a, type: 3}
+    - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
       propertyPath: firePrefab
       value: 
       objectReference: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
+    - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
+      propertyPath: attackRange
+      value: 50
+      objectReference: {fileID: 0}
     - target: {fileID: 4867106674078933978, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
       propertyPath: keepDistance
       value: 50
