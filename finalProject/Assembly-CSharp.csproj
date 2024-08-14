@@ -66,6 +66,7 @@
     <Compile Include="Assets\Script\Creature\Witch_freeze.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_2.cs" />
     <Compile Include="Assets\Script\Boss\ATK2.cs" />
+    <Compile Include="Assets\Script\Player\PlayerPortal.cs" />
     <Compile Include="Assets\Assets\Creatures\Ghost\Scripts\GhostScript.cs" />
     <Compile Include="Assets\Script\Boss\ATK3_1.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\AssetController.cs" />
@@ -74,8 +75,9 @@
     <Compile Include="Assets\Script\Boss\Boss.cs" />
     <Compile Include="Assets\Script\Player\PlayerBurn.cs" />
     <Compile Include="Assets\Script\Creature\Ghost.cs" />
+    <Compile Include="Assets\Script\Boss\ATK0.cs" />
     <Compile Include="Assets\Script\UI\UI_playerLV.cs" />
-    <Compile Include="Assets\Script\Camera\MainCamera_Move.cs" />
+    <Compile Include="Assets\Script\Bullet\Camera\MainCamera_Move.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\Turtle_AnimationEvents.cs" />
     <Compile Include="Assets\Script\UI\UI_time.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Ghost_bullet.cs" />
@@ -93,7 +95,7 @@
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Script\Boss\ATK0.cs" />
+    <Compile Include="Assets\Script\Player\Portal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />

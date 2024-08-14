@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
@@ -9,10 +9,12 @@ public class Boss : MonoBehaviour
     public Transform player; // 플레이어의 위치를 저장할 변수
     public float speed = 5.0f; // 보스가 이동할 속도
     public float rotationSpeed = 5.0f; // 보스가 회전할 속도
+
+    public GameObject atk0Prefab; // 폭탄 프리팹
     public GameObject atk1Prefab; // ATK1 프리팹
     public GameObject atk2Prefab; // 교체할 프리팹
     public GameObject atk3Prefab; // 보스가 이동한 자리에 남길 불 프리팹
-    public GameObject atk0Prefab; // 폭탄 프리팹
+
     public float keepDistance = 5.0f; // 플레이어와 유지할 최소 거리
     public float attackRange = 3.0f; // 폭탄 공격을 할 거리
     private bool isAttacking = false; // 보스가 공격 중인지 여부
@@ -24,55 +26,51 @@ public class Boss : MonoBehaviour
     {
         animator = GetComponent<Animator>();
 
-        // 슬라이더를 처음에 비활성화 상태로 설정
-        if (uiSlider != null)
-        {
-            uiSlider.gameObject.SetActive(false);
-        }
+       
     }
 
     void Update()
     {
-        // 공격 중이거나 플레이어에 의해 제어되는 중일 때는 이동하지 않음
-        if (isAttacking || isControlled)
-            return;
-
         // 플레이어와의 거리 확인
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (distanceToPlayer > keepDistance)
+        // 공격 중이거나 플레이어에 의해 제어되는 중일 때는 이동하지 않음
+        if (!isAttacking && !isControlled)
         {
-            // 플레이어를 향해 다가가기
-            Vector3 direction = (player.position - transform.position).normalized;
+            if (distanceToPlayer > keepDistance)
+            {
+                // 플레이어를 향해 다가가기
+                Vector3 direction = (player.position - transform.position).normalized;
 
-            // 플레이어를 바라보기
-            Quaternion lookRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+                // 플레이어를 바라보기
+                Quaternion lookRotation = Quaternion.LookRotation(direction);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
 
-            // 플레이어를 향해 이동하기
-            transform.position += transform.forward * speed * Time.deltaTime;
-        }
+                // 플레이어를 향해 이동하기
+                transform.position += transform.forward * speed * Time.deltaTime;
+            }
 
-        // 플레이어와의 거리가 공격 범위 이내일 경우 기본 공격 실행
-        if (distanceToPlayer <= attackRange && !isAttacking && !Input.GetKey(KeyCode.Z) && !Input.GetKey(KeyCode.X) && !Input.GetKey(KeyCode.C))
-        {
-            StartCoroutine(BasicAttack());
+            // 플레이어와의 거리가 공격 범위 이내일 경우 기본 공격 실행
+            if (distanceToPlayer <= attackRange && !Input.GetKey(KeyCode.Z) && !Input.GetKey(KeyCode.X) && !Input.GetKey(KeyCode.C))
+            {
+                StartCoroutine(BasicAttack());
+            }
         }
 
         // Z 키를 눌렀을 때 공격 시작
-        if (Input.GetKeyDown(KeyCode.Z))
+        if (Input.GetKeyDown(KeyCode.Z) && !isAttacking)
         {
             StartCoroutine(Attack());
         }
 
         // X 키를 눌렀을 때 가장 가까운 Creature 프리팹을 교체
-        if (Input.GetKeyDown(KeyCode.X))
+        if (Input.GetKeyDown(KeyCode.X) && !isAttacking)
         {
             StartCoroutine(ReplaceClosestCreatures());
         }
 
         // C 키를 눌렀을 때 10초 동안 플레이어에 의해 제어
-        if (Input.GetKeyDown(KeyCode.C))
+        if (Input.GetKeyDown(KeyCode.C) && !isAttacking)
         {
             StartCoroutine(ControlBoss());
             if (uiSlider != null)
@@ -85,10 +83,6 @@ public class Boss : MonoBehaviour
 
     IEnumerator BasicAttack()
     {
-        if (isAttacking) yield break; // 이미 공격 중이면 실행되지 않도록 함
-
-        isAttacking = true;
-
         // 애니메이션 트리거 설정
         animator.SetBool("ATK0", true);
 
@@ -108,9 +102,7 @@ public class Boss : MonoBehaviour
 
         // 원래 속도로 복귀
         speed = originalSpeed;
-        isAttacking = false;
     }
-
 
     IEnumerator Attack()
     {
@@ -184,6 +176,8 @@ public class Boss : MonoBehaviour
     IEnumerator ControlBoss()
     {
         isControlled = true;
+        isAttacking = true;
+
         float originalSpeed = speed;
         float originalRotationSpeed = rotationSpeed;
         float controlSpeed = 20.0f; // 플레이어가 제어할 때 보스의 속도
@@ -240,6 +234,7 @@ public class Boss : MonoBehaviour
         speed = originalSpeed;
         rotationSpeed = originalRotationSpeed;
         isControlled = false;
+        isAttacking = false;
     }
 
     private IEnumerator StartSliderCountdown()

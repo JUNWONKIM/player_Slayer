@@ -11,6 +11,7 @@ TagManager:
   - Enemy
   - Slow
   - Freeze
+  - Boss
   layers:
   - Default
   - TransparentFX
