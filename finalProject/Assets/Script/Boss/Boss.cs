@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
-    public Transform player; // 플레이어의 위치를 저장할 변수
+    
     public float speed = 5.0f; // 보스가 이동할 속도
     public float rotationSpeed = 5.0f; // 보스가 회전할 속도
 
@@ -14,19 +14,21 @@ public class Boss : MonoBehaviour
     public GameObject atk1Prefab; // ATK1 프리팹
     public GameObject atk2Prefab; // 교체할 프리팹
     public GameObject atk3Prefab; // 보스가 이동한 자리에 남길 불 프리팹
+    public Slider uiSlider; // UISliderController에서 가져온 Slider 컴포넌트
 
-    public float keepDistance = 5.0f; // 플레이어와 유지할 최소 거리
     public float attackRange = 3.0f; // 폭탄 공격을 할 거리
+
+    private Transform player; // 플레이어의 위치를 저장할 변수
     private bool isAttacking = false; // 보스가 공격 중인지 여부
     private bool isControlled = false; // 보스가 플레이어에 의해 제어되는지 여부
     private Animator animator; // 애니메이터 컴포넌트
-    public Slider uiSlider; // UISliderController에서 가져온 Slider 컴포넌트
+    
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        player = GameObject.FindGameObjectWithTag("Player").transform;
 
-       
     }
 
     void Update()
@@ -37,7 +39,7 @@ public class Boss : MonoBehaviour
         // 공격 중이거나 플레이어에 의해 제어되는 중일 때는 이동하지 않음
         if (!isAttacking && !isControlled)
         {
-            if (distanceToPlayer > keepDistance)
+            if (distanceToPlayer > attackRange)
             {
                 // 플레이어를 향해 다가가기
                 Vector3 direction = (player.position - transform.position).normalized;
@@ -54,6 +56,7 @@ public class Boss : MonoBehaviour
             if (distanceToPlayer <= attackRange && !Input.GetKey(KeyCode.Z) && !Input.GetKey(KeyCode.X) && !Input.GetKey(KeyCode.C))
             {
                 StartCoroutine(BasicAttack());
+                Debug.Log(isAttacking);
             }
         }
 
@@ -83,6 +86,9 @@ public class Boss : MonoBehaviour
 
     IEnumerator BasicAttack()
     {
+        // 공격 중임을 표시
+        isAttacking = true;
+
         // 애니메이션 트리거 설정
         animator.SetBool("ATK0", true);
 
@@ -92,17 +98,24 @@ public class Boss : MonoBehaviour
 
         // 애니메이션 길이만큼 대기
         float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(animationLength);
+        yield return new WaitForSeconds(animationLength / 2); // 애니메이션의 절반 시점에 공격 생성
 
-        // 폭탄을 플레이어 위치에 생성
-        Instantiate(atk0Prefab, player.position, Quaternion.identity);
+        // 현재 플레이어 위치에 폭탄을 생성
+        Vector3 attackPosition = player.position;
+        Instantiate(atk0Prefab, attackPosition, Quaternion.identity);
 
-        // 애니메이션 종료
+        // 애니메이션 종료 후 나머지 대기 시간
+        yield return new WaitForSeconds(animationLength / 2);
         animator.SetBool("ATK0", false);
 
         // 원래 속도로 복귀
         speed = originalSpeed;
+
+      
+        isAttacking = false;
+        
     }
+
 
     IEnumerator Attack()
     {

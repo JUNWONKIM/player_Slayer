@@ -88,6 +88,7 @@
     <Compile Include="Assets\Script\UI\UI_ATK3_cooldown.cs" />
     <Compile Include="Assets\Script\Bullet\BulletPool.cs" />
     <Compile Include="Assets\Script\Boss\ATK3.cs" />
+    <Compile Include="Assets\Script\Player\Portal.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_freeze_effect.cs" />
     <Compile Include="Assets\Script\Bullet\Creature\Witch_atkSlow_effect.cs" />
     <Compile Include="Assets\Script\Player\PlayerAI.cs" />
@@ -95,7 +96,6 @@
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Script\Player\Portal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
