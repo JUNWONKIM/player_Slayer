@@ -2946,8 +2946,8 @@ GameObject:
   - component: {fileID: 6603191085348615264}
   - component: {fileID: 6603191085348615265}
   - component: {fileID: 6603191085348615266}
-  - component: {fileID: 6603191085348615571}
   - component: {fileID: 6603191085348615267}
+  - component: {fileID: 6603191085348615571}
   - component: {fileID: 6603191085348615573}
   - component: {fileID: 6603191085348615273}
   - component: {fileID: 6603191085348615268}
@@ -3033,6 +3033,23 @@ CapsuleCollider:
   m_Height: 1.6804923
   m_Direction: 1
   m_Center: {x: 0, y: 0.7740483, z: 0}
+--- !u!114 &6603191085348615267
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6603191085348615574}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d59196f17d94fed43834fc7c175ef1d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 100
+  slowSpeed: 2
+  isFreezed: 0
+  avoidanceDistance: 3
+  bulletDetectionRange: 20
 --- !u!114 &6603191085348615571
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3057,23 +3074,6 @@ MonoBehaviour:
   damageIncrease_3: 1
   projectileCountIncrease_4: 3
   damageIncrease_4: 1
---- !u!114 &6603191085348615267
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6603191085348615574}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d59196f17d94fed43834fc7c175ef1d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 100
-  slowSpeed: 2
-  isFreezed: 0
-  avoidanceDistance: 3
-  bulletDetectionRange: 20
 --- !u!114 &6603191085348615573
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3115,7 +3115,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f67310c82064cf429bd494d9a1c9e12, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  boss: {fileID: 6795789570079456782, guid: 097a41ee71b4aaf4cbf8150f4ba74ccf, type: 3}
   portalPrefab: {fileID: 4752457369876416285, guid: 48f5732b441e21b4ab3beeed538aae66, type: 3}
   distanceToSpawnPortal: 70
   portalOffset: 20
