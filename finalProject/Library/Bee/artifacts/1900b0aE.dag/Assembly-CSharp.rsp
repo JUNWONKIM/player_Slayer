@@ -371,6 +371,7 @@
 "Assets/Script/Creature/Skull.cs"
 "Assets/Script/Creature/Witch_atkSlow.cs"
 "Assets/Script/Creature/Witch_freeze.cs"
+"Assets/Script/Ground/Ground.cs"
 "Assets/Script/Player/PlayerAI.cs"
 "Assets/Script/Player/PlayerBurn.cs"
 "Assets/Script/Player/PlayerHP.cs"

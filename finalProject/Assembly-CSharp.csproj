@@ -66,6 +66,8 @@
     <Compile Include="Assets\Script\Creature\Witch_freeze.cs" />
     <Compile Include="Assets\Script\Player\Shooter\Player_Shooter_2.cs" />
     <Compile Include="Assets\Script\Boss\ATK2.cs" />
+    <Compile Include="Assets\Script\UI\UI_CameraButton.cs" />
+    <Compile Include="Assets\Script\Ground\Ground.cs" />
     <Compile Include="Assets\Script\Player\PlayerPortal.cs" />
     <Compile Include="Assets\Assets\Creatures\Ghost\Scripts\GhostScript.cs" />
     <Compile Include="Assets\Script\Boss\ATK3_1.cs" />
@@ -96,7 +98,6 @@
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Script\UI\UI_CameraButton.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
