@@ -388,6 +388,7 @@
 "Assets/Script/UI/UI_playerHP.cs"
 "Assets/Script/UI/UI_playerLV.cs"
 "Assets/Script/UI/UI_selectCreature.cs"
+"Assets/Script/UI/UI_SoundManager.cs"
 "Assets/Script/UI/UI_time.cs"
 -langversion:9.0
 

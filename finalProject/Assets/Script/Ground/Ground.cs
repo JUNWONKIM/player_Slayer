@@ -7,6 +7,7 @@ public class Ground : MonoBehaviour
     public float tileSize = 50f; // 땅 타일의 크기
     public float tileSpacing = 125f; // 타일 간의 간격
     public int viewDistance = 5; // 플레이어 주변에 생성될 타일의 범위
+    public Transform tilesParent; // 타일을 자식으로 넣을 부모 오브젝트
 
     private Dictionary<Vector2, GameObject> terrainTiles = new Dictionary<Vector2, GameObject>();
     private Transform playerTransform;
@@ -93,6 +94,10 @@ public class Ground : MonoBehaviour
 
         // 타일의 위치와 회전을 고정된 값으로 설정
         GameObject newTile = Instantiate(groundTilePrefab, tilePosition, Quaternion.identity);
+
+        // 타일의 부모를 설정
+        newTile.transform.parent = tilesParent;
+
         newTile.transform.localScale = new Vector3(tileSize, 1, tileSize);
 
         // 타일 딕셔너리에 추가

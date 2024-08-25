@@ -98,10 +98,12 @@
     <Compile Include="Assets\Script\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Script\UI\UI_SoundManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
     <None Include="Assets\Assets\UI\Font\_README.txt" />
+    <None Include="Assets\Assets\Sound\BackGround\ReadMe.txt" />
     <None Include="Assets\Assets\Creatures\Ghost\Documents\readme_txt.txt" />
   </ItemGroup>
   <ItemGroup>

@@ -24,10 +24,7 @@ public class PlayerPortal : MonoBehaviour
         {
             boss = bossObject.transform;
         }
-        else
-        {
-            Debug.LogError("Boss object with tag 'Boss' not found.");
-        }
+        
     }
 
     void Update()

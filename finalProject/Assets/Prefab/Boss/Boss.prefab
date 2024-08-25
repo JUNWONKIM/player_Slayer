@@ -4971,7 +4971,7 @@ MonoBehaviour:
   atk1Prefab: {fileID: 4029471372576940257}
   atk2Prefab: {fileID: 5498239063110878189, guid: 70988b631e25e73428425eaa7ca6575f, type: 3}
   atk3Prefab: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
-  uiSlider: {fileID: 0}
+  uiSlider: {fileID: 550025859278805458, guid: 3a2081c416d5ccb428661107056cc020, type: 3}
   attackRange: 60
 --- !u!65 &3526098398205370511
 BoxCollider:

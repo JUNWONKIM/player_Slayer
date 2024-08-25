@@ -34,8 +34,6 @@ public class Mummy : MonoBehaviour
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-      
-
         if (distanceToPlayer <= explodeRange)
         {
             // 플레이어와의 거리가 폭발 범위 안에 들어오면
@@ -113,30 +111,24 @@ public class Mummy : MonoBehaviour
     void Explode()
     {
         // 폭발 효과 생성
-        GameObject explosion = Instantiate(explosionPrefab, transform.position, transform.rotation);
+        Instantiate(explosionPrefab, transform.position, transform.rotation);
         PlayerLV.IncrementCreatureDeathCount();
         // 미라 제거
         Destroy(gameObject);
-
-        
-
-        BulletCollisionHandler collisionHandler = explosion.AddComponent<BulletCollisionHandler>();
-        collisionHandler.damageAmount = damageAmount;
     }
 
     // 이펙트와의 충돌 처리
-    
+
 
     public void TakeDamage(float amount)
     {
+        currentHealth -= amount; // 데미지만큼 체력 감소
 
-            currentHealth -= amount; // 데미지만큼 체력 감소
-
-            if (currentHealth <= 0)
-            {
-                Explode(); // 체력이 0 이하이면 사망 처리
-            }
-     }
+        if (currentHealth <= 0)
+        {
+            Explode(); // 체력이 0 이하이면 사망 처리
+        }
+    }
 
     public class BulletCollisionHandler : MonoBehaviour
     {
@@ -146,9 +138,8 @@ public class Mummy : MonoBehaviour
             PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
             if (playerHP != null)
             {
-                playerHP.hp -= damageAmount; // 플레이어의 체력을 1 감소
+                playerHP.hp -= damageAmount; // 플레이어의 체력을 감소
             }
         }
     }
-
 }

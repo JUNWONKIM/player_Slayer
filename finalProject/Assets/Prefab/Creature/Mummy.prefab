@@ -286,5 +286,6 @@ MonoBehaviour:
   explodeRange: 5
   explosionPrefab: {fileID: 6287953604210959080, guid: 5156d6689efbccb4991059f3a5755566, type: 3}
   chaseDuration: 2
+  damageAmount: 1
   maxHealth: 100
   currentHealth: 0
