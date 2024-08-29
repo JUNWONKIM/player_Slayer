@@ -5,14 +5,14 @@ using UnityEngine;
 public class Player_Shooter_4 : MonoBehaviour
 {
     public static Player_Shooter_4 instance;
-    
+
     public GameObject bulletPrefab; // 탄환 프리팹
     public Transform firePoint; // 탄환 발사 위치
     public float fireInterval = 1f; // 발사 간격 (초 단위)
-   
+
     public float bulletSpeed = 20f; // 탄환 속도
     public int bulletCount = 0; // 총알 수
-    
+
     public float damageAmount = 10; // 데미지 양
     public float lifetime = 2f; // 탄환의 수명 (초)
 
@@ -20,10 +20,20 @@ public class Player_Shooter_4 : MonoBehaviour
 
     private bool isSlowed = false; // Slow 상태 여부
     public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
+
+    public AudioClip fireSound; // 발사 사운드 클립
+    private AudioSource audioSource; // AudioSource 변수 추가
+
+    // 사운드 속도와 볼륨 설정 변수
+    [Range(0.1f, 3f)] public float fireSoundPitch = 1f; // 사운드의 속도 (피치)
+    [Range(0f, 1f)] public float fireSoundVolume = 1f; // 사운드의 볼륨
+
     void Awake()
     {
         instance = this;
+        audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
     }
+
     void Start()
     {
         // Player 태그의 오브젝트를 찾기
@@ -45,22 +55,22 @@ public class Player_Shooter_4 : MonoBehaviour
     {
         CheckForSlowObjects();
     }
+
     void Shoot()
     {
-        if (playerTransform == null)
+        if (playerTransform == null || bulletCount <= 0)
         {
-            return; // Player 오브젝트를 찾지 못한 경우 발사하지 않음
+            return; // Player 오브젝트를 찾지 못하거나 bulletCount가 0 이하인 경우 발사하지 않음
         }
+
+        // 발사 사운드 재생
+        PlayFireSound();
 
         for (int i = 0; i < bulletCount; i++)
         {
             GameObject bullet = Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
 
             // 탄환 확산 설정
-            float xSpread = Random.Range(-30f, 30f);
-            float ySpread = Random.Range(2f, 20f); // y축 확산 범위 2에서 5 사이
-
-            // 회전된 방향 벡터 계산
             Quaternion spreadRotation = Quaternion.Euler(Random.Range(-30f, 30f), Random.Range(-30f, 30f), 0);
             Vector3 spreadDirection = spreadRotation * playerTransform.forward;
 
@@ -78,6 +88,17 @@ public class Player_Shooter_4 : MonoBehaviour
             // 충돌 처리 컴포넌트를 동적으로 추가
             BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
             collisionHandler.damageAmount = damageAmount;
+        }
+    }
+
+    void PlayFireSound()
+    {
+        if (audioSource != null && fireSound != null)
+        {
+            audioSource.clip = fireSound;
+            audioSource.pitch = fireSoundPitch;
+            audioSource.volume = fireSoundVolume;
+            audioSource.Play();
         }
     }
 
@@ -99,15 +120,12 @@ public class Player_Shooter_4 : MonoBehaviour
 
     public void IncreaseBulletCount(int amount)
     {
-
         bulletCount += amount;
         Debug.Log("샷건 개수 : " + bulletCount);
-
     }
 
     public void IncreaseDamage(float amount)
     {
-        // Player_Shooter_4 클래스의 damageAmount 값을 변경
         damageAmount += amount;
         Debug.Log("샷건 데미지 : " + damageAmount);
     }
@@ -122,20 +140,11 @@ public class Player_Shooter_4 : MonoBehaviour
     public class BulletCollisionHandler : MonoBehaviour
     {
         public float damageAmount;
-        private Player_Shooter_4 shooterInstance;
-
-        // 생성자를 이용하여 Player_Shooter_4 인스턴스를 전달받음
-        public BulletCollisionHandler(Player_Shooter_4 shooterInstance)
-        {
-            this.shooterInstance = shooterInstance;
-        }
 
         void OnTriggerEnter(Collider other)
         {
-            // 충돌한 객체의 태그가 "Creature"인 경우
             if (other.gameObject.CompareTag("Creature"))
             {
-                // 충돌한 객체의 HP를 감소시킴
                 CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
                 if (enemyHealth != null)
                 {
@@ -148,9 +157,6 @@ public class Player_Shooter_4 : MonoBehaviour
                     enemyHealth2.TakeDamage(damageAmount);
                 }
             }
-
         }
-
-
     }
 }

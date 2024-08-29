@@ -12,16 +12,26 @@ public class Player_Shooter_2 : MonoBehaviour
     public int projectilesPerFire = 0; // 한 번에 발사할 발사체 수
     public float bulletLifetime = 1.5f; // 총알의 수명
     public float damageAmount = 1f; // 총알의 데미지
-    
 
     private float lastSpawnTime; // 마지막 소환 시간
 
     private bool isSlowed = false; // Slow 상태 여부
     public float spawnIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
 
+    public AudioClip chargeSound; // 첫 번째 사운드 클립
+    public AudioClip explodeSound; // 두 번째 사운드 클립
+    private AudioSource audioSource; // AudioSource 변수 추가
+
+    // 사운드 속도와 볼륨 설정 변수
+    [Range(0.1f, 3f)] public float chargeSoundPitch = 1f; // 첫 번째 사운드의 속도 (피치)
+    [Range(0f, 1f)] public float chargeSoundVolume = 1f; // 첫 번째 사운드의 볼륨
+    [Range(0.1f, 3f)] public float explodeSoundPitch = 1f; // 두 번째 사운드의 속도 (피치)
+    [Range(0f, 1f)] public float explodeSoundVolume = 1f; // 두 번째 사운드의 볼륨
+
     void Awake()
     {
         instance = this;
+        audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
     }
 
     void Start()
@@ -33,29 +43,45 @@ public class Player_Shooter_2 : MonoBehaviour
     {
         CheckForSlowObjects();
     }
+
     void SpawnBulletWithExplosion()
     {
         for (int i = 0; i < projectilesPerFire; i++)
         {
-            // 플레이어 주변 원형 범위 내에서 랜덤한 위치 계산
             Vector3 spawnPosition = transform.position + Random.insideUnitSphere * spawnRadius;
             spawnPosition.y = fixedYPosition;
 
             GameObject bullet = Instantiate(spawnPrefab, spawnPosition, Quaternion.identity);
-
-            // 총알 파괴 타이머 설정
             Destroy(bullet, bulletLifetime);
 
-            // 총알에 연결된 콜라이더 가져오기
             BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
             collisionHandler.damageAmount = damageAmount;
 
-            // 콜라이더를 비활성화
             Collider bulletCollider = bullet.GetComponent<Collider>();
             bulletCollider.enabled = false;
 
-            // 일정 시간이 지난 후에 콜라이더를 활성화
             StartCoroutine(EnableColliderAfterDelay(bulletCollider, 1.0f));
+
+            StartCoroutine(PlaySoundsSequentially());
+        }
+    }
+
+    IEnumerator PlaySoundsSequentially()
+    {
+        if (audioSource != null)
+        {
+            // 첫 번째 사운드 재생
+            audioSource.clip = chargeSound;
+            audioSource.pitch = chargeSoundPitch;
+            audioSource.volume = chargeSoundVolume;
+            audioSource.Play();
+            yield return new WaitForSeconds(audioSource.clip.length / audioSource.pitch);
+
+            // 두 번째 사운드 재생
+            audioSource.clip = explodeSound;
+            audioSource.pitch = explodeSoundPitch;
+            audioSource.volume = explodeSoundVolume;
+            audioSource.Play();
         }
     }
 
@@ -89,7 +115,6 @@ public class Player_Shooter_2 : MonoBehaviour
 
     public void IncreaseDamage(float amount)
     {
-       
         damageAmount += amount;
         Debug.Log("폭탄 데미지 : " + damageAmount);
     }
@@ -97,18 +122,15 @@ public class Player_Shooter_2 : MonoBehaviour
     public void IncreaseFireRate(float amount)
     {
         spawnInterval /= amount;
-        if (spawnInterval < 0.1f) spawnInterval = 0.1f; 
+        if (spawnInterval < 0.1f) spawnInterval = 0.1f;
         Debug.Log("폭탄 발사 속도 :" + spawnInterval);
     }
-
-
 
     public class BulletCollisionHandler : MonoBehaviour
     {
         public float damageAmount;
         private Player_Shooter_2 shooterInstance;
 
-        // 생성자를 이용하여 Player_Shooter_2 인스턴스를 전달받음
         public BulletCollisionHandler(Player_Shooter_2 shooterInstance)
         {
             this.shooterInstance = shooterInstance;
@@ -116,10 +138,8 @@ public class Player_Shooter_2 : MonoBehaviour
 
         void OnTriggerEnter(Collider other)
         {
-            // 충돌한 객체의 태그가 "Creature"인 경우
             if (other.gameObject.CompareTag("Creature"))
             {
-                // 충돌한 객체의 HP를 감소시킴
                 CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
                 if (enemyHealth != null)
                 {
@@ -132,7 +152,6 @@ public class Player_Shooter_2 : MonoBehaviour
                     enemyHealth2.TakeDamage(damageAmount);
                 }
             }
-
         }
     }
 }

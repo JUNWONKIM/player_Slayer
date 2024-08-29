@@ -15,9 +15,17 @@ public class Player_Shooter_3 : MonoBehaviour
     private bool isSlowed = false; // Slow 상태 여부
     public float summonIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
 
+    public AudioClip summonSound; // 칼 소환 시 재생할 사운드 클립
+    private AudioSource audioSource; // AudioSource 변수 추가
+
+    // 사운드 속도와 볼륨 설정 변수
+    [Range(0.1f, 3f)] public float summonSoundPitch = 1f; // 사운드의 속도 (피치)
+    [Range(0f, 1f)] public float summonSoundVolume = 1f; // 사운드의 볼륨
+
     void Awake()
     {
         instance = this;
+        audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
     }
 
     void Start()
@@ -40,7 +48,6 @@ public class Player_Shooter_3 : MonoBehaviour
         {
             if (swordNum == 1)
             {
-                // 플레이어 위치와 칼의 소환 위치 계산
                 Vector3 summonPosition = player.transform.position + new Vector3(distanceFromPlayer, 0f, 0f);
                 Quaternion summonRotation = Quaternion.Euler(90f, 0f, 0f);
 
@@ -48,41 +55,57 @@ public class Player_Shooter_3 : MonoBehaviour
                 GameObject sword = Instantiate(swordPrefab, summonPosition, summonRotation);
                 sword.AddComponent<SwordOrbit>().Initialize(player.transform, distanceFromPlayer, 1, 0, orbitSpeed);
 
-                // 충돌 처리 컴포넌트를 동적으로 추가
                 BulletCollisionHandler collisionHandler = sword.AddComponent<BulletCollisionHandler>();
                 collisionHandler.damageAmount = damageAmount;
 
-                // 3초 후에 칼 파괴
+                // 칼 소환 사운드 재생
+                StartCoroutine(PlaySummonSoundTwice());
+
                 Destroy(sword, 3f);
             }
             else
             {
-                // 원의 반지름 계산
                 float radius = distanceFromPlayer;
 
                 for (int i = 0; i < swordNum; i++)
                 {
-                    // 각 칼의 각도 계산
                     float angle = i * (360f / swordNum);
 
-                    // 칼의 소환 위치 계산
                     float x = radius * Mathf.Cos(angle * Mathf.Deg2Rad);
                     float z = radius * Mathf.Sin(angle * Mathf.Deg2Rad);
                     Vector3 summonPosition = player.transform.position + new Vector3(x, 0f, z);
                     Quaternion summonRotation = Quaternion.Euler(90f, 0f, angle);
 
-                    // 칼 소환
                     GameObject sword = Instantiate(swordPrefab, summonPosition, summonRotation);
                     sword.AddComponent<SwordOrbit>().Initialize(player.transform, distanceFromPlayer, swordNum, i, orbitSpeed);
 
-                    // 충돌 처리 컴포넌트를 동적으로 추가
                     BulletCollisionHandler collisionHandler = sword.AddComponent<BulletCollisionHandler>();
                     collisionHandler.damageAmount = damageAmount;
 
-                    // 3초 후에 칼 파괴
+                    // 칼 소환 사운드 재생
+                    StartCoroutine(PlaySummonSoundTwice());
+
                     Destroy(sword, 3f);
                 }
             }
+        }
+    }
+
+    IEnumerator PlaySummonSoundTwice()
+    {
+        if (audioSource != null && summonSound != null)
+        {
+            // 첫 번째 재생
+            audioSource.clip = summonSound;
+            audioSource.pitch = summonSoundPitch;
+            audioSource.volume = summonSoundVolume;
+            audioSource.Play();
+
+            // 첫 번째 사운드 재생이 끝날 때까지 대기
+            yield return new WaitForSeconds(summonSound.length / summonSoundPitch);
+
+            // 두 번째 재생
+            audioSource.Play();
         }
     }
 
@@ -110,7 +133,6 @@ public class Player_Shooter_3 : MonoBehaviour
 
     public void IncreaseDamage(float amount)
     {
-        // Player_Shooter_4 클래스의 damageAmount 값을 변경
         damageAmount += amount;
         Debug.Log("칼 데미지 : " + damageAmount);
     }
@@ -121,10 +143,8 @@ public class Player_Shooter_3 : MonoBehaviour
 
         void OnTriggerEnter(Collider other)
         {
-            // 충돌한 객체의 태그가 "Creature"인 경우
             if (other.gameObject.CompareTag("Creature"))
             {
-                // 충돌한 객체의 HP를 감소시킴
                 CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
                 if (enemyHealth != null)
                 {
@@ -137,8 +157,6 @@ public class Player_Shooter_3 : MonoBehaviour
                     enemyHealth2.TakeDamage(damageAmount);
                 }
             }
-
-           
         }
     }
 }
@@ -162,7 +180,6 @@ public class SwordOrbit : MonoBehaviour
 
     void Start()
     {
-        // 3초 후에 칼 파괴
         Destroy(gameObject, 3f);
     }
 
@@ -171,16 +188,13 @@ public class SwordOrbit : MonoBehaviour
         if (playerTransform == null)
             return;
 
-        // 각도를 증가시키면서 회전
         float angle = swordIndex * (360f / totalSwords) + (Time.time * orbitSpeed);
         float x = orbitRadius * Mathf.Cos(angle * Mathf.Deg2Rad);
         float z = orbitRadius * Mathf.Sin(angle * Mathf.Deg2Rad);
 
-        // 새로운 위치 계산
         Vector3 newPosition = playerTransform.position + new Vector3(x, 0f, z);
         transform.position = newPosition;
 
-        // 칼이 플레이어 반대 방향을 바라보도록 회전 설정
         Vector3 directionToPlayer = (playerTransform.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(-directionToPlayer);
         transform.rotation = lookRotation * Quaternion.Euler(90, 0, 0);

@@ -9,7 +9,6 @@ public class Player_Shooter_1 : MonoBehaviour
     public GameObject bulletPrefab; // 발사체 프리팹을 할당할 변수
 
     public float fireInterval = 1f; // 발사 간격
-   
     public float detectionRange = 100f; // 적을 탐지할 범위
     public float projectileSpeed = 100f;
     public int projectilesPerFire = 1; // 한 번에 발사할 발사체 수
@@ -21,13 +20,23 @@ public class Player_Shooter_1 : MonoBehaviour
     private bool isSlowed = false; // Slow 상태 여부
     public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
 
+    public AudioClip shootSound; // 발사 사운드 클립 추가
+    private AudioSource audioSource; // AudioSource 변수 추가
+    [Range(0f, 1f)] // 인스펙터에서 슬라이드 바로 조절할 수 있게 설정
+    public float volume = 1f; // 사운드 볼륨 조절 변수
+
     void Awake()
     {
         instance = this;
+        audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
+        audioSource.volume = volume; // 초기 볼륨 설정
     }
 
     void Update()
     {
+        // 인스펙터에서 볼륨이 변경되었을 때 AudioSource에 적용
+        audioSource.volume = volume;
+
         if (Time.time - lastFireTime > fireInterval)
         {
             StartCoroutine(FireProjectileBurst());
@@ -36,7 +45,6 @@ public class Player_Shooter_1 : MonoBehaviour
 
         CheckForSlowObjects(); // Slow 태그 체크
     }
-
 
     IEnumerator FireProjectileBurst()
     {
@@ -81,14 +89,17 @@ public class Player_Shooter_1 : MonoBehaviour
                 bulletRigidbody.velocity = targetDirection.normalized * projectileSpeed;
             }
 
+            // 발사 사운드 재생
+            if (audioSource != null && shootSound != null)
+            {
+                audioSource.PlayOneShot(shootSound);
+            }
+
             // 충돌 처리 컴포넌트를 동적으로 추가
             BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
             collisionHandler.damageAmount = damageAmount;
         }
     }
-
-
-
 
     private void CheckForSlowObjects()
     {
@@ -121,9 +132,8 @@ public class Player_Shooter_1 : MonoBehaviour
 
     public void IncreaseDamage(float amount)
     {
-        // Player_Shooter_4 클래스의 damageAmount 값을 변경
         damageAmount += amount;
-        Debug.Log("투사체  데미지 : " + damageAmount);
+        Debug.Log("투사체 데미지 : " + damageAmount);
     }
 
     public class BulletCollisionHandler : MonoBehaviour
@@ -135,12 +145,11 @@ public class Player_Shooter_1 : MonoBehaviour
         {
             this.shooterInstance = shooterInstance;
         }
+
         void OnTriggerEnter(Collider other)
         {
-            // 충돌한 객체의 태그가 "Creature"인 경우
             if (other.gameObject.CompareTag("Creature"))
             {
-                // 충돌한 객체의 HP를 감소시킴
                 CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
                 if (enemyHealth != null)
                 {
@@ -155,7 +164,6 @@ public class Player_Shooter_1 : MonoBehaviour
                     Destroy(gameObject);
                 }
             }
-
         }
     }
 }
