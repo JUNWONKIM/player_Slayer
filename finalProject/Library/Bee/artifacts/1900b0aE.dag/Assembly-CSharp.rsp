@@ -359,6 +359,7 @@
 "Assets/Script/Boss/ATK3.cs"
 "Assets/Script/Boss/ATK3_1.cs"
 "Assets/Script/Boss/Boss.cs"
+"Assets/Script/Boss/BossSound.cs"
 "Assets/Script/Bullet/BulletPool.cs"
 "Assets/Script/Bullet/Creature/Ghost_bullet.cs"
 "Assets/Script/Bullet/Creature/Witch_atkSlow_effect.cs"

@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class Boss : MonoBehaviour
 {
-    
     public float speed = 5.0f; // 보스가 이동할 속도
     public float rotationSpeed = 5.0f; // 보스가 회전할 속도
 
@@ -22,41 +21,44 @@ public class Boss : MonoBehaviour
     private bool isAttacking = false; // 보스가 공격 중인지 여부
     private bool isControlled = false; // 보스가 플레이어에 의해 제어되는지 여부
     private Animator animator; // 애니메이터 컴포넌트
-    
+
+    private float idleStartTime; // Idle 상태 시작 시간
+    private float idleTimeToReattack = 2.0f; // Idle 상태가 지속된 후 재공격 시간
+    private bool isIdle = false; // 현재 Idle 상태인지 여부
 
     void Start()
     {
         animator = GetComponent<Animator>();
         player = GameObject.FindGameObjectWithTag("Player").transform;
-
     }
 
     void Update()
     {
-        // 플레이어와의 거리 확인
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        // 공격 중이거나 플레이어에 의해 제어되는 중일 때는 이동하지 않음
         if (!isAttacking && !isControlled)
         {
-            if (distanceToPlayer > attackRange)
+            if (distanceToPlayer <= attackRange)
             {
-                // 플레이어를 향해 다가가기
-                Vector3 direction = (player.position - transform.position).normalized;
-
-                // 플레이어를 바라보기
-                Quaternion lookRotation = Quaternion.LookRotation(direction);
-                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
-
-                // 플레이어를 향해 이동하기
-                transform.position += transform.forward * speed * Time.deltaTime;
+                if (isIdle)
+                {
+                    // Idle 상태가 2초 이상 지속되었을 때 기본 공격을 다시 실행
+                    if (Time.time - idleStartTime > idleTimeToReattack)
+                    {
+                        StartCoroutine(BasicAttack());
+                    }
+                }
+                else
+                {
+                    // 기본 공격을 실행
+                    StartCoroutine(BasicAttack());
+                }
             }
-
-            // 플레이어와의 거리가 공격 범위 이내일 경우 기본 공격 실행
-            if (distanceToPlayer <= attackRange && !Input.GetKey(KeyCode.Z) && !Input.GetKey(KeyCode.X) && !Input.GetKey(KeyCode.C))
+            else
             {
-                StartCoroutine(BasicAttack());
-                Debug.Log(isAttacking);
+                // 플레이어가 공격 사거리 밖으로 나갔으므로 다시 플레이어를 향해 걸어가기
+                isIdle = false;
+                MoveTowardsPlayer();
             }
         }
 
@@ -84,44 +86,73 @@ public class Boss : MonoBehaviour
         }
     }
 
+    private void MoveTowardsPlayer()
+    {
+        // 플레이어를 향해 다가가기
+        Vector3 direction = (player.position - transform.position).normalized;
+
+        // 플레이어를 바라보기
+        Quaternion lookRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, rotationSpeed * Time.deltaTime);
+
+        // 플레이어를 향해 이동하기
+        transform.position += transform.forward * speed * Time.deltaTime;
+
+        // 이동 중에는 Idle 상태 해제
+        if (isIdle)
+        {
+            // Idle 상태 해제
+            ResetAllTriggers();
+            animator.SetBool("IsIdle", false);
+            isIdle = false;
+        }
+    }
+
     IEnumerator BasicAttack()
     {
         // 공격 중임을 표시
         isAttacking = true;
 
-        // 애니메이션 트리거 설정
+        // 기본 공격 애니메이션 실행
+        ResetAllTriggers();
+        animator.SetBool("IsIdle", false);
         animator.SetBool("ATK0", true);
 
         // 보스가 멈추도록 속도 설정
         float originalSpeed = speed;
         speed = 0;
 
-        // 애니메이션 길이만큼 대기
-        float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
-        yield return new WaitForSeconds(animationLength / 2); // 애니메이션의 절반 시점에 공격 생성
+        // 애니메이션이 끝날 때까지 대기
+        AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+        float animationLength = stateInfo.length;
+        yield return new WaitForSeconds(animationLength); // 애니메이션 전체 길이만큼 대기
 
         // 현재 플레이어 위치에 폭탄을 생성
         Vector3 attackPosition = player.position;
         Instantiate(atk0Prefab, attackPosition, Quaternion.identity);
 
         // 애니메이션 종료 후 나머지 대기 시간
-        yield return new WaitForSeconds(animationLength / 2);
+        yield return new WaitForSeconds(animationLength / 2); // 애니메이션 절반 시점까지 대기
         animator.SetBool("ATK0", false);
 
-        // 원래 속도로 복귀
-        speed = originalSpeed;
+        // Idle 상태로 전환하고 2초 대기
+        isIdle = true;
+        idleStartTime = Time.time;
 
-      
+        // 애니메이션 상태를 Idle로 설정
+        ResetAllTriggers();
+        animator.SetBool("IsIdle", true);
+
+        // 기본 공격 완료
         isAttacking = false;
-        
     }
-
 
     IEnumerator Attack()
     {
         isAttacking = true;
 
-        // 애니메이션 트리거 설정
+        // 모든 트리거 리셋 후 Attack 애니메이션 실행
+        ResetAllTriggers();
         animator.SetTrigger("ATK1");
 
         // ATK1 프리팹 활성화
@@ -144,7 +175,8 @@ public class Boss : MonoBehaviour
     {
         isAttacking = true;
 
-        // 애니메이션 트리거 설정
+        // 모든 트리거 리셋 후 ReplaceClosestCreatures 애니메이션 실행
+        ResetAllTriggers();
         animator.SetTrigger("ATK2");
 
         // 보스가 멈추도록 속도와 회전 속도 설정
@@ -218,10 +250,10 @@ public class Boss : MonoBehaviour
                 transform.rotation = Quaternion.RotateTowards(transform.rotation, toRotation, controlRotationSpeed * Time.deltaTime);
 
                 // 애니메이션 트리거 설정
-                animator.ResetTrigger("isIdle");
+                ResetAllTriggers();
                 animator.SetTrigger("isRun");
 
-                // 1초마다 불 프리팹 생성
+                // 0.1초마다 불 프리팹 생성
                 if (Time.time - lastFireTime >= 0.1f)
                 {
                     Vector3 firePosition = transform.position - transform.forward * 20f; // 보스 뒤쪽에 불 생성
@@ -232,7 +264,7 @@ public class Boss : MonoBehaviour
             else
             {
                 // 이동하지 않으면 Idle 상태로 변경
-                animator.ResetTrigger("isRun");
+                ResetAllTriggers();
                 animator.SetTrigger("isIdle");
             }
 
@@ -240,8 +272,7 @@ public class Boss : MonoBehaviour
         }
 
         // 애니메이션 트리거를 모두 false로 설정
-        animator.ResetTrigger("isRun");
-        animator.ResetTrigger("isIdle");
+        ResetAllTriggers();
 
         // 원래 상태로 돌아가기
         speed = originalSpeed;
@@ -269,5 +300,15 @@ public class Boss : MonoBehaviour
 
         // 슬라이더의 게임 오브젝트를 비활성화
         uiSlider.gameObject.SetActive(false);
+    }
+
+    private void ResetAllTriggers()
+    {
+        // 모든 트리거를 리셋하여 이전 애니메이션 상태가 남지 않도록 함
+        animator.ResetTrigger("isIdle");
+        animator.ResetTrigger("isRun");
+        animator.ResetTrigger("ATK1");
+        animator.ResetTrigger("ATK2");
+        animator.ResetTrigger("ATK0"); // ATK0 트리거 리셋 추가
     }
 }
