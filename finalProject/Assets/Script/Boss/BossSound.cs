@@ -21,6 +21,8 @@ public class BossSound : MonoBehaviour
     public float atk1Pitch = 1.0f;
     // ATK2에 대한 피치 설정 제거
 
+    public float soundDelay = 0.1f;
+
     private AudioSource audioSource;
     private Animator animator;
     private string currentAnimationState;
@@ -60,11 +62,11 @@ public class BossSound : MonoBehaviour
         }
         else if (isAtk0)
         {
-            StartCoroutine(PlaySoundWithDelay("Atk0", atk0Sound, atk0Volume, atk0Pitch, false, 0.5f));
+            StartCoroutine(PlaySoundWithDelay("Atk0", atk0Sound, atk0Volume, atk0Pitch, false, soundDelay));
         }
         else if (isAtk1)
         {
-            StartCoroutine(PlaySoundWithDelay("Atk1", atk1Sound, atk1Volume, atk1Pitch, false, 0.5f));
+            StartCoroutine(PlaySoundWithDelay("Atk1", atk1Sound, atk1Volume, atk1Pitch, false, soundDelay));
         }
         else if (isIdle)
         {

@@ -12,6 +12,7 @@ TagManager:
   - Slow
   - Freeze
   - Boss
+  - Slidebar_ATK3
   layers:
   - Default
   - TransparentFX

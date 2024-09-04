@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Player_Shooter_1 : MonoBehaviour
@@ -27,9 +26,16 @@ public class Player_Shooter_1 : MonoBehaviour
 
     void Awake()
     {
-        instance = this;
-        audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
-        audioSource.volume = volume; // 초기 볼륨 설정
+        if (instance == null)
+        {
+            instance = this;
+            audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
+            audioSource.volume = volume; // 초기 볼륨 설정
+        }
+        else
+        {
+            Destroy(gameObject); // Singleton 패턴을 위한 중복 인스턴스 제거
+        }
     }
 
     void Update()
@@ -60,26 +66,33 @@ public class Player_Shooter_1 : MonoBehaviour
 
     void Shoot()
     {
-        GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
-        List<GameObject> allCreatures = new List<GameObject>();
-        allCreatures.AddRange(creatures);
-
-        GameObject closestCreature = null;
+        GameObject closestTarget = null;
         float closestDistance = Mathf.Infinity;
 
-        foreach (GameObject creature in allCreatures)
+        // Creature와 Boss 태그를 가진 객체를 모두 찾기
+        GameObject[] targets = GameObject.FindGameObjectsWithTag("Creature");
+        foreach (GameObject target in GameObject.FindGameObjectsWithTag("Boss"))
         {
-            float distance = Vector3.Distance(transform.position, creature.transform.position);
+            var newTargets = new GameObject[targets.Length + 1];
+            targets.CopyTo(newTargets, 0);
+            newTargets[targets.Length] = target;
+            targets = newTargets;
+        }
+
+        // 가장 가까운 목표를 찾기
+        foreach (GameObject target in targets)
+        {
+            float distance = Vector3.Distance(transform.position, target.transform.position);
             if (distance < closestDistance && distance <= detectionRange)
             {
-                closestCreature = creature;
+                closestTarget = target;
                 closestDistance = distance;
             }
         }
 
-        if (closestCreature != null)
+        if (closestTarget != null)
         {
-            Vector3 targetDirection = closestCreature.transform.position - transform.position;
+            Vector3 targetDirection = closestTarget.transform.position - transform.position;
             Quaternion rotation = Quaternion.LookRotation(targetDirection);
             GameObject bullet = Instantiate(bulletPrefab, transform.position, rotation);
 
@@ -107,7 +120,7 @@ public class Player_Shooter_1 : MonoBehaviour
 
         if (slowObjects.Length > 0 && !isSlowed)
         {
-            fireInterval *= fireIntervalSlowMultiplier; // 발사 간격을 두 배로 늘림
+            fireInterval *= fireIntervalSlowMultiplier; // 발사 간격을 느리게 함
             isSlowed = true;
         }
         else if (slowObjects.Length == 0 && isSlowed)
@@ -139,17 +152,12 @@ public class Player_Shooter_1 : MonoBehaviour
     public class BulletCollisionHandler : MonoBehaviour
     {
         public float damageAmount;
-        private Player_Shooter_1 shooterInstance;
-
-        public BulletCollisionHandler(Player_Shooter_1 shooterInstance)
-        {
-            this.shooterInstance = shooterInstance;
-        }
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Creature"))
+            if (other.gameObject.CompareTag("Creature") || other.gameObject.CompareTag("Boss"))
             {
+                // CreatureHealth와 Mummy 컴포넌트 모두 체크
                 CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
                 if (enemyHealth != null)
                 {

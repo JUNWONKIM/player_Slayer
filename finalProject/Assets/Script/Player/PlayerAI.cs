@@ -6,7 +6,7 @@ public class PlayerAI : MonoBehaviour
     public static PlayerAI instance;
 
     public float moveSpeed = 100f; // 이동 속도
-    public float slowSpeed = 2f;
+    public float slowSpeed = 2f; // Slow 효과 배수
     public bool isFreezed = false;
 
     public float avoidanceDistance = 3f; // 총알을 피하는 거리
@@ -26,7 +26,6 @@ public class PlayerAI : MonoBehaviour
     private float stateChangeTime = 0f;
     private float stateChangeDuration = 0.5f; // 상태 변경 유지 시간
 
-
     void Awake()
     {
         instance = this;
@@ -35,13 +34,13 @@ public class PlayerAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        StartCoroutine(FindClosestCreatureCoroutine());
+        StartCoroutine(FindClosestCreatureOrBossCoroutine());
         StartCoroutine(FindClosestBulletCoroutine());
     }
 
-    void Update()
+    void FixedUpdate()
     {
-        // 플레이어의 상태에 따라 다른 행동을 수행
+        // 상태에 따라 다른 행동을 수행
         switch (currentState)
         {
             case PlayerState.MoveTowardsCreature:
@@ -58,18 +57,18 @@ public class PlayerAI : MonoBehaviour
                 break;
         }
 
-        // 만약 가장 가까운 총알이 플레이어 주위 일정 범위에 들어왔을 때
+        // 총알이 가까이 있을 때
         if (nearestBullet != null && currentState != PlayerState.AvoidBullet && Vector3.Distance(transform.position, nearestBullet.position) < bulletDetectionRange)
         {
             ChangeState(PlayerState.AvoidBullet);
         }
 
-        // 현재 상태가 변경된 후 지정된 시간이 경과하면 상태를 이전으로 되돌림
+        // 상태 유지 시간 체크
         if (Time.time - stateChangeTime >= stateChangeDuration)
         {
             if (currentState == PlayerState.AvoidBullet && nearestBullet == null)
             {
-                ChangeState(PlayerState.MoveTowardsCreature);
+                ChangeState(PlayerState.MoveAwayFromCreature);
             }
             else if (currentState == PlayerState.MoveAwayFromCreature && target == null)
             {
@@ -84,46 +83,42 @@ public class PlayerAI : MonoBehaviour
     {
         if (target != null)
         {
-            // creature의 반대 방향으로 이동
             Vector3 moveDirection = (transform.position - target.position).normalized;
-            rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.deltaTime);
+            rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
 
-            // creature 바라보기
             Vector3 lookAtDirection = (target.position - transform.position).normalized;
-            transform.rotation = Quaternion.LookRotation(lookAtDirection);
+            Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f)); // 속도 조절을 위한 값
         }
     }
 
     void AvoidBullet(Vector3 bulletPosition)
     {
-        // 총알의 위치에서 플레이어의 위치를 뺀 방향 벡터
-        Vector3 directionToPlayer = transform.position - bulletPosition;
+        if (nearestBullet != null)
+        {
+            Vector3 directionToPlayer = transform.position - bulletPosition;
+            Vector3 bulletDirection = nearestBullet.GetComponent<Rigidbody>().velocity.normalized;
+            Vector3 perpendicular = Vector3.Cross(bulletDirection, Vector3.up).normalized;
 
-        // 총알의 이동 방향 벡터
-        Vector3 bulletDirection = bulletPosition - nearestBullet.GetComponent<Rigidbody>().velocity.normalized;
-
-        // 총알의 방향과 수직인 벡터 계산 (y 축은 무시)
-        Vector3 perpendicular = new Vector3(bulletDirection.z, 0f, -bulletDirection.x).normalized;
-
-        // 플레이어를 해당 방향으로 이동
-        rb.MovePosition(transform.position + perpendicular * moveSpeed * Time.deltaTime);
+            // 적절한 방향으로 이동
+            rb.MovePosition(rb.position + perpendicular * moveSpeed * Time.fixedDeltaTime);
+        }
     }
 
     void MoveAwayFromCreature()
     {
         if (target != null)
         {
-            // creature의 반대 방향으로 이동
             Vector3 moveDirection = (transform.position - target.position).normalized;
-            rb.MovePosition(transform.position + moveDirection * moveSpeed * Time.deltaTime);
+            rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
         }
     }
 
-    private IEnumerator FindClosestCreatureCoroutine()
+    private IEnumerator FindClosestCreatureOrBossCoroutine()
     {
         while (true)
         {
-            FindClosestCreature();
+            FindClosestCreatureOrBoss();
             yield return new WaitForSeconds(0.2f);
         }
     }
@@ -137,11 +132,12 @@ public class PlayerAI : MonoBehaviour
         }
     }
 
-    void FindClosestCreature()
+    void FindClosestCreatureOrBoss()
     {
         GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
+        GameObject[] bosses = GameObject.FindGameObjectsWithTag("Boss");
         float closestDistance = Mathf.Infinity;
-        GameObject closestCreature = null;
+        GameObject closestTarget = null;
 
         foreach (GameObject creature in creatures)
         {
@@ -149,20 +145,34 @@ public class PlayerAI : MonoBehaviour
             if (distance < closestDistance)
             {
                 closestDistance = distance;
-                closestCreature = creature;
+                closestTarget = creature;
             }
         }
 
-        if (closestCreature != null)
+        foreach (GameObject boss in bosses)
         {
-            if (closestCreature.transform != target) // 현재 타겟과 가장 가까운 creature이 다를 때만 타겟을 변경
+            float distance = Vector3.Distance(transform.position, boss.transform.position);
+            if (distance < closestDistance)
             {
-                target = closestCreature.transform;
-
-                // 변경된 creature을 바라보기
-                Vector3 lookAtDirection = (target.position - transform.position).normalized;
-                transform.rotation = Quaternion.LookRotation(lookAtDirection);
+                closestDistance = distance;
+                closestTarget = boss;
             }
+        }
+
+        if (closestTarget != null)
+        {
+            if (closestTarget.transform != target)
+            {
+                target = closestTarget.transform;
+
+                Vector3 lookAtDirection = (target.position - transform.position).normalized;
+                Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
+                rb.MoveRotation(lookRotation);
+            }
+        }
+        else
+        {
+            target = null;
         }
     }
 
@@ -186,6 +196,10 @@ public class PlayerAI : MonoBehaviour
         {
             nearestBullet = closestBullet.transform;
         }
+        else
+        {
+            nearestBullet = null;
+        }
     }
 
     private void ChangeState(PlayerState newState)
@@ -200,16 +214,15 @@ public class PlayerAI : MonoBehaviour
 
         if (freezeObjects.Length > 0 && !isFreezed)
         {
-            moveSpeed /= slowSpeed; // 발사 간격을 두 배로 늘림
+            moveSpeed /= slowSpeed;
             isFreezed = true;
         }
         else if (freezeObjects.Length == 0 && isFreezed)
         {
-            moveSpeed *= slowSpeed; // 발사 간격을 두 배로 늘림
+            moveSpeed *= slowSpeed;
             isFreezed = false;
         }
     }
-
 
     public void IncreaseMoveSpeed(float amount)
     {
