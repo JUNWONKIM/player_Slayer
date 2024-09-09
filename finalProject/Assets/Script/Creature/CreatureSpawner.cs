@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems; // EventSystem 사용
 
 public class CreatureSpawner : MonoBehaviour
 {
@@ -16,6 +17,10 @@ public class CreatureSpawner : MonoBehaviour
     private LineRenderer lineRenderer;
 
     public UI_selectCreature[] uiButtons; // UI 버튼 스크립트 배열
+
+    // UI 클릭 여부를 확인하기 위한 변수
+    public GraphicRaycaster graphicRaycaster;
+    public EventSystem eventSystem;
 
     void Start()
     {
@@ -39,7 +44,8 @@ public class CreatureSpawner : MonoBehaviour
     {
         HandleCreatureSelection();
 
-        if (Input.GetMouseButtonDown(LeftMouseButton))
+        // UI 클릭이 아니라면 마우스 클릭 처리
+        if (Input.GetMouseButtonDown(LeftMouseButton) && !IsPointerOverUIElement())
         {
             if (selectedCreature == 4)
             {
@@ -141,5 +147,17 @@ public class CreatureSpawner : MonoBehaviour
         {
             uiButtons[index].StartCooldown();
         }
+    }
+
+    // UI 위에서 클릭이 발생했는지 확인하는 함수
+    bool IsPointerOverUIElement()
+    {
+        PointerEventData pointerData = new PointerEventData(eventSystem);
+        pointerData.position = Input.mousePosition;
+
+        List<RaycastResult> results = new List<RaycastResult>();
+        graphicRaycaster.Raycast(pointerData, results);
+
+        return results.Count > 0;
     }
 }

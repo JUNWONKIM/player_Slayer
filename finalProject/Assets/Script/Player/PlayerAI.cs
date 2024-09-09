@@ -76,7 +76,21 @@ public class PlayerAI : MonoBehaviour
             }
         }
 
+        // 적을 항상 바라보게 설정
+        LookAtTarget();
+
         CheckForSlowObjects();
+    }
+
+    void LookAtTarget()
+    {
+        if (target != null)
+        {
+            // 적을 바라보는 로직
+            Vector3 lookAtDirection = (target.position - transform.position).normalized;
+            Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f)); // 부드럽게 회전
+        }
     }
 
     void MoveTowardsCreature()
