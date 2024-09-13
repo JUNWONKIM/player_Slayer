@@ -132,37 +132,6 @@ CapsuleCollider:
   m_Height: 1.5280646
   m_Direction: 1
   m_Center: {x: 0.0027905465, y: 0.7033696, z: 0}
---- !u!114 &-1673793734741156669
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7307231022892869790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 1
-  currentHealth: 0
-  deathSound: {fileID: 8300000, guid: fcf36d122f9410641af3dc5683eb2c13, type: 3}
---- !u!114 &6952263816850193966
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7307231022892869790}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: db8379a8040c1254f93047b6a6f42d9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 10
-  retreatDistance: 2
-  retreatSpeed: 10
-  damageAmount: 1
 --- !u!82 &7149499565399781540
 AudioSource:
   m_ObjectHideFlags: 0
@@ -172,7 +141,7 @@ AudioSource:
   m_GameObject: {fileID: 7307231022892869790}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -8790320964885932390, guid: da28ece7c9833444f90ff5bd5c747fd6, type: 2}
   m_audioClip: {fileID: 8300000, guid: fcf36d122f9410641af3dc5683eb2c13, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -259,3 +228,34 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &-1673793734741156669
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307231022892869790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 1
+  currentHealth: 0
+  deathSound: {fileID: 8300000, guid: fcf36d122f9410641af3dc5683eb2c13, type: 3}
+--- !u!114 &6952263816850193966
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7307231022892869790}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: db8379a8040c1254f93047b6a6f42d9e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 10
+  retreatDistance: 2
+  retreatSpeed: 10
+  damageAmount: 1
