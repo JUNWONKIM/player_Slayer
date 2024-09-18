@@ -4,12 +4,11 @@ using UnityEngine.UI;
 
 public class UI_startbutton : MonoBehaviour
 {
-    public Text startText; // Text UI 요소에 대한 참조
-    public UI_Setting uiSetting; // UI_Setting 스크립트에 대한 참조
+    public UI_Setting uiSetting; // UI_Setting 스크립트에 대한 참조 (필요시 연결)
 
     void Start()
     {
-        startText.text = "키를 눌러 시작하세요";
+       
     }
 
     void Update()
