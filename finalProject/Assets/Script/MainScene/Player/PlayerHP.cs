@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHP : MonoBehaviour
@@ -9,13 +7,12 @@ public class PlayerHP : MonoBehaviour
     public GameObject bossPrefab; // Boss 프리팹
     public float bossSpawnRadius = 200f; // Boss 생성 반경
     private GameObject boss; // 현재 비활성화 되어 있는 Boss
+    public UI_BossHp uiBossHp; // UI_BossHp 스크립트 참조
 
-    // Start is called before the first frame update
     void Start()
     {
         hp = max_hp;
 
-        // Boss 프리팹을 미리 생성하지 않고, 비활성화된 상태로 설정
         if (bossPrefab != null)
         {
             boss = Instantiate(bossPrefab);
@@ -23,10 +20,8 @@ public class PlayerHP : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // HP가 최대 HP의 30% 이하일 때 Boss를 생성
         if (hp <= max_hp * 0.3f && boss != null && !boss.activeInHierarchy)
         {
             SpawnBossNearPlayer();
@@ -39,7 +34,7 @@ public class PlayerHP : MonoBehaviour
         Debug.Log("Player HP: " + hp);
     }
 
-    void SpawnBossNearPlayer()
+    public void SpawnBossNearPlayer()
     {
         // 플레이어의 위치를 가져옴
         Vector3 playerPosition = transform.position;
@@ -58,7 +53,17 @@ public class PlayerHP : MonoBehaviour
         boss.transform.position = randomPosition;
         boss.SetActive(true);
 
+        // 슬라이더에 보스 체력 설정
+        UI_BossHp uiBossHp = FindObjectOfType<UI_BossHp>();
+        if (uiBossHp != null)
+        {
+            CreatureHealth bossHealth = boss.GetComponent<CreatureHealth>();
+            uiBossHp.SetBossHealth(bossHealth);
+        }
+
         // Boss가 생성되면 더 이상 생성하지 않도록
         enabled = false;
     }
+
+
 }

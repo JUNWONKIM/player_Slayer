@@ -10875,6 +10875,7 @@ GameObject:
   - component: {fileID: 4170683914044742674}
   - component: {fileID: 9039301633965190263}
   - component: {fileID: 3969841577075606842}
+  - component: {fileID: 974647841792389388}
   - component: {fileID: 5653785596601742560}
   - component: {fileID: 7305883199709931127}
   - component: {fileID: 8053050441341164405}
@@ -10969,6 +10970,21 @@ MonoBehaviour:
   atk2Prefab: {fileID: 5498239063110878189, guid: 70988b631e25e73428425eaa7ca6575f, type: 3}
   atk3Prefab: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
   attackRange: 80
+--- !u!114 &974647841792389388
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8053050441341164415}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 100
+  currentHealth: 100
+  deathSound: {fileID: 8300000, guid: 592dc3e8955c51949a05d298802e497d, type: 3}
 --- !u!65 &5653785596601742560
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11005,11 +11021,11 @@ Rigidbody:
   serializedVersion: 2
   m_Mass: 1
   m_Drag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_UseGravity: 0
-  m_IsKinematic: 1
+  m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 126
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!82 &7954393640356781152
 AudioSource:

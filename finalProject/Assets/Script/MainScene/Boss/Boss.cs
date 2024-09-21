@@ -24,7 +24,7 @@ public class Boss : MonoBehaviour
 
     private float idleStartTime; // Idle 상태 시작 시간
     private float idleTimeToReattack = 2.0f; // Idle 상태가 지속된 후 재공격 시간
-    private bool isIdle = false; // 현재 Idle 상태인지 여부
+    private bool IsIdle = false; // 현재 Idle 상태인지 여부
 
     void Start()
     {
@@ -42,21 +42,15 @@ public class Boss : MonoBehaviour
         {
             if (!isAttacking)
             {
-                if (isIdle)
-                {
-                    HandleIdleState(distanceToPlayer);
-                }
-                else
-                {
-                    StartCoroutine(BasicAttack());
-                }
+                // 사정거리 내에서 바로 공격
+                StartCoroutine(BasicAttack());
             }
         }
         else
         {
-            isIdle = false;
+            IsIdle = false;
             // 플레이어가 사정거리 밖으로 나간 경우 보스가 다시 플레이어를 추적하도록 설정
-            if (!isAttacking && !isIdle)
+            if (!isAttacking)
             {
                 MoveTowardsPlayer();
             }
@@ -81,7 +75,7 @@ public class Boss : MonoBehaviour
 
     private void MoveTowardsPlayer()
     {
-        if (isIdle) return; // idle 상태에서는 이동하지 않음
+        if (IsIdle) return; // idle 상태에서는 이동하지 않음
 
         Vector3 direction = (player.position - transform.position).normalized;
         Quaternion lookRotation = Quaternion.LookRotation(direction);
@@ -92,7 +86,12 @@ public class Boss : MonoBehaviour
         // 이동
         Vector3 moveDirection = direction * speed * Time.deltaTime;
         rb.MovePosition(rb.position + moveDirection);
+
+        ResetAllTriggers();
+        animator.SetBool("IsWalk", true); // Walk 애니메이션 트리거
     }
+
+
 
     private void HandleIdleState(float distanceToPlayer)
     {
@@ -125,31 +124,35 @@ public class Boss : MonoBehaviour
         }
 
         ResetAllTriggers();
-        animator.SetBool("isIdle", false);
+        animator.SetBool("IsIdle", false);
         animator.SetBool("ATK0", true);
 
+        // 보스가 공격 중일 때 이동을 멈추게 하고 원래 속도 저장
         float originalSpeed = speed;
-        speed = 0;
+        speed = 0; // 공격 중 이동을 막음
 
+        // 현재 재생 중인 애니메이션의 길이를 계산
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         float animationLength = stateInfo.length;
         yield return new WaitForSeconds(animationLength);
 
+        // 공격 위치로 폭탄 생성
         Vector3 attackPosition = player.position;
         Instantiate(atk0Prefab, attackPosition, Quaternion.identity);
 
+        // 애니메이션이 끝날 때까지 대기
         yield return new WaitForSeconds(animationLength / 2);
         animator.SetBool("ATK0", false);
 
         // 공격이 끝난 후 idle 상태로 전환
-        isIdle = true;
+        IsIdle = true;
         idleStartTime = Time.time;
 
         ResetAllTriggers();
-        animator.SetBool("isIdle", true);
+        animator.SetBool("IsIdle", true); // Idle 상태로 명확히 전환
 
         // Speed를 원래 값으로 복원
-        speed = originalSpeed;
+        speed = originalSpeed; // 이동 속도를 원래 값으로 복구
 
         isAttacking = false;
     }

@@ -338,8 +338,8 @@ PrefabInstance:
       value: 10
       objectReference: {fileID: 0}
     m_RemovedComponents:
-    - {fileID: 4524755726158905661, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
     - {fileID: 2218055026219704195, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
+    - {fileID: 4524755726158905661, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}
 --- !u!4 &4244958293321388296 stripped
 Transform:
@@ -381,42 +381,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 0.5, z: 0}
---- !u!114 &2115913346
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8252175027606189221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: daa50495a8eb5eb43bf2a807b0b5eb45, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  moveSpeed: 100
-  stoppingDistance: 50
-  retreatDistance: 30
-  bulletSpeed: 50
-  projectilePrefab: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
-  firePoint: {fileID: 4244958293321388296}
-  fireRate: 1
-  nextFireTime: 1
-  damageAmount: 1
---- !u!114 &3819180748485378967
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8252175027606189221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  maxHealth: 2
-  currentHealth: 0
-  deathSound: {fileID: 8300000, guid: 9d9fab3f45818f84aabca7b7485b74c5, type: 3}
 --- !u!82 &5881805342054733911
 AudioSource:
   m_ObjectHideFlags: 0
@@ -513,6 +477,42 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &2115913346
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8252175027606189221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: daa50495a8eb5eb43bf2a807b0b5eb45, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 100
+  stoppingDistance: 50
+  retreatDistance: 30
+  bulletSpeed: 50
+  projectilePrefab: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
+  firePoint: {fileID: 4244958293321388296}
+  fireRate: 1
+  nextFireTime: 1
+  damageAmount: 1
+--- !u!114 &3819180748485378967
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8252175027606189221}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxHealth: 2
+  currentHealth: 0
+  deathSound: {fileID: 8300000, guid: 9d9fab3f45818f84aabca7b7485b74c5, type: 3}
 --- !u!4 &8777038329509096991 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 796652407307068396, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}

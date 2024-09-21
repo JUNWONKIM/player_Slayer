@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class CreatureHealth : MonoBehaviour
 {
@@ -44,7 +45,6 @@ public class CreatureHealth : MonoBehaviour
     {
         if (animator != null)
         {
-            // Creature의 애니메이터에게 죽는 애니메이션을 재생하라고 알림
             animator.SetBool("isDie", true);
         }
 
@@ -52,22 +52,32 @@ public class CreatureHealth : MonoBehaviour
         if (audioSource != null && deathSound != null)
         {
             audioSource.clip = deathSound;
-            audioSource.volume = 1f; // 볼륨을 필요에 맞게 조절
-            audioSource.Play(); // 죽는 소리 재생
+            audioSource.volume = 1f;
+            audioSource.Play();
+        }
+
+        // Rigidbody 물리 상호작용 비활성화 및 움직임 고정
+        rb.isKinematic = true;
+        rb.velocity = Vector3.zero;
+        rb.constraints = RigidbodyConstraints.FreezeAll; // 모든 축의 움직임 및 회전 고정
+
+        // NavMeshAgent 비활성화 (보스가 NavMesh를 사용하고 있다면)
+        NavMeshAgent agent = GetComponent<NavMeshAgent>();
+        if (agent != null)
+        {
+            agent.enabled = false;
         }
 
         gameObject.tag = "Untagged";
-        // 몇 초 후에 태그를 변경하여 다른 스크립트에서 적임을 인식하지 못하게 함
 
         PlayerLV.IncrementCreatureDeathCount();
-        // 적이 죽었음을 표시
         isDead = true;
 
-        // 적의 위치를 고정시키고 회전을 멈춤
-        rb.velocity = Vector3.zero;
+        // 애니메이션의 정확한 길이를 가져오기
+        AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+        float dieAnimationLength = clipInfo[0].clip.length;
 
-        // 애니메이션의 길이에 따라 오브젝트를 파괴
-        float dieAnimationLength = animator.GetCurrentAnimatorClipInfo(0)[0].clip.length;
         Destroy(gameObject, dieAnimationLength);
     }
+
 }
