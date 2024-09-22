@@ -1,22 +1,34 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class UI_BossHp : MonoBehaviour
 {
-    private Image healthBar; // 체력을 표시할 UI 이미지
+    public Slider healthSlider; // 체력을 표시할 슬라이더
 
-    void Start()
-    {
-        healthBar = GetComponent<Image>(); // 현재 GameObject에 부착된 이미지 컴포넌트를 가져옵니다.
-    }
-
+    // 보스의 체력을 설정하고 UI 업데이트
     public void SetBossHealth(CreatureHealth bossHealth)
     {
-        if (bossHealth != null)
+        if (bossHealth != null && healthSlider != null)
         {
-            // 현재 체력을 최대 체력으로 나누어 비율을 계산
-            float healthPercentage = bossHealth.currentHealth / bossHealth.maxHealth;
-            healthBar.fillAmount = healthPercentage; // UI 이미지의 fillAmount를 업데이트
+            healthSlider.maxValue = bossHealth.maxHealth;
+            healthSlider.value = bossHealth.currentHealth;
+
+            // 지속적으로 보스의 체력 UI를 업데이트하기 위해 코루틴을 시작
+            StartCoroutine(UpdateHealthBar(bossHealth));
         }
+    }
+
+    private IEnumerator UpdateHealthBar(CreatureHealth bossHealth)
+    {
+        // 보스가 살아있는 동안 체력바를 업데이트
+        while (bossHealth != null && bossHealth.currentHealth > 0)
+        {
+            healthSlider.value = bossHealth.currentHealth;
+            yield return null; // 매 프레임마다 업데이트
+        }
+
+        // 보스가 죽으면 체력바를 숨김
+        healthSlider.gameObject.SetActive(false);
     }
 }

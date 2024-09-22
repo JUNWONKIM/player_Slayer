@@ -7,21 +7,30 @@ public class PlayerHP : MonoBehaviour
     public GameObject bossPrefab; // Boss 프리팹
     public float bossSpawnRadius = 200f; // Boss 생성 반경
     private GameObject boss; // 현재 비활성화 되어 있는 Boss
-    public UI_BossHp uiBossHp; // UI_BossHp 스크립트 참조
+
+    public UI_BossHp bossHpUI; // UI_BossHp 스크립트 참조
 
     void Start()
     {
         hp = max_hp;
 
+        // Boss 프리팹을 미리 생성하고 비활성화 상태로 설정
         if (bossPrefab != null)
         {
             boss = Instantiate(bossPrefab);
-            boss.SetActive(false); // 초기에는 비활성화
+            boss.SetActive(false); // 처음에는 비활성화
+        }
+
+        // 슬라이더도 처음에는 비활성화
+        if (bossHpUI != null && bossHpUI.healthSlider != null)
+        {
+            bossHpUI.healthSlider.gameObject.SetActive(false);
         }
     }
 
     void Update()
     {
+        // HP가 최대 HP의 30% 이하일 때 Boss를 생성
         if (hp <= max_hp * 0.3f && boss != null && !boss.activeInHierarchy)
         {
             SpawnBossNearPlayer();
@@ -34,7 +43,7 @@ public class PlayerHP : MonoBehaviour
         Debug.Log("Player HP: " + hp);
     }
 
-    public void SpawnBossNearPlayer()
+    void SpawnBossNearPlayer()
     {
         // 플레이어의 위치를 가져옴
         Vector3 playerPosition = transform.position;
@@ -53,17 +62,11 @@ public class PlayerHP : MonoBehaviour
         boss.transform.position = randomPosition;
         boss.SetActive(true);
 
-        // 슬라이더에 보스 체력 설정
-        UI_BossHp uiBossHp = FindObjectOfType<UI_BossHp>();
-        if (uiBossHp != null)
+        // 슬라이더를 활성화하고 보스 체력을 UI에 설정
+        if (bossHpUI != null && bossHpUI.healthSlider != null)
         {
-            CreatureHealth bossHealth = boss.GetComponent<CreatureHealth>();
-            uiBossHp.SetBossHealth(bossHealth);
+            bossHpUI.healthSlider.gameObject.SetActive(true); // 슬라이더 활성화
+            bossHpUI.SetBossHealth(boss.GetComponent<CreatureHealth>()); // 보스 체력 연결
         }
-
-        // Boss가 생성되면 더 이상 생성하지 않도록
-        enabled = false;
     }
-
-
 }
