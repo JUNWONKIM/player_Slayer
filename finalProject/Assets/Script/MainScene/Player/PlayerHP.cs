@@ -66,7 +66,7 @@ public class PlayerHP : MonoBehaviour
         if (bossHpUI != null && bossHpUI.healthSlider != null)
         {
             bossHpUI.healthSlider.gameObject.SetActive(true); // 슬라이더 활성화
-            bossHpUI.SetBossHealth(boss.GetComponent<CreatureHealth>()); // 보스 체력 연결
+            bossHpUI.SetBossHealth(boss.GetComponent<BossHP>()); // 보스 체력 연결
         }
     }
 }

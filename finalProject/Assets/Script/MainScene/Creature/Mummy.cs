@@ -130,16 +130,5 @@ public class Mummy : MonoBehaviour
         }
     }
 
-    public class BulletCollisionHandler : MonoBehaviour
-    {
-        public float damageAmount;
-        void OnTriggerEnter(Collider other)
-        {
-            PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
-            if (playerHP != null)
-            {
-                playerHP.hp -= damageAmount; // 플레이어의 체력을 감소
-            }
-        }
-    }
+    
 }

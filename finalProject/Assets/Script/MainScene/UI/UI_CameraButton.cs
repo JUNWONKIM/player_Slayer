@@ -18,11 +18,6 @@ public class UI_CameraButton : MonoBehaviour
 
     void Update()
     {
-        // R 키를 누르면 카메라 초기화 함수 호출
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            ResetCameraToInitialPosition();
-        }
 
         // T 키를 누르면 플레이어로 카메라 이동
         if (Input.GetKeyDown(KeyCode.T))

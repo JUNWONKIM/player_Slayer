@@ -143,18 +143,28 @@ public class Player_Shooter_4 : MonoBehaviour
 
         void OnTriggerEnter(Collider other)
         {
-            if (other.gameObject.CompareTag("Creature"))
+            if (other.gameObject.CompareTag("Creature") || other.gameObject.CompareTag("Boss"))
             {
+                // CreatureHealth와 Mummy 컴포넌트 모두 체크
                 CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
+                BossHP BossHealth = other.gameObject.GetComponent<BossHP>();
+                Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
                 if (enemyHealth != null)
                 {
                     enemyHealth.TakeDamage(damageAmount);
+                    Destroy(gameObject);
                 }
 
-                Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
                 if (enemyHealth2 != null)
                 {
                     enemyHealth2.TakeDamage(damageAmount);
+                    Destroy(gameObject);
+                }
+
+                if (BossHealth != null)
+                {
+                    BossHealth.TakeDamage(damageAmount);
+                    Destroy(gameObject);
                 }
             }
         }

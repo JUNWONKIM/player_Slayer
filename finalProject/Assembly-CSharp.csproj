@@ -106,6 +106,9 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_SoundManager.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
+    <Compile Include="Assets\Script\MainScene\GAME\GameSceneManager.cs" />
+    <Compile Include="Assets\Script\MainScene\Creature\Mummy_ex.cs" />
+    <Compile Include="Assets\Script\MainScene\Boss\BossHP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />

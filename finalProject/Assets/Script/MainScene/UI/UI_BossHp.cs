@@ -7,7 +7,7 @@ public class UI_BossHp : MonoBehaviour
     public Slider healthSlider; // 체력을 표시할 슬라이더
 
     // 보스의 체력을 설정하고 UI 업데이트
-    public void SetBossHealth(CreatureHealth bossHealth)
+    public void SetBossHealth(BossHP bossHealth)
     {
         if (bossHealth != null && healthSlider != null)
         {
@@ -19,7 +19,7 @@ public class UI_BossHp : MonoBehaviour
         }
     }
 
-    private IEnumerator UpdateHealthBar(CreatureHealth bossHealth)
+    private IEnumerator UpdateHealthBar(BossHP bossHealth)
     {
         // 보스가 살아있는 동안 체력바를 업데이트
         while (bossHealth != null && bossHealth.currentHealth > 0)

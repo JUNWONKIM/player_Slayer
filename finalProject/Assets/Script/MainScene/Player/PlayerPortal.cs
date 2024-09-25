@@ -11,7 +11,7 @@ public class PlayerPortal : MonoBehaviour
 
     private GameObject[] portals; // 생성된 포탈을 저장할 배열
     private bool portalSpawned = false; // 포탈이 이미 생성되었는지 여부를 추적하는 플래그
-    private Transform boss; // 보스의 Transform을 저장할 변수
+    private GameObject boss; // 보스의 GameObject를 저장할 변수
 
     void Start()
     {
@@ -19,24 +19,20 @@ public class PlayerPortal : MonoBehaviour
         portals = new GameObject[8];
 
         // 태그를 이용해 보스 찾기
-        GameObject bossObject = GameObject.FindGameObjectWithTag("Boss");
-        if (bossObject != null)
-        {
-            boss = bossObject.transform;
-        }
-        
+        boss = GameObject.FindGameObjectWithTag("Boss");
     }
 
     void Update()
     {
+        // 보스 오브젝트를 지속적으로 찾고, 보스가 없으면 업데이트를 진행하지 않음
         if (boss == null)
         {
-            // 보스가 없으면 업데이트를 진행하지 않음
+            boss = GameObject.FindGameObjectWithTag("Boss");
             return;
         }
 
         // 보스와의 거리 확인
-        float distanceToBoss = Vector3.Distance(transform.position, boss.position);
+        float distanceToBoss = Vector3.Distance(transform.position, boss.transform.position);
 
         // 보스와의 거리가 distanceToSpawnPortal 이하일 때, 포탈이 생성되지 않은 경우에만 포탈 생성
         if (distanceToBoss <= distanceToSpawnPortal && !portalSpawned)
@@ -58,8 +54,7 @@ public class PlayerPortal : MonoBehaviour
     void SpawnPortals()
     {
         // 8 방향 벡터를 정의 (동서남북 + 대각선)
-        Vector3[] directions = new Vector3[]
-        {
+        Vector3[] directions = new Vector3[] {
             transform.forward,                // 북쪽
             -transform.forward,               // 남쪽
             transform.right,                  // 동쪽
@@ -71,8 +66,7 @@ public class PlayerPortal : MonoBehaviour
         };
 
         // 각 방향에 맞는 회전값을 정의
-        Quaternion[] rotations = new Quaternion[]
-        {
+        Quaternion[] rotations = new Quaternion[] {
             Quaternion.LookRotation(transform.forward),                // 북쪽을 바라보는 회전
             Quaternion.LookRotation(-transform.forward),               // 남쪽을 바라보는 회전
             Quaternion.LookRotation(transform.right),                  // 동쪽을 바라보는 회전
@@ -115,8 +109,7 @@ public class PlayerPortal : MonoBehaviour
     void UpdatePortalPositions()
     {
         // 포탈의 위치를 보스와의 거리와 관련하여 업데이트
-        Vector3[] directions = new Vector3[]
-        {
+        Vector3[] directions = new Vector3[] {
             transform.forward,                // 북쪽
             -transform.forward,               // 남쪽
             transform.right,                  // 동쪽

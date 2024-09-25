@@ -9753,6 +9753,7 @@ GameObject:
   - component: {fileID: 3802818915604165333}
   - component: {fileID: 7328407200830710712}
   - component: {fileID: 5686056653793946555}
+  - component: {fileID: 1248455121607478335}
   m_Layer: 0
   m_Name: Mummy_ex
   m_TagString: Untagged
@@ -14724,6 +14725,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1248455121607478335
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6287953604210959080}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3d12d87d6a03dbf4ebcf6daba65f4f96, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damageAmount: 2
 --- !u!1 &7628594910936866404
 GameObject:
   m_ObjectHideFlags: 0

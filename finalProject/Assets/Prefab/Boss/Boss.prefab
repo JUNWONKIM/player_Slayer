@@ -10875,7 +10875,7 @@ GameObject:
   - component: {fileID: 4170683914044742674}
   - component: {fileID: 9039301633965190263}
   - component: {fileID: 3969841577075606842}
-  - component: {fileID: 974647841792389388}
+  - component: {fileID: 7325812531043256224}
   - component: {fileID: 5653785596601742560}
   - component: {fileID: 7305883199709931127}
   - component: {fileID: 8053050441341164405}
@@ -10963,14 +10963,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a8a6c4a7c83efd142b192e18a2fd4017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  speed: 15
   rotationSpeed: 5
   atk0Prefab: {fileID: 7815819902453335873, guid: 3a8776d65b1cc5543bf62c52dc72081a, type: 3}
   atk1Prefab: {fileID: 5292557603648156814}
   atk2Prefab: {fileID: 5498239063110878189, guid: 70988b631e25e73428425eaa7ca6575f, type: 3}
   atk3Prefab: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
-  attackRange: 80
---- !u!114 &974647841792389388
+  attackRange: 60
+--- !u!114 &7325812531043256224
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10979,11 +10979,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 8053050441341164415}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
+  m_Script: {fileID: 11500000, guid: ebf3c4ea89c472643a466865f0137e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHealth: 100
-  currentHealth: 100
+  maxHealth: 50
+  currentHealth: 50
   deathSound: {fileID: 8300000, guid: 592dc3e8955c51949a05d298802e497d, type: 3}
 --- !u!65 &5653785596601742560
 BoxCollider:

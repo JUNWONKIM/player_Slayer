@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.EventSystems;
 
 public class UI_Setting : MonoBehaviour
 {
@@ -51,9 +50,6 @@ public class UI_Setting : MonoBehaviour
         Time.timeScale = 0f;  // 게임 일시 정지
         isPaused = true;
         isKeyInfoPanelActive = false;
-
-        // 모든 입력을 차단
-        EventSystem.current.sendNavigationEvents = false;
     }
 
     public void ResumeGame()
@@ -62,14 +58,6 @@ public class UI_Setting : MonoBehaviour
         Time.timeScale = 1f;  // 게임 재개
         isPaused = false;
         isKeyInfoPanelActive = false;
-
-        // 입력 이벤트를 다시 활성화
-        EventSystem.current.sendNavigationEvents = true;
-    }
-
-    public void QuitGame()
-    {
-        Application.Quit();  // 게임 종료
     }
 
     public bool IsSettingsPanelActive()
@@ -77,19 +65,11 @@ public class UI_Setting : MonoBehaviour
         return settingsPanel.activeSelf;  // 설정창이 활성화되어 있는지 확인
     }
 
-    // 설정 패널 토글 버튼
     public void OnSettingsButtonClick()
     {
         ToggleSettingsPanel();  // 버튼으로 설정창 토글
     }
 
-    // 키 정보 패널을 여는 버튼
-    public void OnKeyInfoPanelButtonClick()
-    {
-        OpenKeyInfoPanel();
-    }
-
-    // 키 정보 패널 열기
     public void OpenKeyInfoPanel()
     {
         keyInfoPanel.SetActive(true);  // 키 정보 패널 활성화
@@ -97,7 +77,6 @@ public class UI_Setting : MonoBehaviour
         isKeyInfoPanelActive = true;
     }
 
-    // 키 정보 패널 닫고 설정창으로 돌아가기
     public void CloseKeyInfoPanelAndOpenSettings()
     {
         keyInfoPanel.SetActive(false);  // 키 정보 패널 비활성화
@@ -105,9 +84,8 @@ public class UI_Setting : MonoBehaviour
         isKeyInfoPanelActive = false;
     }
 
-    // 게임 종료 버튼 함수
     public void OnQuitButtonClick()
     {
-        QuitGame();  // 게임 종료
+        Application.Quit();  // 게임 종료
     }
 }
