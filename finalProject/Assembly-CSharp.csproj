@@ -59,6 +59,8 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_Cursor.cs" />
     <Compile Include="Assets\Script\AudioManager.cs" />
     <Compile Include="Assets\Script\MainScene\Player\PlayerHP.cs" />
+    <Compile Include="Assets\Script\MainScene\GAME\GameSceneManager.cs" />
+    <Compile Include="Assets\Script\MainScene\Boss\BossHP.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_BossHp.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_selectCreature.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Skull.cs" />
@@ -73,6 +75,7 @@
     <Compile Include="Assets\Script\MainScene\Ground\Ground.cs" />
     <Compile Include="Assets\Script\MainScene\Player\PlayerPortal.cs" />
     <Compile Include="Assets\Assets\Creatures\Ghost\Scripts\GhostScript.cs" />
+    <Compile Include="Assets\Script\MainScene\Creature\Mummy_ex.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\ATK3_1.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\AssetController.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CreateTransformAfter.cs" />
@@ -106,9 +109,6 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_SoundManager.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Script\MainScene\GAME\GameSceneManager.cs" />
-    <Compile Include="Assets\Script\MainScene\Creature\Mummy_ex.cs" />
-    <Compile Include="Assets\Script\MainScene\Boss\BossHP.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
