@@ -1,14 +1,14 @@
 using UnityEngine;
-
+using System.Collections;
 public class UI_CameraButton : MonoBehaviour
 {
-    private Camera mainCamera; // 메인 카메라를 참조할 변수
-    private Vector3 initialPosition; // 카메라의 초기 위치
-    private Quaternion initialRotation; // 카메라의 초기 회전
+    private Camera mainCamera; // 메인 카메라
+    private Vector3 initialPosition; // 카메라 초기 위치
+    private Quaternion initialRotation; // 카메라 초기 회전
 
     void Start()
     {
-        // 메인 카메라를 가져옴
+       
         mainCamera = Camera.main;
 
         // 초기 카메라의 위치와 회전을 저장
@@ -19,29 +19,29 @@ public class UI_CameraButton : MonoBehaviour
     void Update()
     {
 
-        // T 키를 누르면 플레이어로 카메라 이동
-        if (Input.GetKeyDown(KeyCode.T))
+       
+        if (Input.GetKeyDown(KeyCode.T))  // T 키를 누르면 플레이어로 카메라 이동
         {
             MoveCameraToObjectWithTag("Player");
         }
 
-        // Y 키를 누르면 보스로 카메라 이동
-        if (Input.GetKeyDown(KeyCode.Y))
+      
+        if (Input.GetKeyDown(KeyCode.Y))  // Y 키를 누르면 보스로 카메라 이동
         {
             MoveCameraToObjectWithTag("Boss");
         }
     }
 
-    // 카메라를 초기화하는 함수
-    public void ResetCameraToInitialPosition()
+    
+    public void ResetCameraToInitialPosition()// 카메라 초기화
     {
         // 카메라의 위치와 회전을 초기값으로 설정
         mainCamera.transform.position = initialPosition;
         mainCamera.transform.rotation = initialRotation;
     }
 
-    // 특정 태그를 가진 오브젝트로 카메라 이동 (회전과 높이는 변경하지 않음)
-    public void MoveCameraToObjectWithTag(string tag)
+    
+    public void MoveCameraToObjectWithTag(string tag)// 특정 태그를 가진 오브젝트로 카메라 이동 (회전과 높이는 변경하지 않음)
     {
         GameObject targetObject = GameObject.FindGameObjectWithTag(tag);
         if (targetObject != null)
@@ -50,12 +50,12 @@ public class UI_CameraButton : MonoBehaviour
             Vector3 cameraPosition = mainCamera.transform.position;
             Quaternion cameraRotation = mainCamera.transform.rotation;
 
-            // 카메라의 높이를 유지
+            // 카메라의 높이(y)를 유지
             Vector3 targetPosition = targetObject.transform.position;
             targetPosition.y = cameraPosition.y;
 
-            // 카메라의 전방 방향과 오프셋을 사용하여 오브젝트 위치 조정
-            Vector3 directionToTarget = targetPosition - cameraPosition;
+           
+            Vector3 directionToTarget = targetPosition - cameraPosition; //카메라 이동 방향 설정
             directionToTarget = Quaternion.Inverse(cameraRotation) * directionToTarget;
 
             // 비율 계산 (Y = 100일 때 Z = -40)
@@ -70,19 +70,14 @@ public class UI_CameraButton : MonoBehaviour
             Vector3 adjustedTargetPosition = cameraPosition + (cameraRotation * directionToTarget);
             adjustedTargetPosition.z = adjustedTargetPosition.z + adjustedZ; // Z 좌표를 조정
 
-            // 카메라의 위치를 업데이트
-            mainCamera.transform.position = adjustedTargetPosition;
+           
+            mainCamera.transform.position = adjustedTargetPosition;  // 카메라의 위치를 업데이트
 
-            // 카메라의 회전은 변경하지 않음
-            mainCamera.transform.rotation = cameraRotation;
+       
+            mainCamera.transform.rotation = cameraRotation;     // 카메라의 회전은 변경하지 않음
         }
-        else
-        {
-            Debug.LogWarning($"No object with tag '{tag}' found.");
-        }
+       
     }
-
-
 
 }
 

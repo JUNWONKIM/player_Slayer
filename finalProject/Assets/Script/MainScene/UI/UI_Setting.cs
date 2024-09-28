@@ -4,14 +4,14 @@ using UnityEngine.UI;
 public class UI_Setting : MonoBehaviour
 {
     public GameObject settingsPanel;  // 설정창 패널
-    public GameObject keyInfoPanel;   // 추가된 키 정보 패널
+    public GameObject keyInfoPanel;   // 키 정보 패널
     private bool isPaused = false;
-    private bool isKeyInfoPanelActive = false; // 키 정보 패널의 상태
+    private bool isKeyInfoPanelActive = false; 
 
     void Update()
     {
-        // ESC 키 입력 처리
-        if (Input.GetKeyDown(KeyCode.Escape))
+       
+        if (Input.GetKeyDown(KeyCode.Escape))//ESC 입력 시
         {
             if (isKeyInfoPanelActive)
             {
@@ -25,13 +25,13 @@ public class UI_Setting : MonoBehaviour
             }
             else
             {
-                // 게임이 일시정지되지 않은 상태에서는 ESC를 누르면 설정창을 연다
+                // 게임이 일시정지되지 않은 상태에서는 ESC를 누르면 설정창을 염
                 PauseGame();
             }
         }
     }
 
-    public void ToggleSettingsPanel()
+    public void ToggleSettingsPanel() //설정 버튼 토글 설정
     {
         if (isPaused)
         {
@@ -43,7 +43,7 @@ public class UI_Setting : MonoBehaviour
         }
     }
 
-    void PauseGame()
+    void PauseGame() //설정창 열기
     {
         settingsPanel.SetActive(true);  // 설정창 활성화
         keyInfoPanel.SetActive(false);  // 키 정보 패널 비활성화
@@ -52,7 +52,7 @@ public class UI_Setting : MonoBehaviour
         isKeyInfoPanelActive = false;
     }
 
-    public void ResumeGame()
+    public void ResumeGame() //게임 재개
     {
         settingsPanel.SetActive(false);  // 설정창 비활성화
         Time.timeScale = 1f;  // 게임 재개
@@ -60,31 +60,31 @@ public class UI_Setting : MonoBehaviour
         isKeyInfoPanelActive = false;
     }
 
-    public bool IsSettingsPanelActive()
+    public bool IsSettingsPanelActive()  // 설정창이 활성화되어 있는지 확인
     {
-        return settingsPanel.activeSelf;  // 설정창이 활성화되어 있는지 확인
+        return settingsPanel.activeSelf; 
     }
 
-    public void OnSettingsButtonClick()
+    public void OnSettingsButtonClick() //설정 버튼
     {
-        ToggleSettingsPanel();  // 버튼으로 설정창 토글
+        ToggleSettingsPanel();  
     }
 
-    public void OpenKeyInfoPanel()
+    public void OpenKeyInfoPanel() //키 정보 패널 열기
     {
         keyInfoPanel.SetActive(true);  // 키 정보 패널 활성화
         settingsPanel.SetActive(false);  // 설정창 비활성화
         isKeyInfoPanelActive = true;
     }
 
-    public void CloseKeyInfoPanelAndOpenSettings()
+    public void CloseKeyInfoPanelAndOpenSettings() //키 정보 패널 비활성화, 설정창 활성화
     {
         keyInfoPanel.SetActive(false);  // 키 정보 패널 비활성화
         settingsPanel.SetActive(true);  // 설정창 다시 활성화
         isKeyInfoPanelActive = false;
     }
 
-    public void OnQuitButtonClick()
+    public void OnQuitButtonClick() //게임 종료 버튼
     {
         Application.Quit();  // 게임 종료
     }

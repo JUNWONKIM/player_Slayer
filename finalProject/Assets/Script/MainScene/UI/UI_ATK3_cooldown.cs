@@ -6,61 +6,57 @@ using UnityEngine.UI;
 public class UI_ATK3_cooldown : MonoBehaviour
 {
     private Slider uiSlider;
-    private bool isActive = false;
-    private GameObject bossObject;
+    private bool isActive = false; //ui 비활성화
+    private GameObject bossPrefab;
 
     void Start()
     {
-        // Slidebar_ATK3 태그를 가진 슬라이더를 찾음
+       
         GameObject sliderObject = GameObject.FindGameObjectWithTag("Slidebar_ATK3");
 
         if (sliderObject != null)
         {
             uiSlider = sliderObject.GetComponent<Slider>();
-            uiSlider.gameObject.SetActive(false); // 시작할 때 비활성화
+            uiSlider.gameObject.SetActive(false); //시작 시 비활성화
         }
-        else
-        {
-            Debug.LogWarning("Slidebar_ATK3 태그를 가진 슬라이더를 찾을 수 없습니다.");
-        }
+      
     }
 
+   
     void Update()
     {
-        // Boss 오브젝트를 찾음 (매 프레임마다 확인)
-        bossObject = GameObject.FindGameObjectWithTag("Boss");
+        bossPrefab = GameObject.FindGameObjectWithTag("Boss"); 
 
-        // Boss 오브젝트가 활성화되어 있는 경우에만 슬라이더를 작동
-        if (bossObject != null && bossObject.activeInHierarchy)
+        if (bossPrefab != null && bossPrefab.activeInHierarchy) //보스 프리팹이 존재할 경우
         {
-            // C 키를 눌렀을 때 슬라이더를 활성화하고 카운트다운 시작
-            if (Input.GetKeyDown(KeyCode.C) && !isActive && uiSlider != null)
+
+            if (Input.GetKeyDown(KeyCode.C) && !isActive && uiSlider != null) //c키 입력 시 & ui 비활성화 시
             {
                 StartCoroutine(StartSliderCountdown());
             }
         }
     }
 
-    private IEnumerator StartSliderCountdown()
+    private IEnumerator StartSliderCountdown() //슬라이더 활성화
     {
         isActive = true;
 
-        uiSlider.gameObject.SetActive(true); // 슬라이더 활성화
+        uiSlider.gameObject.SetActive(true); // ui 활성화
         uiSlider.value = 1.0f; // 슬라이더를 꽉 찬 상태로 설정
 
-        float startTime = Time.time;
+        float duration = 10.0f; //지속시간
+        float startTime = Time.time; //시작 시간
 
-        while (Time.time < startTime + 10.0f) // 10초 동안 슬라이더 값을 줄임
+        while (Time.time < startTime + duration) // 지속시간 동안 슬라이더 값을 줄임
         {
-            uiSlider.value = Mathf.Lerp(1.0f, 0.0f, (Time.time - startTime) / 10.0f);
+            float elapsed = Time.time - startTime;
+            uiSlider.value = Mathf.Lerp(1.0f, 0.0f, elapsed / duration);
             yield return null;
         }
 
-        // 슬라이더가 완전히 빈 상태로 설정
-        uiSlider.value = 0.0f;
+        uiSlider.value = 0.0f; //슬라이더를 빈 상태로 설정
 
-        // 슬라이더를 비활성화
-        uiSlider.gameObject.SetActive(false);
+        uiSlider.gameObject.SetActive(false); //슬라이더 비활성화
 
         isActive = false;
     }

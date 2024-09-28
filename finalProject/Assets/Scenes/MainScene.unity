@@ -1939,7 +1939,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myButton: {fileID: 525044796}
   buttonIndex: 2
-  cooldownImage: {fileID: 525044797}
   cooldownTime: 1
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   cooldownColor: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
@@ -2319,11 +2318,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_HorizontalFit: 2
   m_VerticalFit: 2
---- !u!1 &650169491 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 550025859278805463, guid: 3a2081c416d5ccb428661107056cc020, type: 3}
-  m_PrefabInstance: {fileID: 550025858342484484}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &685340704
 GameObject:
   m_ObjectHideFlags: 0
@@ -3174,7 +3168,7 @@ GameObject:
   - component: {fileID: 796093144}
   - component: {fileID: 796093143}
   m_Layer: 5
-  m_Name: p
+  m_Name: T
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3221,7 +3215,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: c105bd823d5adaa4784c1d51b03ced00, type: 3}
+  m_Sprite: {fileID: 21300000, guid: cb4eb6ad5c0eac3448b5c114c98423e7, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4681,7 +4675,7 @@ GameObject:
   - component: {fileID: 1166123730}
   - component: {fileID: 1166123729}
   m_Layer: 5
-  m_Name: b
+  m_Name: Y
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4728,7 +4722,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: e6483efe949e3ac468eb4fb114586c59, type: 3}
+  m_Sprite: {fileID: 21300000, guid: a890fd693d2251f4e8e67189293067c6, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4788,18 +4782,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 550025859278805456, guid: 3a2081c416d5ccb428661107056cc020, type: 3}
   m_PrefabInstance: {fileID: 550025858342484484}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1214243798
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 650169491}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 67452b505a544d24d9b4d6b327b98a48, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1216180475
 GameObject:
   m_ObjectHideFlags: 0
@@ -5260,7 +5242,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4585123da194abd40af85eb74c3ab83a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  healthSlider: {fileID: 1261661126}
+  hpSlider: {fileID: 1261661126}
 --- !u!1 &1330954319
 GameObject:
   m_ObjectHideFlags: 0
@@ -6043,7 +6025,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myButton: {fileID: 1488973283}
   buttonIndex: 1
-  cooldownImage: {fileID: 1488973284}
   cooldownTime: 0.1
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   cooldownColor: {r: 0.24705882, g: 0.24705882, b: 0.24705882, a: 1}
@@ -6622,7 +6603,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myButton: {fileID: 1619000105}
   buttonIndex: 4
-  cooldownImage: {fileID: 1619000106}
   cooldownTime: 1
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   cooldownColor: {r: 0.24705882, g: 0.24705882, b: 0.24705882, a: 1}
@@ -8253,7 +8233,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myButton: {fileID: 2146810605}
   buttonIndex: 3
-  cooldownImage: {fileID: 2146810606}
   cooldownTime: 2
   activeColor: {r: 1, g: 1, b: 1, a: 1}
   cooldownColor: {r: 0.24705882, g: 0.24705882, b: 0.24705882, a: 1}
@@ -8471,7 +8450,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2435515062723371469, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: m_Enabled
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7747659748791650510, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: detectionRange

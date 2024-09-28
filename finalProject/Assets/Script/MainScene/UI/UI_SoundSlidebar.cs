@@ -1,11 +1,12 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 
 public class UI_SoundSlidebar : MonoBehaviour
 {
     public Slider masterSlider; // 마스터 볼륨 슬라이더
-    public Slider bgmSlider;
-    public Slider sfxSlider;
+    public Slider bgmSlider; // BGM 볼륨 슬라이더
+    public Slider sfxSlider; //SFX 볼륨 슬라이더
 
     private void Start()
     {

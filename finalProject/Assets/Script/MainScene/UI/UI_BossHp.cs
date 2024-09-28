@@ -1,34 +1,35 @@
 using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
+using UnityEngine.UI;
+
 
 public class UI_BossHp : MonoBehaviour
 {
-    public Slider healthSlider; // 체력을 표시할 슬라이더
+    public Slider hpSlider; // 체력을 표시할 슬라이더
 
-    // 보스의 체력을 설정하고 UI 업데이트
-    public void SetBossHealth(BossHP bossHealth)
+   
+    public void SetBossHp(BossHP bossHP) //보스 hp 설정
     {
-        if (bossHealth != null && healthSlider != null)
+        if (bossHP != null && hpSlider != null)
         {
-            healthSlider.maxValue = bossHealth.maxHealth;
-            healthSlider.value = bossHealth.currentHealth;
+            hpSlider.maxValue = bossHP.maxHP;
+            hpSlider.value = bossHP.currentHP;
 
-            // 지속적으로 보스의 체력 UI를 업데이트하기 위해 코루틴을 시작
-            StartCoroutine(UpdateHealthBar(bossHealth));
+          
+            StartCoroutine(UpdateHpBar(bossHP)); //보스 hp 업데이트
         }
     }
 
-    private IEnumerator UpdateHealthBar(BossHP bossHealth)
+    private IEnumerator UpdateHpBar(BossHP bossHP) //보스 hp 업데이트
     {
-        // 보스가 살아있는 동안 체력바를 업데이트
-        while (bossHealth != null && bossHealth.currentHealth > 0)
+        
+        while (bossHP != null && bossHP.currentHP > 0) //boss가 살아 있을 시
         {
-            healthSlider.value = bossHealth.currentHealth;
-            yield return null; // 매 프레임마다 업데이트
+            hpSlider.value = bossHP.currentHP;
+            yield return null; 
         }
 
-        // 보스가 죽으면 체력바를 숨김
-        healthSlider.gameObject.SetActive(false);
+       
+        hpSlider.gameObject.SetActive(false); //보스가 죽으면 비활성화
     }
 }

@@ -22,9 +22,9 @@ public class PlayerHP : MonoBehaviour
         }
 
         // 슬라이더도 처음에는 비활성화
-        if (bossHpUI != null && bossHpUI.healthSlider != null)
+        if (bossHpUI != null && bossHpUI.hpSlider != null)
         {
-            bossHpUI.healthSlider.gameObject.SetActive(false);
+            bossHpUI.hpSlider.gameObject.SetActive(false);
         }
     }
 
@@ -63,10 +63,10 @@ public class PlayerHP : MonoBehaviour
         boss.SetActive(true);
 
         // 슬라이더를 활성화하고 보스 체력을 UI에 설정
-        if (bossHpUI != null && bossHpUI.healthSlider != null)
+        if (bossHpUI != null && bossHpUI.hpSlider != null)
         {
-            bossHpUI.healthSlider.gameObject.SetActive(true); // 슬라이더 활성화
-            bossHpUI.SetBossHealth(boss.GetComponent<BossHP>()); // 보스 체력 연결
+            bossHpUI.hpSlider.gameObject.SetActive(true); // 슬라이더 활성화
+            bossHpUI.SetBossHp(boss.GetComponent<BossHP>()); // 보스 체력 연결
         }
     }
 }

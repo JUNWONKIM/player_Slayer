@@ -1,6 +1,6 @@
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 using UnityEngine.UI;
 public class UI_playerLV : MonoBehaviour
 {
@@ -9,17 +9,15 @@ public class UI_playerLV : MonoBehaviour
 
     void Start()
     {
-        // 초기 텍스트 설정
-        UpdateLevelText();
+        UpdateLevelText(); 
     }
 
     void Update()
     {
-        // 매 프레임마다 텍스트 업데이트
         UpdateLevelText();
     }
 
-    void UpdateLevelText()
+    void UpdateLevelText() //레벨 텍스트 업데이트
     {
         levelText.text = "Lv :  " + playerLV.LV;
     }

@@ -6,8 +6,8 @@ using UnityEngine.SceneManagement;
 
 public class BossHP : MonoBehaviour
 {
-    public float maxHealth = 1; // 최대 체력
-    public float currentHealth; // 현재 체력
+    public float maxHP = 1; // 최대 체력
+    public float currentHP; // 현재 체력
     private Animator animator; // Creature의 애니메이터 컴포넌트
     private bool isDead = false; // 적이 죽었는지 여부
     private Rigidbody rb;
@@ -18,7 +18,7 @@ public class BossHP : MonoBehaviour
 
     void Start()
     {
-        currentHealth = maxHealth; // 시작할 때 최대 체력으로 설정
+        currentHP = maxHP; // 시작할 때 최대 체력으로 설정
         animator = GetComponent<Animator>(); // 애니메이터 컴포넌트 가져오기
         rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
         audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
@@ -35,9 +35,9 @@ public class BossHP : MonoBehaviour
     {
         if (!isDead)
         {
-            currentHealth -= amount; // 데미지만큼 체력 감소
+            currentHP -= amount; // 데미지만큼 체력 감소
 
-            if (currentHealth <= 0)
+            if (currentHP <= 0)
             {
                 Die(); // 체력이 0 이하이면 사망 처리
             }
