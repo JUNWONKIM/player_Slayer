@@ -4,11 +4,10 @@ using UnityEngine;
 public class BulletPool : MonoBehaviour
 {
     public static BulletPool instance; // 싱글톤 인스턴스
+    public GameObject[] bulletPrefabs; // 투사체 프리팹
+    public int poolSizePerBulletType = 10; 
 
-    public GameObject[] bulletPrefabs; // 총알 프리팹 배열
-    public int poolSizePerBulletType = 10; // 각 총알 타입별 풀의 초기 크기
-
-    private Dictionary<GameObject, List<GameObject>> bulletPools; // 총알 풀 딕셔너리
+    private Dictionary<GameObject, List<GameObject>> bulletPools; // 투사체 풀 딕셔너리
 
     void Awake()
     {
@@ -16,8 +15,8 @@ public class BulletPool : MonoBehaviour
         InitializePools();
     }
 
-    // 풀 초기화
-    void InitializePools()
+
+    void InitializePools() //투사체 풀 생성
     {
         bulletPools = new Dictionary<GameObject, List<GameObject>>();
 
@@ -36,8 +35,8 @@ public class BulletPool : MonoBehaviour
         }
     }
 
-    // 사용 가능한 총알 오브젝트 반환
-    public GameObject GetBulletFromPool(GameObject bulletPrefab)
+  
+    public GameObject GetBulletFromPool(GameObject bulletPrefab)  // 사용 가능한 투사체 오브젝트 반환
     {
         if (!bulletPools.ContainsKey(bulletPrefab))
         {
@@ -55,13 +54,13 @@ public class BulletPool : MonoBehaviour
             }
         }
 
-        // 사용 가능한 총알이 없으면 풀에 추가 생성하여 반환
+        // 사용 가능한 투사체이 없으면 풀에 추가 생성하여 반환
         GameObject newBullet = Instantiate(bulletPrefab);
         pool.Add(newBullet);
         return newBullet;
     }
 
-    // 총알 오브젝트를 풀에 반환
+    // 투사체 오브젝트를 풀에 반환
     public void ReturnBulletToPool(GameObject bullet)
     {
         bullet.SetActive(false);

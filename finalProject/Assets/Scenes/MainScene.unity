@@ -6853,7 +6853,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1711121696}
-  - component: {fileID: 1711121695}
   - component: {fileID: 1711121697}
   m_Layer: 0
   m_Name: ObjectManager
@@ -6862,24 +6861,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1711121695
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1711121694}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc35e78081c6faf46a64309c435cef87, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  bulletPrefabs:
-  - {fileID: 3153472991145048103, guid: 65002c145c1eb4749b6ef74c52637847, type: 3}
-  - {fileID: 8378648546881499446, guid: 150b37074f9b819428ac13fb35922a64, type: 3}
-  - {fileID: 5610884078883986163, guid: 0cd71b44ac848604c890a57d9287706e, type: 3}
-  - {fileID: 689667626583958020, guid: ceda43f19a4fec1448f24f3950594c7d, type: 3}
-  poolSizePerBulletType: 1
 --- !u!4 &1711121696
 Transform:
   m_ObjectHideFlags: 0

@@ -1,64 +1,70 @@
 using UnityEngine;
-
+using System.Collections;
 public class Mummy : MonoBehaviour
 {
-    private Transform player; // 플레이어의 Transform
-    public float normalSpeed = 2f; // 미라의 기본 이동 속도
-    public float chaseSpeed = 5f; // 플레이어를 추격할 때의 속도
-    public float chaseRange = 10f; // 플레이어를 추격하기 시작하는 범위
-    public float explodeRange = 1.5f; // 폭발하는 범위
+   
+    public float normalSpeed = 2f; // 이동 속도
+    public float chaseSpeed = 5f; // 돌진 속도
+    public float chaseRange = 10f; //돌진 시작 범위
+    public float explodeRange = 1.5f; // 폭발 시작 범위
     public GameObject explosionPrefab; // 폭발 이펙트 프리팹
-    public float chaseDuration = 3f; // 추격 지속 시간 (초)
-    public float damageAmount = 1f;
+    public float chaseDuration = 3f; // 돌진 시간
+    public float damageAmount = 1f; //데미지
     public float maxHealth = 1; // 최대 체력
     public float currentHealth; // 현재 체력
+    public float chaseErrorRadius = 10f; //돌진 오차 범위
 
     private Rigidbody rb;
-    private bool isChasing = false;
+    private Transform player;
+    private bool isChasing = false; //돌진 여부
     private bool hasDirectionSet = false; // 방향이 설정되었는지 여부
-    private Vector3 chaseDirection; // 돌진할 때의 방향
+    private Vector3 chaseDirection; // 돌진 방향
     private float chaseTimer = 0f;
 
     void Start()
     {
-        currentHealth = maxHealth; // 시작할 때 최대 체력으로 설정
-
         rb = GetComponent<Rigidbody>();
         if (player == null)
         {
             player = GameObject.FindGameObjectWithTag("Player").transform;
         }
+
+        currentHealth = maxHealth; // 시작 시 최대 체력으로 설정
+
     }
 
     void Update()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
+        //폭발 범위일 시 폭발
         if (distanceToPlayer <= explodeRange)
-        {
-            // 플레이어와의 거리가 폭발 범위 안에 들어오면
+        {           
             Explode();
         }
+
+        //돌진 범위 안일 시
         else if (!isChasing && distanceToPlayer <= chaseRange)
         {
-            // 플레이어와의 거리가 추격 범위 안에 들어오면
             isChasing = true;
             chaseTimer = chaseDuration;
             hasDirectionSet = false; // 방향 초기화
         }
 
+        //돌진 시
         if (isChasing)
         {
             chaseTimer -= Time.deltaTime;
 
+            //방향 설정
             if (!hasDirectionSet)
             {
                 SetChaseDirection();
             }
 
+            //돌진 시간 뒤 폭발
             if (chaseTimer <= 0f)
             {
-                // 추격 시작 후 3초가 지나면 폭발
                 Explode();
             }
         }
@@ -79,45 +85,41 @@ public class Mummy : MonoBehaviour
         }
     }
 
-    void MoveTowardsDirection(Vector3 direction, float speed)
+    void MoveTowardsDirection(Vector3 direction, float speed) //용사를 향해 이동
     {
         Vector3 newPosition = transform.position + direction * speed * Time.deltaTime;
         rb.MovePosition(newPosition);
     }
 
-    void MoveTowardsChaseDirection(float speed)
+    void MoveTowardsChaseDirection(float speed) //용사를 향해 돌진
     {
         Vector3 newPosition = transform.position + chaseDirection * speed * Time.deltaTime;
         rb.MovePosition(newPosition);
     }
 
-    void RotateTowardsDirection(Vector3 direction)
+    void RotateTowardsDirection(Vector3 direction) //용사를 향해 회전
     {
-        // 해당 방향을 바라보도록 회전
         Quaternion targetRotation = Quaternion.LookRotation(direction, Vector3.up);
         rb.MoveRotation(targetRotation);
     }
 
-    void SetChaseDirection()
+    void SetChaseDirection() //돌진 방향 설정
     {
-        // 플레이어의 위치를 기준으로 돌진할 랜덤한 방향 설정
-        Vector3 randomDirection = Random.insideUnitSphere * 10f; // 2f는 오차 반경입니다.
+        Vector3 randomDirection = Random.insideUnitSphere * chaseErrorRadius; // 오차 반경 설정
         randomDirection += player.position;
-        randomDirection.y = transform.position.y; // 수직 이동 방지
+        randomDirection.y = transform.position.y; // y축 이동 금지
         chaseDirection = (randomDirection - transform.position).normalized;
-        hasDirectionSet = true; // 방향이 설정되었음을 표시
+        hasDirectionSet = true; // 방향 설정 완료
     }
 
-    void Explode()
+    void Explode() //폭발 실행
     {
-        // 폭발 효과 생성
-        Instantiate(explosionPrefab, transform.position, transform.rotation);
-        PlayerLV.IncrementCreatureDeathCount();
-        // 미라 제거
-        Destroy(gameObject);
+        Instantiate(explosionPrefab, transform.position, transform.rotation); //폭발 이펙트 생성
+        PlayerLV.IncrementCreatureDeathCount(); //크리쳐 데스 카운트 추가
+        
+        Destroy(gameObject); //미라 제거
     }
 
-    // 이펙트와의 충돌 처리
 
 
     public void TakeDamage(float amount)
@@ -126,7 +128,7 @@ public class Mummy : MonoBehaviour
 
         if (currentHealth <= 0)
         {
-            Explode(); // 체력이 0 이하이면 사망 처리
+            Explode(); // 체력이 0이 되면 폭발
         }
     }
 

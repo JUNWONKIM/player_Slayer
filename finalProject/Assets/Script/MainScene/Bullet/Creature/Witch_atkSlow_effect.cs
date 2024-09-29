@@ -5,19 +5,19 @@ using UnityEngine;
 public class Witch_atkSlow_effect : MonoBehaviour
 {
     private Transform player;
-    public float lifetime = 5.0f;  // 파티클의 수명 시간
+    public float lifetime = 5.0f;  // 파티클의 지속 시간
 
     void Start()
     {
         player = GameObject.FindGameObjectWithTag("Player").transform;
-        Destroy(gameObject, lifetime);  // 5초 후에 파티클을 파괴
+        Destroy(gameObject, lifetime);  // 지속 시간 뒤 파티클 삭제
     }
 
     void Update()
     {
         if (player != null)
         {
-            transform.position = player.position;  // 파티클을 플레이어 위치로 이동
+            transform.position = player.position;  // 파티클이 용사를 따라다니게함
         }
     }
 }

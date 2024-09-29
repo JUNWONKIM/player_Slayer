@@ -7,19 +7,19 @@ public class BossSound : MonoBehaviour
     public AudioClip runSound;
     public AudioClip atk0Sound;
     public AudioClip atk1Sound;
-    // ATK2에 대한 소리 제거
+
 
     public float walkVolume = 1.0f;
     public float runVolume = 1.0f;
     public float atk0Volume = 1.0f;
     public float atk1Volume = 1.0f;
-    // ATK2에 대한 볼륨 설정 제거
+
 
     public float walkPitch = 1.0f;
     public float runPitch = 1.0f;
     public float atk0Pitch = 1.0f;
     public float atk1Pitch = 1.0f;
-    // ATK2에 대한 피치 설정 제거
+
 
     public float soundDelay = 0.1f;
 
@@ -41,9 +41,8 @@ public class BossSound : MonoBehaviour
         HandleAnimationSound();
     }
 
-    private void HandleAnimationSound()
+    private void HandleAnimationSound() //애니메이션 실행 시 소리 실행
     {
-        // 애니메이션 파라미터 상태 가져오기
         bool isRun = animator.GetBool("IsRun");
         bool isAtk0 = animator.GetBool("ATK0");
         bool isAtk1 = animator.GetBool("ATK1");
@@ -74,7 +73,7 @@ public class BossSound : MonoBehaviour
         }
     }
 
-    private void ChangeSound(string newState, AudioClip newClip, float volume, float pitch, bool loop)
+    private void ChangeSound(string newState, AudioClip newClip, float volume, float pitch, bool loop) //소리 설정 변경
     {
         if (currentAnimationState != newState || !isSoundPlaying)
         {
@@ -89,7 +88,7 @@ public class BossSound : MonoBehaviour
         }
     }
 
-    private IEnumerator PlaySoundWithDelay(string newState, AudioClip newClip, float volume, float pitch, bool loop, float delay)
+    private IEnumerator PlaySoundWithDelay(string newState, AudioClip newClip, float volume, float pitch, bool loop, float delay) //사운드 실행 전 딜레이
     {
         // 소리 재생 전에 대기
         yield return new WaitForSeconds(delay);
@@ -98,7 +97,7 @@ public class BossSound : MonoBehaviour
         ChangeSound(newState, newClip, volume, pitch, loop);
     }
 
-    private void StopSound()
+    private void StopSound() //소리 중지
     {
         if (audioSource.isPlaying)
         {

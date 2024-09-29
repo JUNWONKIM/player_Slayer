@@ -140,8 +140,8 @@ public class Player_Shooter_2 : MonoBehaviour
         {
             if (other.gameObject.CompareTag("Creature") || other.gameObject.CompareTag("Boss"))
             {
-                // CreatureHealth와 Mummy 컴포넌트 모두 체크
-                CreatureHealth enemyHealth = other.gameObject.GetComponent<CreatureHealth>();
+                // CreatureHp와 Mummy 컴포넌트 모두 체크
+                CreatureHp enemyHealth = other.gameObject.GetComponent<CreatureHp>();
                 BossHP BossHealth = other.gameObject.GetComponent<BossHP>();
                 Mummy enemyHealth2 = other.gameObject.GetComponent<Mummy>();
                 if (enemyHealth != null)

@@ -1,43 +1,36 @@
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.UI;
-using UnityEngine.EventSystems; // EventSystem 사용
+using UnityEngine.EventSystems; 
 
 public class CreatureSpawner : MonoBehaviour
 {
-    public GameObject playerPrefab; // 플레이어 프리팹
-    public GameObject[] creaturePrefabs; // 적 오브젝트 프리팹 배열
-    public float spawnRange = 30f; // 플레이어와의 최소 소환 범위
+    public GameObject playerPrefab; // 용사 프리팹
+    public GameObject[] creaturePrefabs; // 크리쳐 프리팹
+    public float spawnRange = 30f; //최소 소환 범위
+    public int selectedCreature = 1; //선택된 크리쳐
+    public UI_selectCreature[] uiButtons; // UI 버튼 스크립트
+    public GraphicRaycaster graphicRaycaster; //캔버스 레이캐스터
+    public EventSystem eventSystem; //캔버스 이벤트 시스템
+    public UI_Setting uiSetting;  // UI_Setting 스크립트
 
     private const string GroundTag = "ground";
     private const int LeftMouseButton = 0;
-    public int selectedCreature = 1;
-
     private LineRenderer lineRenderer;
 
-    public UI_selectCreature[] uiButtons; // UI 버튼 스크립트 배열
-    public GraphicRaycaster graphicRaycaster;
-    public EventSystem eventSystem;
-
-    // UI_Setting 스크립트에 대한 참조 추가
-    public UI_Setting uiSetting;
 
     void Start()
     {
+        //소환 가능 범위 표시
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 360;
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
-        lineRenderer.useWorldSpace = false; // 로컬 좌표계 사용
+        lineRenderer.useWorldSpace = false; 
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.startColor = Color.red;
         lineRenderer.endColor = Color.red;
-    }
-
-    public bool IsWithinSpawnRange(Vector3 position)
-    {
-        Vector3 playerPosition = playerPrefab.transform.position;
-        return Vector3.Distance(playerPosition, position) <= spawnRange;
     }
 
     void Update()
@@ -63,8 +56,13 @@ public class CreatureSpawner : MonoBehaviour
 
         DrawSpawnRange();
     }
+    public bool IsWithinSpawnRange(Vector3 position) //스폰 가능 범위 확인
+    {
+        Vector3 playerPosition = playerPrefab.transform.position;
+        return Vector3.Distance(playerPosition, position) <= spawnRange;
+    }
 
-    void HandleCreatureSelection()
+    void HandleCreatureSelection() //소환할 크리쳐 선택
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -84,12 +82,12 @@ public class CreatureSpawner : MonoBehaviour
         }
     }
 
-    void DrawSpawnRange()
+    void DrawSpawnRange() //스폰 범위 표시
     {
         Vector3 playerPosition = playerPrefab.transform.position;
         Vector3 center = new Vector3(playerPosition.x, 1f, playerPosition.z);
 
-        for (int i = 0; i < 360; i++)
+        for (int i = 0; i < 360; i++) //LinRenderer 사용
         {
             float rad = Mathf.Deg2Rad * i;
             float x = center.x + Mathf.Cos(rad) * spawnRange;
@@ -98,7 +96,7 @@ public class CreatureSpawner : MonoBehaviour
         }
     }
 
-    void SpawnSelectedCreature(int index)
+    void SpawnSelectedCreature(int index) //선택된 크리쳐 소환
     {
         if (index < creaturePrefabs.Length)
         {
@@ -106,36 +104,32 @@ public class CreatureSpawner : MonoBehaviour
             {
                 GameObject creatureToSpawn = creaturePrefabs[index];
                 SpawnCreature(creatureToSpawn);
-
-                // 버튼의 쿨타임 시작
-                TriggerButtonCooldown(index);
+                TriggerButtonCooldown(index); //버튼 쿨타임 시작
             }
         }
     }
 
-    void SpawnRandomCreature()
+    void SpawnRandomCreature() //마녀 랜덤 소환
     {
         int randomIndex = Random.Range(3, creaturePrefabs.Length);
         if (!uiButtons[randomIndex].IsOnCooldown())
         {
             GameObject creatureToSpawn = creaturePrefabs[randomIndex];
             SpawnCreature(creatureToSpawn);
-
-            // 버튼의 쿨타임 시작
-            TriggerButtonCooldown(randomIndex);
+            TriggerButtonCooldown(randomIndex);//버튼 쿨타임 시작
         }
     }
 
-    void SpawnCreature(GameObject creaturePrefab)
+    void SpawnCreature(GameObject creaturePrefab) //크리쳐 소환
     {
         Vector3 playerPosition = playerPrefab.transform.position;
 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag(GroundTag))
+        if (Physics.Raycast(ray, out RaycastHit hit) && hit.collider.CompareTag(GroundTag)) //클릭된 오브젝트가 Ground일 경우
         {
             Vector3 spawnPosition = hit.point;
 
-            if (Vector3.Distance(new Vector3(playerPosition.x, 0f, playerPosition.z), new Vector3(spawnPosition.x, 0f, spawnPosition.z)) > spawnRange)
+            if (Vector3.Distance(new Vector3(playerPosition.x, 0f, playerPosition.z), new Vector3(spawnPosition.x, 0f, spawnPosition.z)) > spawnRange) //스폰 범위일 경우
             {
                 if (creaturePrefab != null)
                 {
@@ -145,7 +139,7 @@ public class CreatureSpawner : MonoBehaviour
         }
     }
 
-    void TriggerButtonCooldown(int index)
+    void TriggerButtonCooldown(int index) //UI 쿨다운 시작
     {
         if (index < uiButtons.Length)
         {
@@ -153,8 +147,7 @@ public class CreatureSpawner : MonoBehaviour
         }
     }
 
-    // UI 위에서 클릭이 발생했는지 확인하는 함수
-    bool IsPointerOverUIElement()
+    bool IsPointerOverUIElement() //설정창이 클릭될 경우 소환 x
     {
         PointerEventData pointerData = new PointerEventData(eventSystem);
         pointerData.position = Input.mousePosition;

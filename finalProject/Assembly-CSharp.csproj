@@ -66,9 +66,9 @@
     <Compile Include="Assets\Script\MainScene\Creature\Skull.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_playerHP.cs" />
     <Compile Include="Assets\Script\MainScene\Player\Shooter\Player_Shooter_1.cs" />
-    <Compile Include="Assets\Script\MainScene\Creature\CreatureHealth.cs" />
+    <Compile Include="Assets\Script\MainScene\Creature\CreatureHp.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_SoundSlidebar.cs" />
-    <Compile Include="Assets\Script\MainScene\Creature\Witch_freeze.cs" />
+    <Compile Include="Assets\Script\MainScene\Creature\Witch.cs" />
     <Compile Include="Assets\Script\MainScene\Player\Shooter\Player_Shooter_2.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\ATK2.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_CameraButton.cs" />
@@ -79,7 +79,6 @@
     <Compile Include="Assets\Script\MainScene\Boss\ATK3_1.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\AssetController.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CreateTransformAfter.cs" />
-    <Compile Include="Assets\Script\MainScene\Creature\Witch_atkSlow.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\Boss.cs" />
     <Compile Include="Assets\Script\MainScene\Player\PlayerBurn.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Ghost.cs" />

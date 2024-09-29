@@ -1,49 +1,53 @@
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
+using System.Collections;
+
 
 public class Ghost : MonoBehaviour
 {
-    public float moveSpeed = 5f; // 적의 이동 속도
-    public float stoppingDistance = 5f; // 플레이어와의 멈추는 거리
-    public float retreatDistance = 5f; // 플레이어로부터 후퇴하는 거리
-
-    public float bulletSpeed = 50f;
-    public GameObject projectilePrefab; // 발사할 투사체 프리팹
+    public float moveSpeed = 5f; // 이동속도
+    public float stoppingDistance = 5f; // 공격 사거리
+    public float retreatDistance = 5f; // 도망 사거리
+    public float bulletSpeed = 50f; // 투사체 속도
+    public GameObject projectilePrefab; // 투사체 프리팹
     public Transform firePoint; // 발사 지점
-    public float fireRate = 1f; // 발사 속도 (1초당 한 발)
-    public float nextFireTime = 0f;
+    public float fireRate = 1f; // 발사 속도
+    public float nextFireTime = 0f; // 발사 시간 기록
+    public float damageAmount = 1f; // 데미지
 
-    public float damageAmount = 1f;
-
-    private Transform player; // 플레이어의 위치
-    private Rigidbody rb; // 고스트의 Rigidbody 컴포넌트
-    private Animator animator; // 고스트의 애니메이터 컴포넌트
+    private Transform player; 
+    private Rigidbody rb; 
+    private Animator animator; 
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform; // 플레이어의 위치 찾기
-        rb = GetComponent<Rigidbody>(); // Rigidbody 컴포넌트 가져오기
-        animator = GetComponent<Animator>(); // 애니메이터 컴포넌트 가져오기
+        rb = GetComponent<Rigidbody>(); 
+        animator = GetComponent<Animator>(); 
+
+        player = GameObject.FindGameObjectWithTag("Player").transform; // 용사 위치
+      
     }
 
     void Update()
     {
         if (player != null && !animator.GetBool("isDie"))
         {
-            // 플레이어와의 거리 계산
+            // 용사와의 거리 계산
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
+            //공격 사거리까지 이동
             if (distanceToPlayer > stoppingDistance)
             {
-                // 플레이어를 향해 이동
                 Move();
             }
+
+            //사거리 안으로 접근 시 공격
             else if (distanceToPlayer <= stoppingDistance && distanceToPlayer > retreatDistance)
-            {
-                // 공격 상태로 전환
+            {           
                 Attack();
             }
         }
+
+        //죽으면 죽는 이펙트 프리팹 활성화 & 나머지 프리팹 비활성화
         else
         {
             Transform childObject_1 = transform.Find("Ghost");
@@ -58,59 +62,55 @@ public class Ghost : MonoBehaviour
         }
     }
 
-    void Move()
+    void Move() //이동
     {
-        // 이동 애니메이션
-        animator.SetBool("isAttack", false);
+   
+        animator.SetBool("isAttack", false);// 이동 애니메이션
 
-        // 플레이어를 바라보도록 회전
+        // 용사를 바라보도록 회전
         Vector3 lookDirection = (player.position - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(lookDirection);
         rb.MoveRotation(rotation);
 
-        // 플레이어 방향으로 이동
+        //용사로 이동
         rb.MovePosition(transform.position + transform.forward * moveSpeed * Time.deltaTime);
     }
 
     void Attack()
     {
-        // 공격 애니메이션
-        animator.SetBool("isAttack", true);
+        
+        animator.SetBool("isAttack", true);// 공격 애니메이션
 
         // 투사체 발사
-        if (Time.time >= nextFireTime)
+        if (Time.time >= nextFireTime) // 발사 가능 시간 확인
         {
-            transform.LookAt(player);
-            Vector3 direction = player.position - firePoint.position;
+            transform.LookAt(player); //용사를 바라봄
+            Vector3 direction = player.position - firePoint.position; //발사 방향
             direction.Normalize();
-            GameObject bullet = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
+            GameObject bullet = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);// 투사체 생성
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed; // 투사체 속도
-            Destroy(bullet, 3f); // 3초 후에 파괴
+            Destroy(bullet, 3f); // 일정 시간 뒤 투사체 파괴
             nextFireTime = Time.time + 1f / fireRate; // 다음 발사 시간 설정
 
+            //투사체 충돌 처리
             BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
             collisionHandler.damageAmount = damageAmount;
         }
     }
 
-    public void DieAnimationComplete()
-    {
-        // 스크립트를 비활성화하여 이동 및 회전 멈춤
-        enabled = false;
-    }
 
-    public class BulletCollisionHandler : MonoBehaviour
+    public class BulletCollisionHandler : MonoBehaviour //투사체 충돌처리
     {
-        public float damageAmount;
+        public float damageAmount; //투사체 데미지
         void OnTriggerEnter(Collider other)
         {
             PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
             if (playerHP != null)
             {
-                playerHP.hp -= damageAmount; // 플레이어의 체력을 1 감소
+                playerHP.hp -= damageAmount; 
                 
             
-            Destroy(gameObject);
+            Destroy(gameObject); 
             }
         }
     }

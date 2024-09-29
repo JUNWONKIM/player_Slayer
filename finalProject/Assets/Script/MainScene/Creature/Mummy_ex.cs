@@ -1,29 +1,19 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class Mummy_ex : MonoBehaviour
 {
-    public float damageAmount;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    public float damageAmount; //데미지
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
+ 
  
     void OnTriggerEnter(Collider other)
     {
         PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
         if (playerHP != null)
         {
-            playerHP.hp -= damageAmount; // 플레이어의 체력을 감소
+            playerHP.hp -= damageAmount; //용사 체력 감소
         }
         
     }   
