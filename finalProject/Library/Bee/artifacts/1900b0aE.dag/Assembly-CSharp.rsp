@@ -347,8 +347,6 @@
 -r:"Library/Bee/artifacts/1900b0aE.dag/Unity.VSCode.Editor.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/1900b0aE.dag/UnityEngine.UI.ref.dll"
-"Assets/Assets/Creatures/Ghost/Scripts/GhostScript.cs"
-"Assets/Assets/Creatures/Skull/Readme/Scripts/Readme.cs"
 "Assets/Assets/Tortoise Boss/Demo/AssetController.cs"
 "Assets/Assets/Tortoise Boss/Demo/CameraController/Scripts/CameraController.cs"
 "Assets/Assets/Tortoise Boss/Demo/CreateTransformAfter.cs"

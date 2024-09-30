@@ -74,7 +74,6 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_CameraButton.cs" />
     <Compile Include="Assets\Script\MainScene\Ground\Ground.cs" />
     <Compile Include="Assets\Script\MainScene\Player\PlayerPortal.cs" />
-    <Compile Include="Assets\Assets\Creatures\Ghost\Scripts\GhostScript.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Mummy_ex.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\ATK3_1.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\AssetController.cs" />
@@ -92,7 +91,6 @@
     <Compile Include="Assets\Script\MainScene\Boss\BossSound.cs" />
     <Compile Include="Assets\Script\MainScene\Bullet\Creature\Ghost_bullet.cs" />
     <Compile Include="Assets\Script\MainScene\Player\Shooter\Player_Shooter_4.cs" />
-    <Compile Include="Assets\Assets\Creatures\Skull\Readme\Scripts\Readme.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Mummy.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\ATK1.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_ATK3_cooldown.cs" />
@@ -112,8 +110,6 @@
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
     <None Include="Assets\Assets\UI\Font\_README.txt" />
-    <None Include="Assets\Assets\Sound\BackGround\ReadMe.txt" />
-    <None Include="Assets\Assets\Creatures\Ghost\Documents\readme_txt.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

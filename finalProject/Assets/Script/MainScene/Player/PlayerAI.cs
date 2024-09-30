@@ -3,26 +3,28 @@ using UnityEngine;
 
 public class PlayerAI : MonoBehaviour
 {
-    public static PlayerAI instance;
+    public static PlayerAI instance; // 싱글톤
 
     public float moveSpeed = 100f; // 이동 속도
-    public float slowSpeed = 2f; // Slow 효과 배수
-    public bool isFreezed = false;
+    public float slowSpeed = 2f; // 슬로우 배수
+    public bool isFreezed = false; // 슬로우 상태 여부
 
-    public float avoidanceDistance = 3f; // 총알을 피하는 거리
-    public float bulletDetectionRange = 20f;
+    public float avoidanceDistance = 3f; // 투사체를 피하는 거리
+    public float bulletDetectionRange = 20f; // 투사체 감지 거리
+
     private Transform target; // 가장 가까운 적의 위치
-    private Transform nearestBullet; // 가장 가까운 총알의 위치
-    private Rigidbody rb; // 플레이어의 Rigidbody 컴포넌트
+    private Transform nearestBullet; // 가장 가까운 투사체의 위치
+    private Rigidbody rb;
+    private Animator animator; // 애니메이터 추가
 
-    private enum PlayerState
+    private enum PlayerState // 용사 상태 구분
     {
-        MoveTowardsCreature,
-        AvoidBullet,
-        MoveAwayFromCreature
+        MoveAwayFromCreature, // 적에게서 멀어짐
+        AvoidBullet, // 투사체를 피함
+        Idle // 대기 상태
     }
+    private PlayerState currentState = PlayerState.MoveAwayFromCreature;
 
-    private PlayerState currentState = PlayerState.MoveTowardsCreature;
     private float stateChangeTime = 0f;
     private float stateChangeDuration = 0.5f; // 상태 변경 유지 시간
 
@@ -34,17 +36,18 @@ public class PlayerAI : MonoBehaviour
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        StartCoroutine(FindClosestCreatureOrBossCoroutine());
-        StartCoroutine(FindClosestBulletCoroutine());
+        animator = GetComponent<Animator>();
+
+        StartCoroutine(FindClosestObjectsCoroutine());
     }
 
-    void FixedUpdate()
+    void Update()
     {
         // 상태에 따라 다른 행동을 수행
         switch (currentState)
         {
-            case PlayerState.MoveTowardsCreature:
-                MoveTowardsCreature();
+            case PlayerState.MoveAwayFromCreature:
+                MoveAwayFromCreature();
                 break;
             case PlayerState.AvoidBullet:
                 if (nearestBullet != null)
@@ -52,49 +55,53 @@ public class PlayerAI : MonoBehaviour
                     AvoidBullet(nearestBullet.position);
                 }
                 break;
-            case PlayerState.MoveAwayFromCreature:
-                MoveAwayFromCreature();
+            case PlayerState.Idle:
+                IdleState();
                 break;
         }
 
-        // 총알이 가까이 있을 때
-        if (nearestBullet != null && currentState != PlayerState.AvoidBullet && Vector3.Distance(transform.position, nearestBullet.position) < bulletDetectionRange)
+       
+        if (nearestBullet == null && target == null) // 크리쳐나 보스가 없고, 투사체도 없을 경우
         {
-            ChangeState(PlayerState.AvoidBullet);
+            ChangeState(PlayerState.Idle); // Idle 상태로 전환
+        }
+        else if (nearestBullet != null && Vector3.Distance(transform.position, nearestBullet.position) < bulletDetectionRange)
+        {
+            ChangeState(PlayerState.AvoidBullet); // 투사체가 있으면 AvoidBullet 상태로 전환
+        }
+        else if (target != null) // 크리쳐나 보스가 있으면 MoveAwayFromCreature 상태로 전환
+        {
+            ChangeState(PlayerState.MoveAwayFromCreature);
         }
 
-        // 상태 유지 시간 체크
-        if (Time.time - stateChangeTime >= stateChangeDuration)
-        {
-            if (currentState == PlayerState.AvoidBullet && nearestBullet == null)
-            {
-                ChangeState(PlayerState.MoveAwayFromCreature);
-            }
-            else if (currentState == PlayerState.MoveAwayFromCreature && target == null)
-            {
-                ChangeState(PlayerState.MoveTowardsCreature);
-            }
-        }
-
-        // 적을 항상 바라보게 설정
-        LookAtTarget();
-
-        CheckForSlowObjects();
+        LookAtTarget(); // 가까운 크리쳐를 바라봄
+        CheckForSlowObjects(); // 슬로우 이펙트가 있는지 확인
     }
 
-    void LookAtTarget()
+
+
+    void IdleState() //idle 상태
+    {
+        animator.SetBool("isIdle", true); // Idle 애니메이션 설정
+    }
+
+    void LookAtTarget() // 크리쳐를 바라봄
     {
         if (target != null)
         {
-            // 적을 바라보는 로직
             Vector3 lookAtDirection = (target.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f)); // 부드럽게 회전
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f));
         }
     }
 
-    void MoveTowardsCreature()
+    void MoveAwayFromCreature() //크리처에게서 멀어짐
     {
+      
+        animator.SetBool("isIdle", false); //walk 애니메이션 실행
+
+
+        //크치러에게서 반대로 이동 & 가까운 크리처를 바라봄
         if (target != null)
         {
             Vector3 moveDirection = (transform.position - target.position).normalized;
@@ -102,57 +109,45 @@ public class PlayerAI : MonoBehaviour
 
             Vector3 lookAtDirection = (target.position - transform.position).normalized;
             Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f)); // 속도 조절을 위한 값
+            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f)); 
         }
     }
 
-    void AvoidBullet(Vector3 bulletPosition)
+    void AvoidBullet(Vector3 bulletPosition) //투사체 회피 
     {
+        
+        animator.SetBool("isIdle", false); //walk 애니메이션 실행
+
+        //
         if (nearestBullet != null)
         {
             Vector3 directionToPlayer = transform.position - bulletPosition;
             Vector3 bulletDirection = nearestBullet.GetComponent<Rigidbody>().velocity.normalized;
-            Vector3 perpendicular = Vector3.Cross(bulletDirection, Vector3.up).normalized;
+            Vector3 perpendicular = Vector3.Cross(bulletDirection, Vector3.up).normalized; //투사체와 수직으로 방향 설정
 
-            // 적절한 방향으로 이동
-            rb.MovePosition(rb.position + perpendicular * moveSpeed * Time.fixedDeltaTime);
+            
+            rb.MovePosition(rb.position + perpendicular * moveSpeed * Time.fixedDeltaTime); 
         }
     }
 
-    void MoveAwayFromCreature()
-    {
-        if (target != null)
-        {
-            Vector3 moveDirection = (transform.position - target.position).normalized;
-            rb.MovePosition(rb.position + moveDirection * moveSpeed * Time.fixedDeltaTime);
-        }
-    }
-
-    private IEnumerator FindClosestCreatureOrBossCoroutine()
+    private IEnumerator FindClosestObjectsCoroutine() //가장 가까운 보스, 크리쳐, 투사체를 찾음
     {
         while (true)
         {
-            FindClosestCreatureOrBoss();
-            yield return new WaitForSeconds(0.2f);
+            FindClosestCreatureOrBoss();  // 가까운 크리쳐나 보스 찾기
+            FindClosestBullet();          // 가까운 투사체 찾기
+            yield return new WaitForSeconds(0.2f); 
         }
     }
 
-    private IEnumerator FindClosestBulletCoroutine()
+    void FindClosestCreatureOrBoss() //가까운 크리쳐나 보스 찾기
     {
-        while (true)
-        {
-            FindClosestBullet();
-            yield return new WaitForSeconds(0.2f);
-        }
-    }
-
-    void FindClosestCreatureOrBoss()
-    {
-        GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
+        GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature"); 
         GameObject[] bosses = GameObject.FindGameObjectsWithTag("Boss");
-        float closestDistance = Mathf.Infinity;
         GameObject closestTarget = null;
-
+        float closestDistance = Mathf.Infinity;
+        
+        //각 크리처에 대하여 가장 가까운 거리를 가진 크리처를 찾음
         foreach (GameObject creature in creatures)
         {
             float distance = Vector3.Distance(transform.position, creature.transform.position);
@@ -163,6 +158,7 @@ public class PlayerAI : MonoBehaviour
             }
         }
 
+        //보스를 찾음
         foreach (GameObject boss in bosses)
         {
             float distance = Vector3.Distance(transform.position, boss.transform.position);
@@ -175,22 +171,15 @@ public class PlayerAI : MonoBehaviour
 
         if (closestTarget != null)
         {
-            if (closestTarget.transform != target)
-            {
-                target = closestTarget.transform;
-
-                Vector3 lookAtDirection = (target.position - transform.position).normalized;
-                Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
-                rb.MoveRotation(lookRotation);
-            }
+            target = closestTarget.transform;
         }
         else
         {
-            target = null;
+            target = null; 
         }
     }
 
-    void FindClosestBullet()
+    void FindClosestBullet() //가장 가까운 투사체 찾기
     {
         GameObject[] bullets = GameObject.FindGameObjectsWithTag("C_Bullet");
         float closestDistance = Mathf.Infinity;
@@ -199,6 +188,8 @@ public class PlayerAI : MonoBehaviour
         foreach (GameObject bullet in bullets)
         {
             float distance = Vector3.Distance(transform.position, bullet.transform.position);
+
+            //각각의 투사체에 대해 가장 가까운 투사체를 찾음
             if (distance < closestDistance && distance <= bulletDetectionRange)
             {
                 closestDistance = distance;
@@ -212,25 +203,38 @@ public class PlayerAI : MonoBehaviour
         }
         else
         {
-            nearestBullet = null;
+            nearestBullet = null; 
         }
     }
 
-    private void ChangeState(PlayerState newState)
+    private void ChangeState(PlayerState newState) //상태 변경
     {
         currentState = newState;
         stateChangeTime = Time.time;
+
+      
+        if (newState == PlayerState.Idle)
+        {
+            animator.SetBool("isIdle", true);
+        }
+        else
+        {
+            animator.SetBool("isIdle", false);
+        }
     }
 
-    private void CheckForSlowObjects()
+    private void CheckForSlowObjects() //마녀의 슬로우 이펙트 존재 확인
     {
         GameObject[] freezeObjects = GameObject.FindGameObjectsWithTag("Freeze");
 
+        //존재할 경우 속도 감소
         if (freezeObjects.Length > 0 && !isFreezed)
         {
             moveSpeed /= slowSpeed;
             isFreezed = true;
         }
+
+        //없을 시 속도 복구
         else if (freezeObjects.Length == 0 && isFreezed)
         {
             moveSpeed *= slowSpeed;
@@ -238,9 +242,8 @@ public class PlayerAI : MonoBehaviour
         }
     }
 
-    public void IncreaseMoveSpeed(float amount)
+    public void IncreaseMoveSpeed(float amount) //속도 증가 (레벨업 시 필요)
     {
         moveSpeed *= amount;
-        Debug.Log("Move speed increased to: " + moveSpeed);
     }
 }

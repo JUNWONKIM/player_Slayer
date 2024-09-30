@@ -8359,11 +8359,11 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 2435515062723371068, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: hp
-      value: 10
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2435515062723371068, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: max_hp
-      value: 10
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 2435515062723371068, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: bossHpUI
@@ -8431,7 +8431,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2435515062723371469, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7747659748791650510, guid: 4847ab6cb0d9b4e46bc0fa6b639a86cc, type: 3}
       propertyPath: detectionRange

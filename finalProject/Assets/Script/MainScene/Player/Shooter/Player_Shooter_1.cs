@@ -5,36 +5,35 @@ public class Player_Shooter_1 : MonoBehaviour
 {
     public static Player_Shooter_1 instance;
 
-    public GameObject bulletPrefab; // 발사체 프리팹을 할당할 변수
+    public GameObject bulletPrefab; // 발사체 프리팹
 
     public float fireInterval = 1f; // 발사 간격
-    public float detectionRange = 100f; // 적을 탐지할 범위
-    public float projectileSpeed = 100f;
-    public int projectilesPerFire = 1; // 한 번에 발사할 발사체 수
+    public float detectionRange = 100f; // 탐지 범위
+    public float projectileSpeed = 100f; //투사체 속도
+    public int projectilesPerFire = 1; // 한 번에 발사할 투사체 수
     public float burstInterval = 0.1f; // 연속 발사 간격
     public float damageAmount = 1; // 데미지 양
-
-    private float lastFireTime; // 마지막 발사 시간
-
-    private bool isSlowed = false; // Slow 상태 여부
+    public float volume = 1f;
     public float fireIntervalSlowMultiplier = 2f; // Slow 효과 시 발사 간격 배수
 
     public AudioClip shootSound; // 발사 사운드 클립 추가
-    private AudioSource audioSource; // AudioSource 변수 추가
-    [Range(0f, 1f)] // 인스펙터에서 슬라이드 바로 조절할 수 있게 설정
-    public float volume = 1f; // 사운드 볼륨 조절 변수
+    private AudioSource audioSource; 
+    [Range(0f, 1f)]
+    private float lastFireTime; // 마지막 발사 시간
+    private bool isSlowed = false; // Slow 상태 여부
+
 
     void Awake()
     {
         if (instance == null)
         {
             instance = this;
-            audioSource = GetComponent<AudioSource>(); // AudioSource 컴포넌트 가져오기
-            audioSource.volume = volume; // 초기 볼륨 설정
+            audioSource = GetComponent<AudioSource>(); 
+            audioSource.volume = volume; 
         }
         else
         {
-            Destroy(gameObject); // Singleton 패턴을 위한 중복 인스턴스 제거
+            Destroy(gameObject); 
         }
     }
 

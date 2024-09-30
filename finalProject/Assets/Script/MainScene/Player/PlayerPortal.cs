@@ -4,27 +4,25 @@ using UnityEngine;
 
 public class PlayerPortal : MonoBehaviour
 {
-    public GameObject portalPrefab; // 생성할 포탈 프리팹
-    public float distanceToSpawnPortal = 40.0f; // 포탈 생성 거리를 정의하는 변수
-    public float portalOffset = 20.0f; // 포탈 생성 위치의 오프셋을 정의하는 변수
-    public float portalHeight = 15.0f; // 포탈의 y 위치를 설정하는 변수
+    public GameObject portalPrefab; // 포탈 프리팹
+    public float distanceToSpawnPortal = 40.0f; // 포탈 생성 거리
+    public float portalOffset = 20.0f; // 포탈 생성 위치
+    public float portalHeight = 15.0f; // 포탈의 y 위치
 
-    private GameObject[] portals; // 생성된 포탈을 저장할 배열
-    private bool portalSpawned = false; // 포탈이 이미 생성되었는지 여부를 추적하는 플래그
-    private GameObject boss; // 보스의 GameObject를 저장할 변수
+    private GameObject[] portals; // 생성된 포탈을 저장
+    private bool portalSpawned = false; // 포탈 생성 여부
+    private GameObject boss; 
 
     void Start()
     {
-        // 포탈을 저장할 배열을 초기화 (8개의 포탈 생성)
-        portals = new GameObject[8];
+        portals = new GameObject[8]; //포탈 8개 초기화
 
-        // 태그를 이용해 보스 찾기
         boss = GameObject.FindGameObjectWithTag("Boss");
     }
 
     void Update()
     {
-        // 보스 오브젝트를 지속적으로 찾고, 보스가 없으면 업데이트를 진행하지 않음
+        // 보스 오브젝트를 지속적으로 찾음
         if (boss == null)
         {
             boss = GameObject.FindGameObjectWithTag("Boss");
@@ -33,27 +31,25 @@ public class PlayerPortal : MonoBehaviour
 
         // 보스와의 거리 확인
         float distanceToBoss = Vector3.Distance(transform.position, boss.transform.position);
-
-        // 보스와의 거리가 distanceToSpawnPortal 이하일 때, 포탈이 생성되지 않은 경우에만 포탈 생성
-        if (distanceToBoss <= distanceToSpawnPortal && !portalSpawned)
+              
+        if (distanceToBoss <= distanceToSpawnPortal && !portalSpawned)  // 보스와의 거리가 distanceToSpawnPortal 이하일 때
         {
-            SpawnPortals();
+            SpawnPortals(); //포탈 소환
         }
-        // 보스가 거리 밖으로 나가면 포탈을 삭제
-        else if (distanceToBoss > distanceToSpawnPortal && portalSpawned)
+      
+        else if (distanceToBoss > distanceToSpawnPortal && portalSpawned)   // 보스가 거리 밖으로 나가면 포탈을 삭제
         {
-            DestroyPortals();
+            DestroyPortals(); //포탈 삭제
         }
         else if (portalSpawned)
         {
-            // 포탈의 위치를 보스와의 거리와 관련하여 업데이트
-            UpdatePortalPositions();
+            UpdatePortalPositions(); //포탈 위치 업데이트
         }
     }
 
-    void SpawnPortals()
+    void SpawnPortals() //포탈 생성
     {
-        // 8 방향 벡터를 정의 (동서남북 + 대각선)
+        //위치
         Vector3[] directions = new Vector3[] {
             transform.forward,                // 북쪽
             -transform.forward,               // 남쪽
@@ -64,17 +60,16 @@ public class PlayerPortal : MonoBehaviour
             (-transform.forward + transform.right).normalized,   // 남동쪽
             (-transform.forward - transform.right).normalized    // 남서쪽
         };
-
-        // 각 방향에 맞는 회전값을 정의
+        //바라보는 방향
         Quaternion[] rotations = new Quaternion[] {
-            Quaternion.LookRotation(transform.forward),                // 북쪽을 바라보는 회전
-            Quaternion.LookRotation(-transform.forward),               // 남쪽을 바라보는 회전
-            Quaternion.LookRotation(transform.right),                  // 동쪽을 바라보는 회전
-            Quaternion.LookRotation(-transform.right),                 // 서쪽을 바라보는 회전
-            Quaternion.LookRotation((transform.forward + transform.right).normalized),    // 북동쪽을 바라보는 회전
-            Quaternion.LookRotation((transform.forward - transform.right).normalized),    // 북서쪽을 바라보는 회전
-            Quaternion.LookRotation((-transform.forward + transform.right).normalized),   // 남동쪽을 바라보는 회전
-            Quaternion.LookRotation((-transform.forward - transform.right).normalized)    // 남서쪽을 바라보는 회전
+            Quaternion.LookRotation(transform.forward),                // 북쪽
+            Quaternion.LookRotation(-transform.forward),               // 남쪽
+            Quaternion.LookRotation(transform.right),                  // 동쪽
+            Quaternion.LookRotation(-transform.right),                 // 서쪽
+            Quaternion.LookRotation((transform.forward + transform.right).normalized),    // 북동쪽
+            Quaternion.LookRotation((transform.forward - transform.right).normalized),    // 북서쪽
+            Quaternion.LookRotation((-transform.forward + transform.right).normalized),   // 남동쪽
+            Quaternion.LookRotation((-transform.forward - transform.right).normalized)    // 남서쪽
         };
 
         for (int i = 0; i < directions.Length; i++)
@@ -83,15 +78,15 @@ public class PlayerPortal : MonoBehaviour
             Vector3 portalPosition = transform.position + directions[i] * portalOffset;
             portalPosition.y = portalHeight;
 
-            // 포탈을 생성하고, 지정된 회전값으로 회전
+            // 회전
             portals[i] = Instantiate(portalPrefab, portalPosition, rotations[i]);
         }
 
-        // 포탈이 생성되었음을 표시
+        // 포탈 생성 상태 체크
         portalSpawned = true;
     }
 
-    void DestroyPortals()
+    void DestroyPortals() //포탈 삭제
     {
         // 생성된 포탈을 삭제
         for (int i = 0; i < portals.Length; i++)
@@ -102,13 +97,12 @@ public class PlayerPortal : MonoBehaviour
             }
         }
 
-        // 포탈이 삭제되었음을 표시
+        // 포탈 생성 상태 체크
         portalSpawned = false;
     }
 
-    void UpdatePortalPositions()
+    void UpdatePortalPositions() //포탈 위치 업데이트
     {
-        // 포탈의 위치를 보스와의 거리와 관련하여 업데이트
         Vector3[] directions = new Vector3[] {
             transform.forward,                // 북쪽
             -transform.forward,               // 남쪽
