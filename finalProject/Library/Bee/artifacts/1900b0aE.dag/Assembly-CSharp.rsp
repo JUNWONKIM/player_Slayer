@@ -386,6 +386,7 @@
 "Assets/Script/MainScene/Player/Shooter/Player_Shooter_4.cs"
 "Assets/Script/MainScene/UI/UI_ATK3_cooldown.cs"
 "Assets/Script/MainScene/UI/UI_BossHp.cs"
+"Assets/Script/MainScene/UI/UI_ButtonManager.cs"
 "Assets/Script/MainScene/UI/UI_CameraButton.cs"
 "Assets/Script/MainScene/UI/UI_Cursor.cs"
 "Assets/Script/MainScene/UI/UI_playerHP.cs"

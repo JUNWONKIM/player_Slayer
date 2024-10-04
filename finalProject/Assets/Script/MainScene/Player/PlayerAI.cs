@@ -85,13 +85,18 @@ public class PlayerAI : MonoBehaviour
         animator.SetBool("isIdle", true); // Idle 애니메이션 설정
     }
 
-    void LookAtTarget() // 크리쳐를 바라봄
+    void LookAtTarget() // 크리쳐나 보스를 바라봄
     {
         if (target != null)
         {
-            Vector3 lookAtDirection = (target.position - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(lookAtDirection);
-            rb.MoveRotation(Quaternion.Slerp(rb.rotation, lookRotation, Time.fixedDeltaTime * 10f));
+            Vector3 directionToLook = (target.position - transform.position).normalized;
+            directionToLook.y = 0; // y축 회전 방지
+
+            if (directionToLook != Vector3.zero) // 회전할 방향이 있을 때만
+            {
+                Quaternion lookRotation = Quaternion.LookRotation(directionToLook);
+                transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * 10f); // 부드러운 회전
+            }
         }
     }
 

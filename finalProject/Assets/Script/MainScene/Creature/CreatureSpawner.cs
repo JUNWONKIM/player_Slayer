@@ -19,6 +19,7 @@ public class CreatureSpawner : MonoBehaviour
     private const int LeftMouseButton = 0;
     private LineRenderer lineRenderer;
 
+    private PlayerHP playerHP; // 플레이어 체력 스크립트
 
     void Start()
     {
@@ -27,10 +28,13 @@ public class CreatureSpawner : MonoBehaviour
         lineRenderer.positionCount = 360;
         lineRenderer.startWidth = 0.1f;
         lineRenderer.endWidth = 0.1f;
-        lineRenderer.useWorldSpace = false; 
+        lineRenderer.useWorldSpace = false;
         lineRenderer.material = new Material(Shader.Find("Sprites/Default"));
         lineRenderer.startColor = Color.red;
         lineRenderer.endColor = Color.red;
+
+        // 플레이어의 체력 스크립트 참조
+        playerHP = playerPrefab.GetComponent<PlayerHP>();
     }
 
     void Update()
@@ -62,7 +66,7 @@ public class CreatureSpawner : MonoBehaviour
         return Vector3.Distance(playerPosition, position) <= spawnRange;
     }
 
-    void HandleCreatureSelection() //소환할 크리쳐 선택
+    void HandleCreatureSelection() // 소환할 크리쳐 선택
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
@@ -74,11 +78,19 @@ public class CreatureSpawner : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            selectedCreature = 3;
+            // 플레이어 체력이 70% 미만일 때만 3번 크리쳐 선택 가능
+            if (playerHP.hp <= playerHP.max_hp * 0.7f)
+            {
+                selectedCreature = 3;
+            }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            selectedCreature = 4;
+            // 플레이어 체력이 50% 미만일 때만 4번 크리쳐 선택 가능
+            if (playerHP.hp <= playerHP.max_hp * 0.5f)
+            {
+                selectedCreature = 4;
+            }
         }
     }
 
