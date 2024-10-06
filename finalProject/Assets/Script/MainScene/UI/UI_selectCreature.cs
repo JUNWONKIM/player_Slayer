@@ -9,6 +9,7 @@ public class UI_selectCreature : MonoBehaviour
     public float cooldownTime = 0f; // 버튼의 쿨타임 시간
     public Color activeColor = Color.white; // 버튼 활성화 색상
     public Color cooldownColor = Color.red; // 버튼 쿨타임 색상
+    public Color selectedColor = Color.green; // 버튼 선택 색상
 
     private ColorBlock originalColors; // 버튼의 원래 색상 저장
     private bool isOnCooldown = false; // 쿨다운 확인
@@ -44,27 +45,34 @@ public class UI_selectCreature : MonoBehaviour
     {
         if (spawner.selectedCreature == buttonIndex)
         {
-            PressButton();
+            PressButton(); // 선택된 버튼은 초록색으로 변경
         }
         else
         {
-            ReleaseButton();
+            if (!isOnCooldown)
+            {
+                ReleaseButton(); // 선택되지 않았고 쿨타임이 없을 때 원래 상태로
+            }
         }
     }
 
-    void PressButton() // 버튼이 눌릴 경우
+    void PressButton() // 버튼이 선택되었을 때
     {
-        var colors = myButton.colors;
-        colors.normalColor = colors.pressedColor;
-        myButton.colors = colors;
+        if (myButton.image != null)
+        {
+            myButton.image.color = selectedColor; // 선택된 상태에서 초록색으로 변경
+        }
     }
 
-    void ReleaseButton() // 버튼이 해제될 경우
+    void ReleaseButton() // 버튼이 해제되었을 때
     {
-        myButton.colors = originalColors;
+        if (myButton.image != null && !isOnCooldown)
+        {
+            myButton.image.color = activeColor; // 기본 활성화 상태로 복원
+        }
     }
 
-    void OnButtonClick() // 버튼이 눌릴 경우 쿨타임 시작
+    void OnButtonClick() // 버튼 클릭 시 쿨타임 시작
     {
         if (!isOnCooldown)
         {
@@ -79,21 +87,21 @@ public class UI_selectCreature : MonoBehaviour
 
         if (myButton.image != null)
         {
-            myButton.image.color = cooldownColor; // 버튼 색상 변경
+            myButton.image.color = cooldownColor; // 쿨타임 동안 빨간색으로 변경
         }
     }
 
-    void UpdateCooldown() //쿨타임 진행
+    void UpdateCooldown() // 쿨타임 진행 중
     {
-        float remainingTime = cooldownEndTime - Time.time; //남은 시간
+        float remainingTime = cooldownEndTime - Time.time; // 남은 시간 계산
 
-        if (remainingTime <= 0) //쿨타임 종료
+        if (remainingTime <= 0) // 쿨타임이 끝났을 때
         {
-            EndCooldown(); 
+            EndCooldown();
         }
         else
         {
-            // 버튼 색상 점점 밝게 변경
+            // 쿨타임 동안 색상이 점차 바뀌도록 설정
             if (myButton.image != null)
             {
                 myButton.image.color = Color.Lerp(cooldownColor, activeColor, 1 - (remainingTime / cooldownTime));
@@ -101,14 +109,20 @@ public class UI_selectCreature : MonoBehaviour
         }
     }
 
-    void EndCooldown() //쿨타임 종료
+    void EndCooldown() // 쿨타임 종료 시
     {
         isOnCooldown = false;
 
-        // 버튼 색상을 원래 색상으로 복원
+        // 쿨타임이 끝나면 원래 상태로 복원
         if (myButton.image != null)
         {
             myButton.image.color = activeColor;
+        }
+
+        // 만약 버튼이 선택된 상태라면, 선택 색상으로 돌아가게 처리
+        if (spawner.selectedCreature == buttonIndex)
+        {
+            PressButton();
         }
     }
 

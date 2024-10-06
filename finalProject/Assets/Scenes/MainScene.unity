@@ -1440,7 +1440,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1905902125}
         m_TargetAssemblyTypeName: UI_Setting, Assembly-CSharp
-        m_MethodName: OnKeyInfoPanelButtonClick
+        m_MethodName: OpenKeyInfoPanel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1940,8 +1940,9 @@ MonoBehaviour:
   myButton: {fileID: 525044796}
   buttonIndex: 2
   cooldownTime: 1
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  activeColor: {r: 0.5764706, g: 0.5764706, b: 0.5764706, a: 1}
   cooldownColor: {r: 0.24528301, g: 0.24528301, b: 0.24528301, a: 1}
+  selectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &583916540
 GameObject:
   m_ObjectHideFlags: 0
@@ -6026,8 +6027,9 @@ MonoBehaviour:
   myButton: {fileID: 1488973283}
   buttonIndex: 1
   cooldownTime: 0.1
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  activeColor: {r: 0.5764706, g: 0.5764706, b: 0.5764706, a: 1}
   cooldownColor: {r: 0.24705882, g: 0.24705882, b: 0.24705882, a: 1}
+  selectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1514963740
 GameObject:
   m_ObjectHideFlags: 0
@@ -6604,8 +6606,9 @@ MonoBehaviour:
   myButton: {fileID: 1619000105}
   buttonIndex: 4
   cooldownTime: 1
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  activeColor: {r: 0.5764706, g: 0.5764706, b: 0.5764706, a: 1}
   cooldownColor: {r: 0.24705882, g: 0.24705882, b: 0.24705882, a: 1}
+  selectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1678073965
 GameObject:
   m_ObjectHideFlags: 0
@@ -6786,7 +6789,7 @@ MonoBehaviour:
   - {fileID: 525044796}
   - {fileID: 2146810605}
   - {fileID: 1619000105}
-  disabledColor: {r: 0.3962264, g: 0.3962264, b: 0.3962264, a: 1}
+  disabledColor: {r: 0.2830189, g: 0.2830189, b: 0.2830189, a: 1}
   enabledColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1707908482
 GameObject:
@@ -8235,8 +8238,9 @@ MonoBehaviour:
   myButton: {fileID: 2146810605}
   buttonIndex: 3
   cooldownTime: 2
-  activeColor: {r: 1, g: 1, b: 1, a: 1}
+  activeColor: {r: 0.5764706, g: 0.5764706, b: 0.5764706, a: 1}
   cooldownColor: {r: 0.24705882, g: 0.24705882, b: 0.24705882, a: 1}
+  selectedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1001 &550025858342484484
 PrefabInstance:
   m_ObjectHideFlags: 0

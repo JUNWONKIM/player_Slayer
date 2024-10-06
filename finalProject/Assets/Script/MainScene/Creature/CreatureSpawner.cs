@@ -9,11 +9,11 @@ public class CreatureSpawner : MonoBehaviour
     public GameObject playerPrefab; // 용사 프리팹
     public GameObject[] creaturePrefabs; // 크리쳐 프리팹
     public float spawnRange = 30f; //최소 소환 범위
-    public int selectedCreature = 1; //선택된 크리쳐
-    public UI_selectCreature[] uiButtons; // UI 버튼 스크립트
+    public int selectedCreature = 1; // 선택된 크리쳐, 처음에 1번으로 설정
+    public UI_selectCreature[] uiButtons; // UI 버튼 
     public GraphicRaycaster graphicRaycaster; //캔버스 레이캐스터
-    public EventSystem eventSystem; //캔버스 이벤트 시스템
-    public UI_Setting uiSetting;  // UI_Setting 스크립트
+    public EventSystem eventSystem; 
+    public UI_Setting uiSetting;  // UI_Setting 
 
     private const string GroundTag = "ground";
     private const int LeftMouseButton = 0;
@@ -23,7 +23,7 @@ public class CreatureSpawner : MonoBehaviour
 
     void Start()
     {
-        //소환 가능 범위 표시
+        // 소환 가능 범위 표시
         lineRenderer = GetComponent<LineRenderer>();
         lineRenderer.positionCount = 360;
         lineRenderer.startWidth = 0.1f;
@@ -35,6 +35,9 @@ public class CreatureSpawner : MonoBehaviour
 
         // 플레이어의 체력 스크립트 참조
         playerHP = playerPrefab.GetComponent<PlayerHP>();
+
+        // 선택된 크리처를 1번으로 강제 설정
+        selectedCreature = 1;
     }
 
     void Update()
@@ -60,6 +63,7 @@ public class CreatureSpawner : MonoBehaviour
 
         DrawSpawnRange();
     }
+
     public bool IsWithinSpawnRange(Vector3 position) //스폰 가능 범위 확인
     {
         Vector3 playerPosition = playerPrefab.transform.position;

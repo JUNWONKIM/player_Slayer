@@ -59,6 +59,7 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_Cursor.cs" />
     <Compile Include="Assets\Script\AudioManager.cs" />
     <Compile Include="Assets\Script\MainScene\Player\PlayerHP.cs" />
+    <Compile Include="Assets\Script\MainScene\UI\UI_ButtonManager.cs" />
     <Compile Include="Assets\Script\MainScene\GAME\GameSceneManager.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\BossHP.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_BossHp.cs" />
@@ -106,7 +107,6 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_SoundManager.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\CreatureSpawner.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
-    <Compile Include="Assets\Script\MainScene\UI\UI_ButtonManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
