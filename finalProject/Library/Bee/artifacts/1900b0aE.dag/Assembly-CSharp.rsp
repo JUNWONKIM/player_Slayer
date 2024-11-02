@@ -396,8 +396,10 @@
 "Assets/Script/MainScene/UI/UI_SoundManager.cs"
 "Assets/Script/MainScene/UI/UI_SoundSlidebar.cs"
 "Assets/Script/MainScene/UI/UI_time.cs"
+"Assets/Script/TitleScene/TextDelay.cs"
 "Assets/Script/TitleScene/UI_startbutton.cs"
 "Assets/Script/TitleScene/UI_titleCursor.cs"
+"Assets/Script/TitleScene/UI_titleSceneLoad.cs"
 -langversion:9.0
 
 /deterministic

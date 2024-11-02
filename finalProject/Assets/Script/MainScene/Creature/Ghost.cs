@@ -1,12 +1,10 @@
 using UnityEngine;
 using System.Collections;
 
-
 public class Ghost : MonoBehaviour
 {
     public float moveSpeed = 5f; // 이동속도
     public float stoppingDistance = 5f; // 공격 사거리
-    public float retreatDistance = 5f; // 도망 사거리
     public float bulletSpeed = 50f; // 투사체 속도
     public GameObject projectilePrefab; // 투사체 프리팹
     public Transform firePoint; // 발사 지점
@@ -14,17 +12,16 @@ public class Ghost : MonoBehaviour
     public float nextFireTime = 0f; // 발사 시간 기록
     public float damageAmount = 1f; // 데미지
 
-    private Transform player; 
-    private Rigidbody rb; 
-    private Animator animator; 
+    private Transform player;
+    private Rigidbody rb;
+    private Animator animator;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>(); 
-        animator = GetComponent<Animator>(); 
+        rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
 
         player = GameObject.FindGameObjectWithTag("Player").transform; // 용사 위치
-      
     }
 
     void Update()
@@ -41,8 +38,8 @@ public class Ghost : MonoBehaviour
             }
 
             //사거리 안으로 접근 시 공격
-            else if (distanceToPlayer <= stoppingDistance && distanceToPlayer > retreatDistance)
-            {           
+            else if (distanceToPlayer <= stoppingDistance)
+            {
                 Attack();
             }
         }
@@ -64,8 +61,7 @@ public class Ghost : MonoBehaviour
 
     void Move() //이동
     {
-   
-        animator.SetBool("isAttack", false);// 이동 애니메이션
+        animator.SetBool("isAttack", false); // 이동 애니메이션
 
         // 용사를 바라보도록 회전
         Vector3 lookDirection = (player.position - transform.position).normalized;
@@ -78,8 +74,7 @@ public class Ghost : MonoBehaviour
 
     void Attack()
     {
-        
-        animator.SetBool("isAttack", true);// 공격 애니메이션
+        animator.SetBool("isAttack", true); // 공격 애니메이션
 
         // 투사체 발사
         if (Time.time >= nextFireTime) // 발사 가능 시간 확인
@@ -87,7 +82,7 @@ public class Ghost : MonoBehaviour
             transform.LookAt(player); //용사를 바라봄
             Vector3 direction = player.position - firePoint.position; //발사 방향
             direction.Normalize();
-            GameObject bullet = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);// 투사체 생성
+            GameObject bullet = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity); // 투사체 생성
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed; // 투사체 속도
             Destroy(bullet, 3f); // 일정 시간 뒤 투사체 파괴
             nextFireTime = Time.time + 1f / fireRate; // 다음 발사 시간 설정
@@ -98,7 +93,6 @@ public class Ghost : MonoBehaviour
         }
     }
 
-
     public class BulletCollisionHandler : MonoBehaviour //투사체 충돌처리
     {
         public float damageAmount; //투사체 데미지
@@ -107,10 +101,8 @@ public class Ghost : MonoBehaviour
             PlayerHP playerHP = other.gameObject.GetComponent<PlayerHP>();
             if (playerHP != null)
             {
-                playerHP.hp -= damageAmount; 
-                
-            
-            Destroy(gameObject); 
+                playerHP.hp -= damageAmount;
+                Destroy(gameObject);
             }
         }
     }

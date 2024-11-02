@@ -10969,7 +10969,7 @@ MonoBehaviour:
   atk1Prefab: {fileID: 5292557603648156814}
   atk2Prefab: {fileID: 5498239063110878189, guid: 70988b631e25e73428425eaa7ca6575f, type: 3}
   atk3Prefab: {fileID: 2500958570904746032, guid: a3737fabc10902d48b9bfbcc2f852077, type: 3}
-  attackRange: 60
+  attackRange: 70
 --- !u!114 &7325812531043256224
 MonoBehaviour:
   m_ObjectHideFlags: 0

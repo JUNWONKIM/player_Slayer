@@ -132,5 +132,11 @@ public class Mummy : MonoBehaviour
         }
     }
 
-    
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            Explode(); // 용사와 충돌 시 폭발 실행
+        }
+    }
 }
