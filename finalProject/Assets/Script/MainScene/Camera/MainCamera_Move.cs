@@ -40,7 +40,7 @@ public class MainCamera_Move : MonoBehaviour
         newPosition.y = Mathf.Clamp(newPosition.y, minZoomHeight, maxZoomHeight);
         transform.position = newPosition;
 
-        // 마우스를 화면 끝으로 밀면 그 방향으로 이동
+       // 마우스를 화면 끝으로 밀면 그 방향으로 이동
         Vector3 mousePosition = Input.mousePosition;
         Vector3 moveVector = Vector3.zero;
 

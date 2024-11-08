@@ -82,6 +82,7 @@
     <Compile Include="Assets\Script\MainScene\Boss\Boss.cs" />
     <Compile Include="Assets\Script\MainScene\Player\PlayerBurn.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Ghost.cs" />
+    <Compile Include="Assets\Script\TitleScene\TextDelay.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\ATK0.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_playerLV.cs" />
     <Compile Include="Assets\Script\TitleScene\UI_startbutton.cs" />
@@ -106,9 +107,8 @@
     <Compile Include="Assets\Script\MainScene\Player\PlayerLV.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_SoundManager.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\CreatureSpawner.cs" />
-    <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
     <Compile Include="Assets\Script\TitleScene\UI_titleSceneLoad.cs" />
-    <Compile Include="Assets\Script\TitleScene\TextDelay.cs" />
+    <Compile Include="Assets\Assets\Tortoise Boss\Demo\CameraController\Scripts\CameraController.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
