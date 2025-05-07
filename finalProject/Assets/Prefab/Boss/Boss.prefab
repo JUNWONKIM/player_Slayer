@@ -10982,8 +10982,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebf3c4ea89c472643a466865f0137e16, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHP: 20
-  currentHP: 20
+  maxHP: 100
+  currentHP: 100
   deathSound: {fileID: 8300000, guid: 592dc3e8955c51949a05d298802e497d, type: 3}
 --- !u!65 &5653785596601742560
 BoxCollider:
