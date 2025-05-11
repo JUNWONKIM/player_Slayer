@@ -20,8 +20,7 @@ public class Skull : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    void Update()
-    {
+    void Update()    {
         if (!animator.GetBool("isDie")) // 살아 있을 경우
         {
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
