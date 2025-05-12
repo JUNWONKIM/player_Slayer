@@ -14,7 +14,7 @@ public class PlayerAgent : Agent
     private float episodeTimer = 0f;
     private float previousHP;
 
-    public Transform[] nearbyEnemies; // 가장 가까운 해골 최대 3~5개 저장
+    public Transform[] nearbyEnemies;
     public int maxTrackedEnemies = 3;
 
     public override void Initialize()
@@ -31,7 +31,6 @@ public class PlayerAgent : Agent
 
     public override void OnEpisodeBegin()
     {
-        // HP 및 위치 초기화는 외부 환경 매니저에서 처리하는 것을 권장
         previousHP = AgentHp.hp = AgentHp.max_hp;
         episodeTimer = 0f;
         rb.velocity = Vector3.zero;
@@ -40,11 +39,9 @@ public class PlayerAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // 자기 자신의 속도 및 체력
         sensor.AddObservation(rb.velocity);
         sensor.AddObservation(AgentHp.hp / AgentHp.max_hp);
 
-        // 주변 크리처들까지 거리 및 방향
         var enemies = GameObject.FindGameObjectsWithTag("Creature");
         System.Array.Sort(enemies, (a, b) => Vector3.Distance(transform.position, a.transform.position)
                                             .CompareTo(Vector3.Distance(transform.position, b.transform.position)));
@@ -54,13 +51,12 @@ public class PlayerAgent : Agent
             if (i < enemies.Length)
             {
                 Vector3 dir = (enemies[i].transform.position - transform.position).normalized;
-                float dist = Vector3.Distance(transform.position, enemies[i].transform.position) / 20f; // 거리 정규화 (20m 기준)
+                float dist = Vector3.Distance(transform.position, enemies[i].transform.position) / 20f;
                 sensor.AddObservation(dir);
                 sensor.AddObservation(dist);
             }
             else
             {
-                // 빈 정보 패딩
                 sensor.AddObservation(Vector3.zero);
                 sensor.AddObservation(1f);
             }
@@ -75,6 +71,13 @@ public class PlayerAgent : Agent
         rb.MovePosition(rb.position + moveDir * moveSpeed * Time.fixedDeltaTime);
     }
 
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        var continuousActions = actionsOut.ContinuousActions;
+        continuousActions[0] = Input.GetAxis("Horizontal");
+        continuousActions[1] = Input.GetAxis("Vertical");
+    }
+
     void FixedUpdate()
     {
         episodeTimer += Time.fixedDeltaTime;
@@ -82,13 +85,24 @@ public class PlayerAgent : Agent
         // 생존 시간 보상
         AddReward(survivalRewardPerSecond * Time.fixedDeltaTime);
 
-        // HP 감점 보상
+        // HP 감점 보상 (강화됨)
         float hpLoss = previousHP - AgentHp.hp;
         if (hpLoss > 0)
         {
-            AddReward(-0.01f * hpLoss);
+            AddReward(-0.2f * hpLoss); // 체력 1당 -0.2
         }
         previousHP = AgentHp.hp;
+
+        // 적 근접 패널티
+        GameObject[] creatures = GameObject.FindGameObjectsWithTag("Creature");
+        foreach (GameObject creature in creatures)
+        {
+            float dist = Vector3.Distance(transform.position, creature.transform.position);
+            if (dist < 5f)
+            {
+                AddReward(-0.02f * (5f - dist)); // 가까울수록 패널티
+            }
+        }
 
         // 종료 조건
         if (AgentHp.hp <= 0f)

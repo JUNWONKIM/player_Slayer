@@ -4,18 +4,21 @@ using UnityEngine;
 public class SkullSpawner : MonoBehaviour
 {
     public GameObject skullPrefab;         // 해골 프리팹
-    public Transform player;               // 플레이어(에이전트) 트랜스폼
-    public float spawnRadius = 20f;        // 플레이어로부터 몇 m 떨어진 위치에 소환할지
-    public float spawnInterval = 3f;       // 해골 소환 간격
-    public int maxSkulls = 10;             // 동시에 존재할 수 있는 해골 수 제한
+    public float spawnRadius = 20f;        // 소환 반경
+    public float spawnInterval = 3f;       // 소환 간격
+    public int maxSkulls = 10;             // 최대 소환 수
 
     private int currentSkullCount = 0;
 
+    [Header("Spawn Target")]
+    public Transform ownerAgent; // 이 스포너가 소환한 해골이 추적할 에이전트
+
     void Start()
     {
-        if (player == null)
+        if (ownerAgent == null)
         {
-            player = GameObject.FindGameObjectWithTag("Player").transform;
+            Debug.LogWarning("SkullSpawner의 ownerAgent가 설정되지 않았습니다!");
+            return;
         }
 
         StartCoroutine(SpawnSkullsRoutine());
@@ -27,7 +30,6 @@ public class SkullSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
 
-            // 최대 수 제한
             if (currentSkullCount >= maxSkulls) continue;
 
             SpawnSkull();
@@ -36,19 +38,19 @@ public class SkullSpawner : MonoBehaviour
 
     void SpawnSkull()
     {
-        // 플레이어 근처 랜덤 위치 계산
         Vector3 randomDirection = Random.insideUnitSphere * spawnRadius;
         randomDirection.y = 0;
-        Vector3 spawnPosition = player.position + randomDirection;
+        Vector3 spawnPosition = ownerAgent.position + randomDirection;
 
         GameObject skull = Instantiate(skullPrefab, spawnPosition, Quaternion.identity);
-        skull.tag = "Creature";  // 혹시라도 프리팹에 태그가 안붙어 있다면
+        skull.tag = "Creature";
         currentSkullCount++;
 
-        // 해골이 죽으면 카운트 감소 (Skull 스크립트에 추가 필요)
-        Skull skullScript = skull.GetComponent<Skull>();
+        // 소환한 해골에게 타겟 설정
+        Skull_RL skullScript = skull.GetComponent<Skull_RL>();
         if (skullScript != null)
         {
+            skullScript.ownerAgent = ownerAgent;
             skullScript.StartCoroutine(RemoveOnDeath(skull));
         }
     }
@@ -61,7 +63,6 @@ public class SkullSpawner : MonoBehaviour
             yield return null;
         }
 
-        // 해골 오브젝트가 죽으면 일정 시간 뒤 삭제하고 카운트 줄이기
         yield return new WaitForSeconds(2f);
         currentSkullCount--;
     }
