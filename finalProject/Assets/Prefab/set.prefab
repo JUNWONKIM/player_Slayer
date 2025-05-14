@@ -1,5 +1,54 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1067877910263568360
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2878297716711461427}
+  - component: {fileID: 5795846300765075358}
+  m_Layer: 0
+  m_Name: GhostSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2878297716711461427
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067877910263568360}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2534713901304523603}
+  m_RootOrder: 1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5795846300765075358
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1067877910263568360}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d20aa934b0d10b4b93cfbeb44b3b7ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ghostPrefab: {fileID: 8252175027606189221, guid: 30b2903530c8d6041932a7307bb0c4db, type: 3}
+  spawnRadius: 200
+  spawnInterval: 3
+  maxGhosts: 1
+  ownerAgent: {fileID: 207637095579183293}
 --- !u!1 &2534713901304523602
 GameObject:
   m_ObjectHideFlags: 0
@@ -30,6 +79,7 @@ Transform:
   m_Children:
   - {fileID: 207637095579183293}
   - {fileID: 2534713901831321217}
+  - {fileID: 2878297716711461427}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -49,7 +99,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2534713901831321217
 Transform:
   m_ObjectHideFlags: 0
@@ -77,9 +127,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 63761aeaecd0bca478f4aaa792fc00a8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  skullPrefab: {fileID: 7307231022892869790, guid: ed1b08d13f55e2b489418b4cd30d2a3a, type: 3}
-  spawnRadius: 100
-  spawnInterval: 10
+  skullPrefab: {fileID: 8252175027606189221, guid: be2b656260cb64e4a9d341c9e2293348, type: 3}
+  spawnRadius: 200
+  spawnInterval: 3
   maxSkulls: 1
   ownerAgent: {fileID: 207637095579183293}
 --- !u!1001 &8612740316805479581
@@ -87,27 +137,32 @@ PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Modification:
+    serializedVersion: 3
     m_TransformParent: {fileID: 2534713901304523603}
     m_Modifications:
     - target: {fileID: 6101116847342209028, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
       propertyPath: m_Model
       value: 
-      objectReference: {fileID: 5022602860645237092, guid: ba5a9d9a4db224a438ee34d512973e56, type: 3}
+      objectReference: {fileID: 0}
     - target: {fileID: 6101116847342209028, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
       propertyPath: m_BehaviorName
-      value: PlayerAgent
+      value: My Behavior
       objectReference: {fileID: 0}
     - target: {fileID: 6101116847342209028, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
       propertyPath: m_BrainParameters.VectorActionSize.Array.size
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6101116847342209028, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
       propertyPath: m_BrainParameters.m_ActionSpec.m_NumContinuousActions
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6101116847342209029, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
       propertyPath: MaxStep
       value: 1000
+      objectReference: {fileID: 0}
+    - target: {fileID: 6101116847342209029, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+      propertyPath: m_Enabled
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6101116847342209029, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
       propertyPath: moveSpeed
@@ -161,8 +216,27 @@ PrefabInstance:
       propertyPath: m_Name
       value: Player_RL
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 6101116847342209029, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+    - {fileID: 6101116847342209028, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 8459789219010762200, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 8723512566642537787}
+    - targetCorrespondingSourceObject: {fileID: 8459789219010762200, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2172556105353270627}
+    - targetCorrespondingSourceObject: {fileID: 8459789219010762200, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 449671275102348111}
   m_SourcePrefab: {fileID: 100100000, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+--- !u!54 &207637095579183282 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 8459789219010761775, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+  m_PrefabInstance: {fileID: 8612740316805479581}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &207637095579183293 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8459789219010761760, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
@@ -173,7 +247,60 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 8459789219010762200, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
   m_PrefabInstance: {fileID: 8612740316805479581}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &296179845421043917
+--- !u!114 &8723512566642537787
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207637095579183429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d1c4e0b1822b495aa52bc52839ecb30, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BrainParameters:
+    VectorObservationSize: 1
+    NumStackedVectorObservations: 1
+    m_ActionSpec:
+      m_NumContinuousActions: 2
+      BranchSizes: 01000000
+    VectorActionSize: 
+    VectorActionDescriptions: []
+    VectorActionSpaceType: 0
+    hasUpgradedBrainParametersWithActionSpec: 1
+  m_Model: {fileID: 0}
+  m_InferenceDevice: 0
+  m_BehaviorType: 0
+  m_BehaviorName: PlayerAgent
+  TeamId: 0
+  m_UseChildSensors: 1
+  m_UseChildActuators: 1
+  m_ObservableAttributeHandling: 0
+--- !u!114 &2172556105353270627
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207637095579183429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8969336fb130dca4c81b268bfa618dd9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  agentParameters:
+    maxStep: 0
+  hasUpgradedFromAgentParameters: 1
+  MaxStep: 1000
+  moveSpeed: 20
+  rb: {fileID: 207637095579183282}
+  AgentHp: {fileID: 2534713900912080026}
+  survivalRewardPerSecond: 0.1
+  maxEpisodeTime: 60
+  maxCreatures: 3
+  maxBullets: 3
+--- !u!114 &449671275102348111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -187,3 +314,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   DecisionPeriod: 5
   TakeActionsBetweenDecisions: 1
+--- !u!114 &2534713900912080026 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6101116847342209031, guid: 0f084d392a01df648ad90e9a40b10304, type: 3}
+  m_PrefabInstance: {fileID: 8612740316805479581}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 207637095579183429}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c56c91b1c9aa4947bd56cc4c2691204, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
