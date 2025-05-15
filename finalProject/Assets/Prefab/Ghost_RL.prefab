@@ -555,10 +555,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   moveSpeed: 100
   stoppingDistance: 50
-  bulletSpeed: 10
+  bulletSpeed: 20
   projectilePrefab: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
   firePoint: {fileID: 8777038329509096991}
-  fireRate: 1
+  fireRate: 0.5
   nextFireTime: 1
   damageAmount: 1
   ownerAgent: {fileID: 0}

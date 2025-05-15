@@ -1,4 +1,4 @@
-using Unity.MLAgents;
+﻿using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
@@ -10,9 +10,11 @@ public class PlayerAgent_2 : Agent
     public AgentHp AgentHp;
     public float survivalRewardPerSecond = 0.1f;
     public float maxEpisodeTime = 60f;
-
+    public GhostSpawner ghostSpawner;
     private float episodeTimer = 0f;
     private float previousHP;
+    public Transform field;  // 내 소속 필드 오브젝트
+
 
     public int maxCreatures = 3;
     public int maxBullets = 3;
@@ -21,7 +23,6 @@ public class PlayerAgent_2 : Agent
     {
         if (rb == null)
             rb = GetComponent<Rigidbody>();
-
         if (AgentHp == null)
             AgentHp = GetComponent<AgentHp>();
 
@@ -33,9 +34,22 @@ public class PlayerAgent_2 : Agent
     {
         previousHP = AgentHp.hp = AgentHp.max_hp;
         episodeTimer = 0f;
+
         rb.velocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
+
+        // 필드가 연결되어 있을 때만 중심 위치로 이동
+        if (field != null)
+        {
+            transform.position = field.position + new Vector3(0f, 0.5f, 0f);
+        }
+
+        if (ghostSpawner != null)
+        {
+            ghostSpawner.ResetGhosts();
+        }
     }
+
 
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -99,42 +113,68 @@ public class PlayerAgent_2 : Agent
     {
         episodeTimer += Time.fixedDeltaTime;
 
-        AddReward(survivalRewardPerSecond * Time.fixedDeltaTime);
+        // ✅ 생존 시간 보상
+        AddReward(0.1f * Time.fixedDeltaTime);
 
+        // ✅ HP 감소 페널티
         float hpLoss = previousHP - AgentHp.hp;
         if (hpLoss > 0)
         {
-            AddReward(-0.1f * hpLoss); // ��ȭ�� ���Ƽ
+            AddReward(-0.1f * hpLoss);
         }
         previousHP = AgentHp.hp;
 
-        foreach (GameObject Creature in GameObject.FindGameObjectsWithTag("Creature"))
+        // ✅ 고스트 거리 기반 보상 및 페널티
+        bool safeFromGhost = true;
+        foreach (GameObject creature in GameObject.FindGameObjectsWithTag("Creature"))
         {
-            float dist = Vector3.Distance(transform.position, Creature.transform.position);
-            if (dist < 50f)
-            {
-                AddReward(-0.005f * (50f - dist)); // ����Ʈ �Ÿ� ��ȭ
-            }
-        }
+            float dist = Vector3.Distance(transform.position, creature.transform.position);
+            if (dist < 10f)
+                safeFromGhost = false;
 
+            if (dist < 30f)
+                AddReward(-0.005f * (30f - dist));
+        }
+        if (safeFromGhost)
+            AddReward(0.02f * Time.fixedDeltaTime);
+
+        // ✅ 총알 거리 기반 보상 및 페널티
+        bool safeFromBullet = true;
         foreach (GameObject bullet in GameObject.FindGameObjectsWithTag("C_Bullet"))
         {
             float dist = Vector3.Distance(transform.position, bullet.transform.position);
-            if (dist < 20f)
-            {
-                AddReward(-0.01f * (20f - dist)); // ����ü �Ÿ� ��ȭ
-            }
-        }
+            if (dist < 5f)
+                safeFromBullet = false;
 
+            if (dist < 15f)
+                AddReward(-0.01f * (15f - dist));
+        }
+        if (safeFromBullet)
+            AddReward(0.03f * Time.fixedDeltaTime);
+
+        // ✅ 종료 조건
         if (AgentHp.hp <= 0f)
         {
-            SetReward(-1.0f); // ��ȭ�� ��� �г�Ƽ
+            SetReward(-3.0f); // 죽었을 때 큰 패널티
             EndEpisode();
         }
         else if (episodeTimer >= maxEpisodeTime)
         {
-            SetReward(+2.0f);
+            SetReward(+5.0f); // 끝까지 살아남았을 때 보상
             EndEpisode();
         }
     }
+
+
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Wall"))
+        {
+            SetReward(-2.0f);     // 벽에 닿았을 때 패널티
+            EndEpisode();         // 에피소드 종료
+        }
+    }
+
+
 }

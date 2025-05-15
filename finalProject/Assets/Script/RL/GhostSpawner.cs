@@ -3,24 +3,25 @@ using UnityEngine;
 
 public class GhostSpawner : MonoBehaviour
 {
-    public GameObject ghostPrefab;         // 고스트 프리팹
-    public float spawnRadius = 20f;        // 소환 반경
-    public float spawnInterval = 3f;       // 소환 간격
-    public int maxGhosts = 10;             // 최대 소환 수
-
-    private int currentGhostCount = 0;
+    public GameObject ghostPrefab;
+    public float spawnInterval = 3f;
+    public int maxGhosts = 1;
 
     [Header("Spawn Target")]
-    public Transform ownerAgent; // 이 스포너가 소환한 고스트가 추적할 에이전트
+    public Transform ownerAgent;
+
+    [Header("Field Info")]
+    public Transform field;
+    public float fieldSize = 100f;
+    public float minSpawnDistance = 10f;
+
+    private bool isResetting = false;
 
     void Start()
     {
-        if (ownerAgent == null)
-            ownerAgent = transform.parent; // 부모를 에이전트로 자동 지정
-
-        if (ownerAgent == null)
+        if (ownerAgent == null || field == null)
         {
-            Debug.LogWarning("GhostSpawner의 ownerAgent가 설정되지 않았습니다!");
+            Debug.LogWarning("GhostSpawner: ownerAgent 또는 field가 설정되지 않았습니다!");
             return;
         }
 
@@ -33,7 +34,10 @@ public class GhostSpawner : MonoBehaviour
         {
             yield return new WaitForSeconds(spawnInterval);
 
-            if (currentGhostCount >= maxGhosts) continue;
+            if (isResetting) continue;
+
+            int aliveGhosts = CountOwnedGhosts();
+            if (aliveGhosts >= maxGhosts) continue;
 
             SpawnGhost();
         }
@@ -41,32 +45,72 @@ public class GhostSpawner : MonoBehaviour
 
     void SpawnGhost()
     {
-        Vector3 randomDirection = Random.insideUnitSphere * spawnRadius;
-        randomDirection.y = 0;
-        Vector3 spawnPosition = ownerAgent.position + randomDirection;
+        float halfSize = fieldSize * 0.5f;
+        Vector3 spawnPosition;
+        int attempt = 0;
+        const int maxAttempts = 30;
+
+        do
+        {
+            Vector3 offset = new Vector3(
+                Random.Range(-halfSize, halfSize),
+                0f,
+                Random.Range(-halfSize, halfSize)
+            );
+            spawnPosition = field.position + offset;
+            attempt++;
+
+            if (attempt >= maxAttempts)
+            {
+                Debug.LogWarning("GhostSpawner: spawn 위치 찾기 실패");
+                return;
+            }
+
+        } while (Vector3.Distance(spawnPosition, ownerAgent.position) < minSpawnDistance);
 
         GameObject ghost = Instantiate(ghostPrefab, spawnPosition, Quaternion.identity);
         ghost.tag = "Creature";
-        currentGhostCount++;
 
-        // 고스트에게 타겟 설정
         Ghost_RL ghostScript = ghost.GetComponent<Ghost_RL>();
         if (ghostScript != null)
         {
             ghostScript.ownerAgent = ownerAgent;
-            StartCoroutine(RemoveOnDeath(ghost));
         }
     }
 
-    IEnumerator RemoveOnDeath(GameObject ghost)
+    public void ResetGhosts()
     {
-        Animator animator = ghost.GetComponent<Animator>();
-        while (animator != null && !animator.GetBool("isDie"))
+        isResetting = true;
+
+        foreach (var ghost in GameObject.FindGameObjectsWithTag("Creature"))
         {
-            yield return null;
+            var script = ghost.GetComponent<Ghost_RL>();
+            if (script != null && script.ownerAgent == ownerAgent)
+            {
+                Destroy(ghost);
+            }
         }
 
-        yield return new WaitForSeconds(2f);
-        currentGhostCount--;
+        StartCoroutine(ResumeSpawningNextFrame());
+    }
+
+    IEnumerator ResumeSpawningNextFrame()
+    {
+        yield return null;
+        isResetting = false;
+    }
+
+    int CountOwnedGhosts()
+    {
+        int count = 0;
+        foreach (var ghost in GameObject.FindGameObjectsWithTag("Creature"))
+        {
+            var script = ghost.GetComponent<Ghost_RL>();
+            if (script != null && script.ownerAgent == ownerAgent)
+            {
+                count++;
+            }
+        }
+        return count;
     }
 }
