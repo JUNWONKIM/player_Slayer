@@ -553,13 +553,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fb2e49893ad398489fa0508d099e57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 100
-  stoppingDistance: 50
+  moveSpeed: 30
+  stoppingDistance: 70
   bulletSpeed: 20
   projectilePrefab: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
   firePoint: {fileID: 8777038329509096991}
   fireRate: 0.5
-  nextFireTime: 1
+  nextFireTime: 2
   damageAmount: 1
   ownerAgent: {fileID: 0}
 --- !u!4 &8777038329509096991 stripped

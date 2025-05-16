@@ -120,7 +120,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3268168084106758064
 Transform:
   m_ObjectHideFlags: 0
@@ -3581,55 +3581,6 @@ Transform:
   m_Father: {fileID: 2646164482577873967}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &5709482328709741388
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5709482328709741386}
-  - component: {fileID: 5709482328709741387}
-  m_Layer: 0
-  m_Name: SkullSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!4 &5709482328709741386
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5709482328709741388}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5709482329236006552}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5709482328709741387
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5709482328709741388}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63761aeaecd0bca478f4aaa792fc00a8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skullPrefab: {fileID: 8252175027606189221, guid: be2b656260cb64e4a9d341c9e2293348, type: 3}
-  spawnRadius: 200
-  spawnInterval: 3
-  maxSkulls: 3
-  ownerAgent: {fileID: 7994056353348560246}
 --- !u!1 &5709482329236006553
 GameObject:
   m_ObjectHideFlags: 0
@@ -3658,9 +3609,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3025708496704512083}
   - {fileID: 7994056353348560246}
-  - {fileID: 5709482328709741386}
-  - {fileID: 5467651107890978808}
   - {fileID: 3085928327542244518}
   - {fileID: 3268168084106758064}
   m_Father: {fileID: 0}
@@ -3684,7 +3634,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3085928327542244518
 Transform:
   m_ObjectHideFlags: 0
@@ -3876,57 +3826,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!1 &7115940838127196707
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5467651107890978808}
-  - component: {fileID: 4359414826500782677}
-  m_Layer: 0
-  m_Name: GhostSpawner
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5467651107890978808
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7115940838127196707}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5709482329236006552}
-  m_RootOrder: 1
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &4359414826500782677
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7115940838127196707}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d20aa934b0d10b4b93cfbeb44b3b7ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ghostPrefab: {fileID: 8252175027606189221, guid: 30b2903530c8d6041932a7307bb0c4db, type: 3}
-  spawnInterval: 3
-  maxGhosts: 3
-  ownerAgent: {fileID: 7994056353348560246}
-  field: {fileID: 3085928327542244518}
-  fieldSize: 100
-  minSpawnDistance: 60
 --- !u!1 &7184048194289660457
 GameObject:
   m_ObjectHideFlags: 0
@@ -4032,6 +3931,55 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1 &7449649036337406550
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3025708496704512083}
+  - component: {fileID: 2872020294287617614}
+  m_Layer: 6
+  m_Name: Spawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3025708496704512083
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7449649036337406550}
+  m_LocalRotation: {x: -0, y: 1, z: -0, w: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 5, y: 5, z: 5}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5709482329236006552}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2872020294287617614
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7449649036337406550}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f069a3117bfc1d498c8d47a2aa1bdb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skullPrefab: {fileID: 7307231022892869790, guid: ed1b08d13f55e2b489418b4cd30d2a3a, type: 3}
+  ghostPrefab: {fileID: 8252175027606189221, guid: 30b2903530c8d6041932a7307bb0c4db, type: 3}
+  spawnRadius: 60
+  spawnInterval: 3
+  maxCreatures: 5
 --- !u!1 &7994056353348560014
 GameObject:
   m_ObjectHideFlags: 0
@@ -4162,8 +4110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c56c91b1c9aa4947bd56cc4c2691204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 15
-  max_hp: 15
+  hp: 30
+  max_hp: 30
 --- !u!114 &1513525332791605488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4215,10 +4163,9 @@ MonoBehaviour:
   AgentHp: {fileID: 5709482329628522833}
   survivalRewardPerSecond: 0.1
   maxEpisodeTime: 60
-  ghostSpawner: {fileID: 4359414826500782677}
-  field: {fileID: 3085928327542244518}
   maxCreatures: 3
   maxBullets: 3
+  creatureSpawner: {fileID: 2872020294287617614}
 --- !u!114 &7650690617287601796
 MonoBehaviour:
   m_ObjectHideFlags: 0

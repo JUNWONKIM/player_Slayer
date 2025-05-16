@@ -115,7 +115,7 @@ public class Ghost_RL : MonoBehaviour
 
         void Start()
         {
-            Destroy(gameObject, 3f); // 3초 뒤 자동 제거
+            Destroy(gameObject, 5f); // 3초 뒤 자동 제거
         }
 
         void OnTriggerEnter(Collider other)

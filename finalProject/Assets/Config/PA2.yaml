@@ -2,7 +2,7 @@ behaviors:
   PlayerAgent:
     trainer_type: ppo
     hyperparameters:
-      batch_size: 1024
+      batch_size: 2048
       buffer_size: 20480
       learning_rate: 2.5e-4
       beta: 5.0e-4

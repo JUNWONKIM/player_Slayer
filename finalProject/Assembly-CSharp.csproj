@@ -73,6 +73,7 @@
     <Compile Include="Assets\Script\MainScene\Player\Shooter\Player_Shooter_3.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\CreatureHp.cs" />
     <Compile Include="Assets\Script\MainScene\Camera\MainCamera_Move.cs" />
+    <Compile Include="Assets\Script\RL\CreatureSpawner2.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Mummy.cs" />
     <Compile Include="Assets\Script\TitleScene\TextDelay.cs" />
     <Compile Include="Assets\Assets\Tortoise Boss\Demo\AssetController.cs" />

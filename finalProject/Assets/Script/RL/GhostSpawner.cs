@@ -1,116 +1,98 @@
-using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class GhostSpawner : MonoBehaviour
 {
     public GameObject ghostPrefab;
-    public float spawnInterval = 3f;
-    public int maxGhosts = 1;
+    public int ghostCount = 4;
+    public float spawnRadius = 40f;
+    public float minGhostDistance = 5f;
+    public float minDistanceFromPlayer = 10f;
 
     [Header("Spawn Target")]
     public Transform ownerAgent;
 
-    [Header("Field Info")]
-    public Transform field;
-    public float fieldSize = 100f;
-    public float minSpawnDistance = 10f;
-
-    private bool isResetting = false;
+    private List<GameObject> spawnedGhosts = new List<GameObject>();
 
     void Start()
     {
-        if (ownerAgent == null || field == null)
+        if (ownerAgent == null)
         {
-            Debug.LogWarning("GhostSpawner: ownerAgent 또는 field가 설정되지 않았습니다!");
+            Debug.LogWarning("GhostSpawner: ownerAgent가 설정되지 않았습니다!");
             return;
         }
 
-        StartCoroutine(SpawnGhostsRoutine());
+        SpawnInitialGhosts();
     }
 
-    IEnumerator SpawnGhostsRoutine()
+    void SpawnInitialGhosts()
     {
-        while (true)
-        {
-            yield return new WaitForSeconds(spawnInterval);
+        int spawned = 0;
+        int attempts = 0;
+        const int maxAttempts = 100;
 
-            if (isResetting) continue;
-
-            int aliveGhosts = CountOwnedGhosts();
-            if (aliveGhosts >= maxGhosts) continue;
-
-            SpawnGhost();
-        }
-    }
-
-    void SpawnGhost()
-    {
-        float halfSize = fieldSize * 0.5f;
-        Vector3 spawnPosition;
-        int attempt = 0;
-        const int maxAttempts = 30;
-
-        do
+        while (spawned < ghostCount && attempts < maxAttempts)
         {
             Vector3 offset = new Vector3(
-                Random.Range(-halfSize, halfSize),
+                Random.Range(-spawnRadius, spawnRadius),
                 0f,
-                Random.Range(-halfSize, halfSize)
+                Random.Range(-spawnRadius, spawnRadius)
             );
-            spawnPosition = field.position + offset;
-            attempt++;
 
-            if (attempt >= maxAttempts)
+            Vector3 spawnPos = ownerAgent.position + offset;
+
+            // 에이전트와의 거리 조건
+            if (Vector3.Distance(spawnPos, ownerAgent.position) < minDistanceFromPlayer)
             {
-                Debug.LogWarning("GhostSpawner: spawn 위치 찾기 실패");
-                return;
+                attempts++;
+                continue;
             }
 
-        } while (Vector3.Distance(spawnPosition, ownerAgent.position) < minSpawnDistance);
+            // 기존 고스트들과의 거리 조건
+            bool tooClose = false;
+            foreach (var ghost in spawnedGhosts)
+            {
+                if (Vector3.Distance(ghost.transform.position, spawnPos) < minGhostDistance)
+                {
+                    tooClose = true;
+                    break;
+                }
+            }
 
-        GameObject ghost = Instantiate(ghostPrefab, spawnPosition, Quaternion.identity);
-        ghost.tag = "Creature";
+            if (!tooClose)
+            {
+                GameObject ghost = Instantiate(ghostPrefab, spawnPos, Quaternion.identity);
+                ghost.tag = "Creature";
 
-        Ghost_RL ghostScript = ghost.GetComponent<Ghost_RL>();
-        if (ghostScript != null)
+                Ghost_RL ghostScript = ghost.GetComponent<Ghost_RL>();
+                if (ghostScript != null)
+                {
+                    ghostScript.ownerAgent = ownerAgent;
+                }
+
+                spawnedGhosts.Add(ghost);
+                spawned++;
+            }
+
+            attempts++;
+        }
+
+        if (spawned < ghostCount)
         {
-            ghostScript.ownerAgent = ownerAgent;
+            Debug.LogWarning($"GhostSpawner: {ghostCount}개 중 {spawned}개만 배치됨 (충돌 회피 실패)");
         }
     }
 
     public void ResetGhosts()
     {
-        isResetting = true;
-
-        foreach (var ghost in GameObject.FindGameObjectsWithTag("Creature"))
+        foreach (var ghost in spawnedGhosts)
         {
-            var script = ghost.GetComponent<Ghost_RL>();
-            if (script != null && script.ownerAgent == ownerAgent)
+            if (ghost != null)
             {
                 Destroy(ghost);
             }
         }
-
-        StartCoroutine(ResumeSpawningNextFrame());
-    }
-
-    IEnumerator ResumeSpawningNextFrame()
-    {
-        yield return null;
-        isResetting = false;
-    }
-
-    int CountOwnedGhosts()
-    {
-        int count = 0;
-        foreach (var ghost in GameObject.FindGameObjectsWithTag("Creature"))
-        {
-            var script = ghost.GetComponent<Ghost_RL>();
-            if (script != null && script.ownerAgent == ownerAgent)
-            {
-                count++;
-            }
-        }
-        return count;
+        spawnedGhosts.Clear();
+        SpawnInitialGhosts();
     }
 }

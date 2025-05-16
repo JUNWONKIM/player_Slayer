@@ -9785,7 +9785,6 @@ GameObject:
   - component: {fileID: 4228224254170143172}
   - component: {fileID: 5863078268597649129}
   - component: {fileID: 6406191655231239889}
-  - component: {fileID: 5761724094233417219}
   m_Layer: 0
   m_Name: Ghost_bullet
   m_TagString: C_Bullet
@@ -14712,19 +14711,6 @@ SphereCollider:
   serializedVersion: 3
   m_Radius: 1.42505
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &5761724094233417219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6424583148328831481}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9a778029ffdd3794cad15773a81b1403, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damageAmount: 1
 --- !u!1 &7473106266047837557
 GameObject:
   m_ObjectHideFlags: 0
