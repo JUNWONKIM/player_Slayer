@@ -3978,8 +3978,8 @@ MonoBehaviour:
   skullPrefab: {fileID: 7307231022892869790, guid: ed1b08d13f55e2b489418b4cd30d2a3a, type: 3}
   ghostPrefab: {fileID: 8252175027606189221, guid: 30b2903530c8d6041932a7307bb0c4db, type: 3}
   spawnRadius: 60
-  spawnInterval: 3
-  maxCreatures: 5
+  spawnInterval: 4
+  maxCreatures: 3
 --- !u!1 &7994056353348560014
 GameObject:
   m_ObjectHideFlags: 0
@@ -4110,8 +4110,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c56c91b1c9aa4947bd56cc4c2691204, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hp: 30
-  max_hp: 30
+  hp: 5
+  max_hp: 5
 --- !u!114 &1513525332791605488
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4157,11 +4157,10 @@ MonoBehaviour:
   agentParameters:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
-  MaxStep: 1000
+  MaxStep: 10000
   moveSpeed: 20
   rb: {fileID: 7994056353348560249}
   AgentHp: {fileID: 5709482329628522833}
-  survivalRewardPerSecond: 0.1
   maxEpisodeTime: 60
   maxCreatures: 3
   maxBullets: 3

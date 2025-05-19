@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections;
 
 public class CreatureSpawner2 : MonoBehaviour
@@ -34,6 +34,13 @@ public class CreatureSpawner2 : MonoBehaviour
 
     IEnumerator SpawnRoutine()
     {
+        // ✅ 시작하자마자 1마리 즉시 소환
+        if (targetAgent != null && currentCreatureCount < maxCreatures)
+        {
+            SpawnCreatureInFrontOfAgent();
+        }
+
+        // 이후 인터벌대로 반복 소환
         while (true)
         {
             yield return new WaitForSeconds(spawnInterval);
@@ -43,6 +50,7 @@ public class CreatureSpawner2 : MonoBehaviour
             SpawnCreatureInFrontOfAgent();
         }
     }
+
 
     void SpawnCreatureInFrontOfAgent()
     {
@@ -54,36 +62,30 @@ public class CreatureSpawner2 : MonoBehaviour
 
         moveDirection.y = 0;
 
-        Vector3 spawnPos = targetAgent.position + moveDirection * spawnRadius;
+        // ✅ 이동 방향에 약간의 각도 노이즈 추가 (±15도 정도)
+        float angleOffset = Random.Range(-30f, 30f); // 각도 범위
+        Quaternion rotation = Quaternion.Euler(0f, angleOffset, 0f);
+        Vector3 randomizedDirection = rotation * moveDirection;
 
-        Vector2 offset = Random.insideUnitCircle.normalized * 3f;
+        Vector3 spawnPos = targetAgent.position + randomizedDirection.normalized * spawnRadius;
+
+        // 좌우 랜덤 offset (필요하면 유지)
+        Vector2 offset = Random.insideUnitCircle.normalized * 2f;
         spawnPos += new Vector3(offset.x, 0f, offset.y);
 
-        GameObject prefabToSpawn = Random.value < 0.5f ? skullPrefab : ghostPrefab;
-        GameObject creature = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
+        GameObject creature = Instantiate(skullPrefab, spawnPos, Quaternion.identity);
         creature.tag = "Creature";
 
-        if (prefabToSpawn == skullPrefab)
+        var skull = creature.GetComponent<Skull_RL>();
+        if (skull != null)
         {
-            var skull = creature.GetComponent<Skull_RL>();
-            if (skull != null)
-            {
-                skull.ownerAgent = targetAgent;
-                StartCoroutine(RemoveOnDeath(creature));
-            }
-        }
-        else
-        {
-            var ghost = creature.GetComponent<Ghost_RL>();
-            if (ghost != null)
-            {
-                ghost.ownerAgent = targetAgent;
-                StartCoroutine(RemoveOnDeath(creature));
-            }
+            skull.ownerAgent = targetAgent;
+            StartCoroutine(RemoveOnDeath(creature));
         }
 
         currentCreatureCount++;
     }
+
 
     IEnumerator RemoveOnDeath(GameObject creature)
     {

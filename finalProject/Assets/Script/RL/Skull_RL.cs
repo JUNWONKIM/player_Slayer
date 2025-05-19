@@ -1,17 +1,16 @@
-using System.Collections;
-using System.Collections.Generic;
+ï»¿using System.Collections;
 using UnityEngine;
 
 public class Skull_RL : MonoBehaviour
 {
-    public float moveSpeed = 5f; // ÀÌµ¿ ¼Óµµ
-    public float damageAmount = 1f; // µ¥¹ÌÁö
-    public float stopDistance = 5f; // ¿ë»ç¿ÍÀÇ ÃÖ¼Ò °Å¸®
-    public Transform ownerAgent; // Å¸°ÙÀÌ µÉ ¼ÒÈ¯ÀÚ ¿¡ÀÌÀüÆ®
+    public float moveSpeed = 10f;
+    public float damageAmount = 1f;
+    public float stopDistance = 5f;
+    public Transform ownerAgent;
 
     private Rigidbody rb;
     private Animator animator;
-    private bool canDealDamage = true; // µ¥¹ÌÁö¸¦ ÁÙ ¼ö ÀÖ´Â »óÅÂ ¿©ºÎ
+    private bool canDealDamage = true;
 
     void Start()
     {
@@ -48,15 +47,16 @@ public class Skull_RL : MonoBehaviour
     {
         if (other.CompareTag("Player") && canDealDamage)
         {
-            // ¿À³Ê¿Í Ãæµ¹ÇÑ °æ¿ì¸¸ µ¥¹ÌÁö Àû¿ë
             if (ownerAgent != null && other.transform == ownerAgent)
             {
                 AgentHp agentHP = other.GetComponent<AgentHp>();
                 if (agentHP != null)
                 {
-                    agentHP.TakeDamage(damageAmount);
-                    StartCoroutine(DamageCooldown());
+                    agentHP.TakeDamage(1f); // âœ… ì¦‰ì‚¬ê¸‰ ë°ë¯¸ì§€
+                    //StartCoroutine(DamageCooldown());
                 }
+
+                Destroy(gameObject); // âœ… ì¶©ëŒ ì‹œ ì¦‰ì‹œ ì‚¬ë¼ì§
             }
         }
     }
