@@ -94,6 +94,7 @@
     <Compile Include="Assets\Script\MainScene\UI\UI_Cursor.cs" />
     <Compile Include="Assets\Script\RL\Skull_RL.cs" />
     <Compile Include="Assets\Script\RL\GhostSpawner.cs" />
+    <Compile Include="Assets\Script\RL\AgentShooter.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_Setting.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_SoundSlidebar.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_time.cs" />

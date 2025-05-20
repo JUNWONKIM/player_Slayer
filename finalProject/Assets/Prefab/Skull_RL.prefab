@@ -186,7 +186,7 @@ AudioSource:
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
-  Mute: 0
+  Mute: 1
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128
@@ -279,8 +279,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 2
-  currentHp: 0
+  maxHp: 3
+  currentHp: 3
   deathSound: {fileID: 8300000, guid: fcf36d122f9410641af3dc5683eb2c13, type: 3}
 --- !u!114 &767349138389649055
 MonoBehaviour:
@@ -294,7 +294,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4467f29ce8683b84ba6c27e3ca2f9ea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 12
+  moveSpeed: 15
   damageAmount: 1
   stopDistance: 5
+  lifetime: 6
   ownerAgent: {fileID: 0}
+  spawnerOwner: {fileID: 0}

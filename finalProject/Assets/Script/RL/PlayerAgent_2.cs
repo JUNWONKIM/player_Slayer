@@ -14,7 +14,7 @@ public class PlayerAgent_2 : Agent
     private float previousHP;
     private float safeTimer = 0f;
 
-    public int maxCreatures = 3;
+    public int maxCreatures = 2;
     public int maxBullets = 3;
 
     public CreatureSpawner2 creatureSpawner;
@@ -24,11 +24,8 @@ public class PlayerAgent_2 : Agent
 
     public override void Initialize()
     {
-        if (rb == null)
-            rb = GetComponent<Rigidbody>();
-
-        if (AgentHp == null)
-            AgentHp = GetComponent<AgentHp>();
+        if (rb == null) rb = GetComponent<Rigidbody>();
+        if (AgentHp == null) AgentHp = GetComponent<AgentHp>();
 
         initialPosition = transform.position;
         initialRotation = transform.rotation;
@@ -40,7 +37,9 @@ public class PlayerAgent_2 : Agent
 
     public override void OnEpisodeBegin()
     {
-        previousHP = AgentHp.hp = 6f; // ✅ 여유 있는 HP
+        AgentHp.SetHp(5f, 5f); // hp와 max_hp를 동시에 설정
+        previousHP = AgentHp.hp;
+
         episodeTimer = 0f;
         safeTimer = 0f;
 
@@ -59,6 +58,7 @@ public class PlayerAgent_2 : Agent
 
         AddReward(+0.5f); // 시작 보너스
     }
+
 
     void CleanupCreaturesAndBullets()
     {
@@ -82,7 +82,7 @@ public class PlayerAgent_2 : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         sensor.AddObservation(rb.velocity);
-        sensor.AddObservation(AgentHp.hp / 6f); // 정규화된 HP
+        sensor.AddObservation(AgentHp.hp / 6f);
 
         var Creatures = GameObject.FindGameObjectsWithTag("Creature");
         System.Array.Sort(Creatures, (a, b) => Vector3.Distance(transform.position, a.transform.position)
@@ -93,16 +93,15 @@ public class PlayerAgent_2 : Agent
             {
                 Vector3 dir = (Creatures[i].transform.position - transform.position).normalized;
                 float dist = Vector3.Distance(transform.position, Creatures[i].transform.position) / 100f;
-                sensor.AddObservation(dir);  // 방향
-                sensor.AddObservation(dist); // 거리
+                sensor.AddObservation(dir);
+                sensor.AddObservation(dist);
             }
             else
             {
                 sensor.AddObservation(Vector3.zero);
-                sensor.AddObservation(1f);  // 최대 거리
+                sensor.AddObservation(1f);
             }
         }
-
 
         var bullets = GameObject.FindGameObjectsWithTag("C_Bullet");
         System.Array.Sort(bullets, (a, b) => Vector3.Distance(transform.position, a.transform.position)
@@ -141,51 +140,55 @@ public class PlayerAgent_2 : Agent
     void FixedUpdate()
     {
         episodeTimer += Time.fixedDeltaTime;
+        safeTimer += Time.fixedDeltaTime;
 
-        // ✅ 움직임 보상 (매 프레임)
-        AddReward(rb.velocity.magnitude * 0.01f);
-
-        // ✅ 해골 거리 기반 보상 (가까우면 페널티, 멀면 보상)
+        Vector3 fleeDir = Vector3.zero;
         float closestDist = float.MaxValue;
+
         foreach (GameObject creature in GameObject.FindGameObjectsWithTag("Creature"))
         {
             Skull_RL skull = creature.GetComponent<Skull_RL>();
             if (skull != null && skull.ownerAgent == this.transform)
             {
-                float dist = Vector3.Distance(transform.position, creature.transform.position);
+                Vector3 dirToSkull = (skull.transform.position - transform.position);
+                float dist = dirToSkull.magnitude;
+
                 if (dist < closestDist)
+                {
                     closestDist = dist;
+                    fleeDir = -dirToSkull.normalized;
+                }
             }
         }
+
+        // 해골 반대 방향으로 이동 중이면 보상
+        if (closestDist < 30f && fleeDir != Vector3.zero)
+        {
+            float dot = Vector3.Dot(fleeDir, rb.velocity.normalized);
+            if (dot > 0.7f && rb.velocity.magnitude > 1f)
+                AddReward(+0.1f);
+        }
+
+        // 너무 가까우면 패널티
         if (closestDist < 5f)
-        {
-            AddReward(-0.02f * (5f - closestDist));  // 더 강한 페널티
-        }
-        else if (closestDist > 10f && closestDist < 40f)
-        {
-            AddReward(+0.01f * (closestDist - 10f));  // 더 강한 보상
-        }
+            AddReward(-0.2f * (5f - closestDist));
+        // 멀면 보상
+        else if (closestDist > 10f)
+            AddReward(+0.05f);
 
-        // ✅ 생존 보상 (매 1초마다)
-        safeTimer += Time.fixedDeltaTime;
-        if (safeTimer >= 1f)
-        {
-            AddReward(+0.5f);
-            safeTimer = 0f;
-        }
+        // 생존 시간 보상 (0.05점/초)
+        AddReward(0.05f * Time.fixedDeltaTime);
 
-        // ✅ 데미지 보상
+        // HP 감소 감지
         float hpLoss = previousHP - AgentHp.hp;
         if (hpLoss > 0f)
-        {
-            AddReward(-0.5f * hpLoss);  // 완화된 패널티
-        }
+            AddReward(-1.0f * hpLoss);
         previousHP = AgentHp.hp;
 
-        // ✅ 종료 조건
+        // 생존 보상 or 사망 패널티
         if (AgentHp.hp <= 0f)
         {
-            SetReward(-3.0f);
+            SetReward(-5.0f);
             EndEpisode();
         }
         else if (episodeTimer >= maxEpisodeTime)
@@ -194,4 +197,5 @@ public class PlayerAgent_2 : Agent
             EndEpisode();
         }
     }
+
 }

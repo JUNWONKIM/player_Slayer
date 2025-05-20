@@ -3,61 +3,63 @@ using UnityEngine;
 
 public class Skull_RL : MonoBehaviour
 {
-    public float moveSpeed = 10f;
+    public float moveSpeed = 12f;
     public float damageAmount = 1f;
     public float stopDistance = 5f;
+    public float lifetime = 6f;
+
     public Transform ownerAgent;
+    public CreatureSpawner2 spawnerOwner;
 
     private Rigidbody rb;
     private Animator animator;
-    private bool canDealDamage = true;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
+        StartCoroutine(SelfDestructAfterTime());
     }
 
     void Update()
     {
-        if (!animator.GetBool("isDie") && ownerAgent != null)
+        if (ownerAgent == null || animator.GetBool("isDie")) return;
+
+        float distance = Vector3.Distance(transform.position, ownerAgent.position);
+
+        if (distance > stopDistance)
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, ownerAgent.position);
-
-            if (distanceToPlayer > stopDistance)
-            {
-                Vector3 moveDirection = (ownerAgent.position - transform.position).normalized;
-                transform.position += moveDirection * moveSpeed * Time.deltaTime;
-            }
-
-            Vector3 lookDirection = ownerAgent.position - transform.position;
-            lookDirection.y = 0;
-            transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDirection), Time.deltaTime * 5f);
+            Vector3 dir = (ownerAgent.position - transform.position).normalized;
+            transform.position += dir * moveSpeed * Time.deltaTime;
         }
+
+        Vector3 lookDir = ownerAgent.position - transform.position;
+        lookDir.y = 0;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDir), Time.deltaTime * 5f);
     }
 
-    private IEnumerator DamageCooldown()
+    IEnumerator SelfDestructAfterTime()
     {
-        canDealDamage = false;
-        yield return new WaitForSeconds(0.5f);
-        canDealDamage = true;
+        yield return new WaitForSeconds(lifetime);
+
+        if (spawnerOwner != null)
+            spawnerOwner.NotifyCreatureDestroyed();
+
+        Destroy(gameObject);
     }
 
-    private void OnTriggerEnter(Collider other)
+    void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canDealDamage)
+        if (other.CompareTag("Player") && other.transform == ownerAgent)
         {
-            if (ownerAgent != null && other.transform == ownerAgent)
-            {
-                AgentHp agentHP = other.GetComponent<AgentHp>();
-                if (agentHP != null)
-                {
-                    agentHP.TakeDamage(1f); // ✅ 즉사급 데미지
-                    //StartCoroutine(DamageCooldown());
-                }
+            AgentHp hp = other.GetComponent<AgentHp>();
+            if (hp != null)
+                hp.TakeDamage(damageAmount);
 
-                Destroy(gameObject); // ✅ 충돌 시 즉시 사라짐
-            }
+            if (spawnerOwner != null)
+                spawnerOwner.NotifyCreatureDestroyed();
+
+            Destroy(gameObject);
         }
     }
 }

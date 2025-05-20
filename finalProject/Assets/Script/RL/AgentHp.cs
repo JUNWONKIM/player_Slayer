@@ -9,6 +9,11 @@ public class AgentHp : MonoBehaviour
     {
         hp = max_hp;
     }
+    public void SetHp(float newHp, float newMax = -1f)
+    {
+        if (newMax > 0f) max_hp = newMax;
+        hp = Mathf.Clamp(newHp, 0f, max_hp);
+    }
 
     public void TakeDamage(float damage)
     {

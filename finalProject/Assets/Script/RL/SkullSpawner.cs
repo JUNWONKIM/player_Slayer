@@ -50,7 +50,7 @@ public class SkullSpawner : MonoBehaviour
         Skull_RL skullScript = skull.GetComponent<Skull_RL>();
         if (skullScript != null)
         {
-            skullScript.ownerAgent = ownerAgent;
+            //skullScript.ownerAgent = ownerAgent;
             skullScript.StartCoroutine(RemoveOnDeath(skull));
         }
     }

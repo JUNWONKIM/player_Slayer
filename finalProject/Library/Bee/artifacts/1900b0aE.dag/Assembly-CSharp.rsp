@@ -427,6 +427,7 @@
 "Assets/Script/MainScene/UI/UI_SoundSlidebar.cs"
 "Assets/Script/MainScene/UI/UI_time.cs"
 "Assets/Script/RL/AgentHp.cs"
+"Assets/Script/RL/AgentShooter.cs"
 "Assets/Script/RL/CreatureSpawner2.cs"
 "Assets/Script/RL/GhostSpawner.cs"
 "Assets/Script/RL/Ghost_RL.cs"

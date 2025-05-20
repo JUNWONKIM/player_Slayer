@@ -59,7 +59,7 @@ public class PlayerLV : MonoBehaviour
     public static void IncrementCreatureDeathCount() //죽은 크리쳐 카운트
     {
         creatureDeathCount++;
-        Debug.Log("Creatures Killed: " + creatureDeathCount);
+        //Debug.Log("Creatures Killed: " + creatureDeathCount);
     }
 
     void LevelUp() //레벨업 처리
