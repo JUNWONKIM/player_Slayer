@@ -161,41 +161,49 @@ public class PlayerAgent_2 : Agent
             }
         }
 
-        // 해골 반대 방향으로 이동 중이면 보상
-        if (closestDist < 30f && fleeDir != Vector3.zero)
+        // ✅ 1. 생존 시간 보상 (초당 0.2점)
+        AddReward(0.2f * Time.fixedDeltaTime);
+
+        // ✅ 2. 해골과 거리 기반 보상
+        float minDistanceRewardCooldown = 1.0f;
+        float lastDistRewardTime = 0f;
+
+        if (Time.time - lastDistRewardTime > minDistanceRewardCooldown && closestDist > 15f)
         {
-            float dot = Vector3.Dot(fleeDir, rb.velocity.normalized);
-            if (dot > 0.7f && rb.velocity.magnitude > 1f)
-                AddReward(+0.1f);
+            AddReward(+0.05f);
+            lastDistRewardTime = Time.time;
         }
 
-        // 너무 가까우면 패널티
-        if (closestDist < 5f)
-            AddReward(-0.2f * (5f - closestDist));
-        // 멀면 보상
-        else if (closestDist > 10f)
-            AddReward(+0.05f);
 
-        // 생존 시간 보상 (0.05점/초)
-        AddReward(0.05f * Time.fixedDeltaTime);
+        // ✅ 3. 도망 방향 보상 (반대 방향으로 이동 시 보상)
+        if (fleeDir != Vector3.zero && rb.velocity.magnitude > 1f)
+        {
+            float dot = Vector3.Dot(fleeDir, rb.velocity.normalized);
+            if (dot > 0.7f)
+                AddReward(+0.2f);
+        }
 
-        // HP 감소 감지
+        // ✅ 4. HP 감소 감지 → 큰 패널티
         float hpLoss = previousHP - AgentHp.hp;
         if (hpLoss > 0f)
-            AddReward(-1.0f * hpLoss);
+        {
+            AddReward(-3.0f * hpLoss); // 데미지 1당 -3점
+            safeTimer = 0f;
+        }
         previousHP = AgentHp.hp;
 
-        // 생존 보상 or 사망 패널티
+        // ✅ 5. 에피소드 종료 조건
         if (AgentHp.hp <= 0f)
         {
-            SetReward(-5.0f);
+            SetReward(-15.0f); // 큰 패널티
             EndEpisode();
         }
         else if (episodeTimer >= maxEpisodeTime)
         {
-            SetReward(+5.0f);
+            SetReward(+10.0f); // 성공 보상
             EndEpisode();
         }
     }
+
 
 }

@@ -3,17 +3,19 @@ using UnityEngine;
 
 public class CreatureSpawner2 : MonoBehaviour
 {
-    public GameObject skullPrefab;           // 해골 프리팹
-    public float spawnRadius = 50f;          // 스폰 거리
-    public float spawnInterval = 3f;         // 스폰 간격
-    public int maxCreatures = 4;             // 최대 해골 수
+    public GameObject skullPrefab;
+    public float spawnRadius = 30f;
+    public float spawnInterval = 1.5f;
+    public int maxCreatures = 5;
 
     private int currentCreatureCount = 0;
     private Transform targetAgent;
+    private Vector3 previousAgentPos;
 
     public void SetTargetAgent(Transform agent)
     {
         targetAgent = agent;
+        previousAgentPos = agent.position; // 최초 위치 저장
     }
 
     void OnEnable()
@@ -26,30 +28,32 @@ public class CreatureSpawner2 : MonoBehaviour
     {
         while (true)
         {
-            yield return new WaitForSeconds(spawnInterval);
-
-            if (targetAgent == null)
-            {
-                Debug.Log("[Spawner] No target agent.");
-                continue;
-            }
-
-            if (currentCreatureCount < maxCreatures)
+            if (targetAgent != null && currentCreatureCount < maxCreatures)
             {
                 SpawnSkull();
-                Debug.Log($"[Spawner] Skull spawned. Count: {currentCreatureCount}/{maxCreatures}");
             }
-            else
-            {
-                Debug.Log("[Spawner] Max creatures reached. Skipping spawn.");
-            }
+
+            yield return new WaitForSeconds(spawnInterval);
         }
     }
 
     void SpawnSkull()
     {
-        Vector2 offset = Random.insideUnitCircle.normalized * spawnRadius;
-        Vector3 spawnPos = targetAgent.position + new Vector3(offset.x, 0, offset.y);
+        Vector3 currentPos = targetAgent.position;
+        Vector3 moveDir = (currentPos - previousAgentPos).normalized;
+
+        if (moveDir.magnitude < 0.1f)
+        {
+            moveDir = targetAgent.forward; // 거의 안 움직이면 앞 방향 fallback
+        }
+
+        previousAgentPos = currentPos;
+
+        Quaternion rotation = Quaternion.Euler(0, Random.Range(-30f, 30f), 0);
+        Vector3 spawnDir = rotation * moveDir;
+
+        Vector3 spawnPos = currentPos + spawnDir.normalized * spawnRadius;
+        spawnPos += new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
 
         GameObject skull = Instantiate(skullPrefab, spawnPos, Quaternion.identity);
         skull.tag = "Creature";
@@ -67,7 +71,6 @@ public class CreatureSpawner2 : MonoBehaviour
     public void NotifyCreatureDestroyed()
     {
         currentCreatureCount = Mathf.Max(0, currentCreatureCount - 1);
-        Debug.Log($"[Spawner] Skull destroyed. Remaining: {currentCreatureCount}");
     }
 
     public void ResetSpawner()

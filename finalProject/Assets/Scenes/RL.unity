@@ -3613,7 +3613,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1927330384}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 46f29f2c72e4efd438e4b55ad2cfcf52, type: 3}
   m_Name: 
@@ -4110,6 +4110,14 @@ PrefabInstance:
     - target: {fileID: 1513525332791605488, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
       propertyPath: m_Model
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
+      propertyPath: maxCreatures
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
+      propertyPath: spawnInterval
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 4359414826500782677, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
       propertyPath: spawnRadius
