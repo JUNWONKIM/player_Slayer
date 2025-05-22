@@ -3875,8 +3875,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   skullPrefab: {fileID: 7307231022892869790, guid: ed1b08d13f55e2b489418b4cd30d2a3a, type: 3}
   spawnRadius: 40
-  spawnInterval: 2
-  maxCreatures: 5
+  spawnInterval: 3
+  maxCreatures: 3
 --- !u!1 &7994056353348560014
 GameObject:
   m_ObjectHideFlags: 0

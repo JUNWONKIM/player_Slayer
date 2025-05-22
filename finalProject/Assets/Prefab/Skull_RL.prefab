@@ -294,9 +294,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4467f29ce8683b84ba6c27e3ca2f9ea9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 15
   damageAmount: 1
   stopDistance: 5
   lifetime: 6
+  damageInterval: 1
   ownerAgent: {fileID: 0}
   spawnerOwner: {fileID: 0}

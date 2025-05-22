@@ -4111,14 +4111,6 @@ PrefabInstance:
       propertyPath: m_Model
       value: 
       objectReference: {fileID: 0}
-    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
-      propertyPath: maxCreatures
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
-      propertyPath: spawnInterval
-      value: 3
-      objectReference: {fileID: 0}
     - target: {fileID: 4359414826500782677, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
       propertyPath: spawnRadius
       value: 100

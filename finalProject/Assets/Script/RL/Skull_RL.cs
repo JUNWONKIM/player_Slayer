@@ -7,12 +7,16 @@ public class Skull_RL : MonoBehaviour
     public float damageAmount = 1f;
     public float stopDistance = 5f;
     public float lifetime = 6f;
+    public float damageInterval = 0.5f;
 
     public Transform ownerAgent;
     public CreatureSpawner2 spawnerOwner;
 
     private Rigidbody rb;
     private Animator animator;
+
+    private bool isTouchingPlayer = false;
+    private Coroutine damageCoroutine;
 
     void Start()
     {
@@ -41,25 +45,40 @@ public class Skull_RL : MonoBehaviour
     IEnumerator SelfDestructAfterTime()
     {
         yield return new WaitForSeconds(lifetime);
-
-        if (spawnerOwner != null)
-            spawnerOwner.NotifyCreatureDestroyed();
-
-        Destroy(gameObject);
+        Destroy(gameObject); // 해골 수명 종료
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player") && other.transform == ownerAgent)
         {
-            AgentHp hp = other.GetComponent<AgentHp>();
-            if (hp != null)
-                hp.TakeDamage(damageAmount);
+            if (!isTouchingPlayer)
+            {
+                isTouchingPlayer = true;
+                damageCoroutine = StartCoroutine(DealDamageOverTime(other.GetComponent<AgentHp>()));
+            }
+        }
+    }
 
-            if (spawnerOwner != null)
-                spawnerOwner.NotifyCreatureDestroyed();
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player") && other.transform == ownerAgent)
+        {
+            if (isTouchingPlayer)
+            {
+                isTouchingPlayer = false;
+                if (damageCoroutine != null)
+                    StopCoroutine(damageCoroutine);
+            }
+        }
+    }
 
-            Destroy(gameObject);
+    IEnumerator DealDamageOverTime(AgentHp hp)
+    {
+        while (isTouchingPlayer && hp != null)
+        {
+            hp.TakeDamage(damageAmount);
+            yield return new WaitForSeconds(damageInterval);
         }
     }
 }
