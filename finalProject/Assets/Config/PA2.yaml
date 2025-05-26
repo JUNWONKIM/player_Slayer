@@ -17,7 +17,7 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-    max_steps: 5.0e6
+    max_steps: 10.0e6
     time_horizon: 1000
     summary_freq: 10000
     threaded: true

@@ -634,7 +634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 3153472991145048103, guid: 65002c145c1eb4749b6ef74c52637847, type: 3}
-  fireInterval: 1
+  fireInterval: 1.2
   detectionRange: 50
   bulletSpeed: 50
   bulletDamage: 1
@@ -3876,7 +3876,9 @@ MonoBehaviour:
   skullPrefab: {fileID: 7307231022892869790, guid: ed1b08d13f55e2b489418b4cd30d2a3a, type: 3}
   spawnRadius: 40
   spawnInterval: 3
-  maxCreatures: 3
+  maxCreatures: 4
+  spawnedCreatures: []
+  spawnedBullets: []
 --- !u!1 &7994056353348560014
 GameObject:
   m_ObjectHideFlags: 0
@@ -3970,7 +3972,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 36
+  m_Constraints: 116
   m_CollisionDetection: 0
 --- !u!136 &7994056353348560250
 CapsuleCollider:
@@ -4022,7 +4024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_BrainParameters:
-    VectorObservationSize: 1
+    VectorObservationSize: 28
     NumStackedVectorObservations: 1
     m_ActionSpec:
       m_NumContinuousActions: 2

@@ -39,51 +39,52 @@ public class CreatureHp : MonoBehaviour
 
             if (currentHp <= 0)
             {
-                Die(); 
+                Destroy(gameObject);
+                //Die(); 
             }
         }
     }
 
-    void Die() //사망 처리
-    {
-        if (animator != null)
-        {
-            animator.SetBool("isDie", true); //죽는 애니메이션 실행
-        }
+    //void Die() //사망 처리
+    //{
+    //    if (animator != null)
+    //    {
+    //        animator.SetBool("isDie", true); //죽는 애니메이션 실행
+    //    }
 
-        // 죽는 소리 재생
-        if (audioSource != null && deathSound != null)
-        {
-            audioSource.clip = deathSound;
-            audioSource.volume = 1f;
-            audioSource.Play();
-        }
+    //    // 죽는 소리 재생
+    //    if (audioSource != null && deathSound != null)
+    //    {
+    //        audioSource.clip = deathSound;
+    //        audioSource.volume = 1f;
+    //        audioSource.Play();
+    //    }
 
-        //움직임 고정
-        rb.isKinematic = true;
-        rb.velocity = Vector3.zero;
-        rb.constraints = RigidbodyConstraints.FreezeAll; 
+    //    //움직임 고정
+    //    rb.isKinematic = true;
+    //    rb.velocity = Vector3.zero;
+    //    rb.constraints = RigidbodyConstraints.FreezeAll; 
 
-        // NavMeshAgent 비활성화 
-        NavMeshAgent agent = GetComponent<NavMeshAgent>();
-        if (agent != null)
-        {
-            agent.enabled = false;
-        }
+    //    // NavMeshAgent 비활성화 
+    //    NavMeshAgent agent = GetComponent<NavMeshAgent>();
+    //    if (agent != null)
+    //    {
+    //        agent.enabled = false;
+    //    }
 
-        //태그 제거
-        gameObject.tag = "Untagged";
+    //    //태그 제거
+    //    gameObject.tag = "Untagged";
 
-        //크리처 데스 카운트 추가
-        PlayerLV.IncrementCreatureDeathCount();
-        isDead = true;
+    //    //크리처 데스 카운트 추가
+    //    PlayerLV.IncrementCreatureDeathCount();
+    //    isDead = true;
 
         
-        AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
-        float dieAnimationLength = clipInfo[0].clip.length;
+    //    AnimatorClipInfo[] clipInfo = animator.GetCurrentAnimatorClipInfo(0);
+    //    float dieAnimationLength = clipInfo[0].clip.length;
 
-        //오브젝트 제거
-        Destroy(gameObject, dieAnimationLength);
-    }
+    //    //오브젝트 제거
+    //    Destroy(gameObject, dieAnimationLength);
+    //}
 
 }

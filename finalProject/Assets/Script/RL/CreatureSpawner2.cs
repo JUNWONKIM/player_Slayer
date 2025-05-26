@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class CreatureSpawner2 : MonoBehaviour
@@ -13,6 +14,7 @@ public class CreatureSpawner2 : MonoBehaviour
     private float spawnTimer = 0f;
 
     public List<GameObject> spawnedCreatures = new List<GameObject>();
+    public List<GameObject> spawnedBullets = new List<GameObject>(); // (옵션)
 
     public void SetTargetAgent(Transform agent)
     {
@@ -24,8 +26,9 @@ public class CreatureSpawner2 : MonoBehaviour
     public void ResetSpawner()
     {
         spawnTimer = 0f;
-        CleanupDestroyedCreatures();
+        CleanupDestroyedObjects();
         spawnedCreatures.Clear();
+        spawnedBullets.Clear(); // (옵션)
     }
 
     void Update()
@@ -33,7 +36,7 @@ public class CreatureSpawner2 : MonoBehaviour
         if (targetAgent == null) return;
 
         spawnTimer += Time.deltaTime;
-        CleanupDestroyedCreatures();
+        CleanupDestroyedObjects();
 
         if (spawnTimer >= spawnInterval && spawnedCreatures.Count < maxCreatures)
         {
@@ -42,10 +45,10 @@ public class CreatureSpawner2 : MonoBehaviour
         }
     }
 
-    private void CleanupDestroyedCreatures()
+    private void CleanupDestroyedObjects()
     {
-        // 리스트에서 null(파괴된) 객체 제거
-        spawnedCreatures.RemoveAll(creature => creature == null);
+        spawnedCreatures.RemoveAll(c => c == null);
+        spawnedBullets.RemoveAll(b => b == null); // (옵션)
     }
 
     private void SpawnSkull()
@@ -62,7 +65,6 @@ public class CreatureSpawner2 : MonoBehaviour
         spawnPos += new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
 
         GameObject skull = Instantiate(skullPrefab, spawnPos, Quaternion.identity);
-        skull.tag = "Creature";
 
         var skr = skull.GetComponent<Skull_RL>();
         if (skr != null)
@@ -72,5 +74,36 @@ public class CreatureSpawner2 : MonoBehaviour
         }
 
         spawnedCreatures.Add(skull);
+    }
+
+    // ✅ 가장 가까운 적 1개 반환
+    public GameObject GetNearestCreature()
+    {
+        if (targetAgent == null || spawnedCreatures.Count == 0) return null;
+
+        return spawnedCreatures
+            .Where(c => c != null)
+            .OrderBy(c => Vector3.Distance(targetAgent.position, c.transform.position))
+            .FirstOrDefault();
+    }
+
+    // ✅ 주변 크리처 여러 개 반환
+    public GameObject[] GetNearestCreatures(int count)
+    {
+        return spawnedCreatures
+            .Where(c => c != null)
+            .OrderBy(c => Vector3.Distance(targetAgent.position, c.transform.position))
+            .Take(count)
+            .ToArray();
+    }
+
+    // ✅ 주변 탄환 관측 (옵션)
+    public GameObject[] GetNearestBullets(int count)
+    {
+        return spawnedBullets
+            .Where(b => b != null)
+            .OrderBy(b => Vector3.Distance(targetAgent.position, b.transform.position))
+            .Take(count)
+            .ToArray();
     }
 }
