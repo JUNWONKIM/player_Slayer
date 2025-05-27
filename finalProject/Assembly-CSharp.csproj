@@ -122,6 +122,7 @@
     <Compile Include="Assets\Script\MainScene\Player\PlayerPortal.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Assets\Logs\reward_log.txt" />
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
     <None Include="Assets\Assets\UI\Font\_README.txt" />
   </ItemGroup>

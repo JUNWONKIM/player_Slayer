@@ -1,3 +1,59 @@
+environment_parameters:
+  skullSpeed:
+    curriculum:
+      - name: skullSpeed
+        value: 13.0
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.7
+      - name: skullSpeed
+        value: 15.0
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 200
+          threshold: 0.7
+      - name: skullSpeed
+        value: 18.0
+
+  spawnInterval:
+    curriculum:
+      - name: spawnInterval
+        value: 3.0
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.7
+      - name: spawnInterval
+        value: 2.5
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 200
+          threshold: 0.7
+      - name: spawnInterval
+        value: 2.0
+
+  maxSkulls:
+    curriculum:
+      - name: maxSkulls
+        value: 2
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 200
+          threshold: 0.75
+      - name: maxSkulls
+        value: 3
+
 behaviors:
   PlayerAgent:
     trainer_type: ppo

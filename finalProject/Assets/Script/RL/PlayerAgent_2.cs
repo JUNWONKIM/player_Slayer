@@ -21,6 +21,9 @@ public class PlayerAgent_2 : Agent
     private float previousHP;
     private float prevNearestDist = -1f;
 
+    float threatPenaltySum = 0f;
+    float distPenaltySum = 0f;
+
     private Vector3 initialPosition;
     private Quaternion initialRotation;
 
@@ -40,6 +43,15 @@ public class PlayerAgent_2 : Agent
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         previousHP = AgentHp.hp;
+
+        float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 13f);
+        float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
+        int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 2));
+
+        if (creatureSpawner != null)
+        {
+            creatureSpawner.SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
+        }
     }
 
     public override void OnEpisodeBegin()
@@ -52,6 +64,8 @@ public class PlayerAgent_2 : Agent
         accumulatedHpLoss = 0f;
         episodeTimer = 0f;
         prevNearestDist = -1f;
+        threatPenaltySum = 0f;
+        distPenaltySum = 0f;
 
         AgentHp.SetHp(5f, 5f);
         previousHP = AgentHp.hp;
@@ -115,23 +129,22 @@ public class PlayerAgent_2 : Agent
     {
         Vector2 move = new Vector2(actions.ContinuousActions[0], actions.ContinuousActions[1]);
         Vector3 worldMove = transform.TransformDirection(new Vector3(move.x, 0, move.y)).normalized;
-
         rb.velocity = worldMove * moveSpeed;
         lastActionMove = worldMove;
     }
+
 
     void FixedUpdate()
     {
         episodeTimer += Time.fixedDeltaTime;
         creatureSpawner.spawnedCreatures.RemoveAll(c => c == null);
 
-        // Debug: 초록색 이동 방향
+        // 이동 방향 디버그
         if (rb.velocity.magnitude > 0.1f)
         {
             Debug.DrawLine(transform.position, transform.position + rb.velocity.normalized * 10f, Color.green, 0.1f, false);
         }
 
-        // Debug: 가장 가까운 해골 방향 (빨강)
         GameObject nearest = creatureSpawner.GetNearestCreature();
         if (nearest != null)
         {
@@ -141,38 +154,42 @@ public class PlayerAgent_2 : Agent
 
         float currentNearestDist = nearest ? Vector3.Distance(transform.position, nearest.transform.position) : 100f;
 
-        // 1. 위협 밀도 기반 패널티
+        // 위협도 누적
         float threatSum = 0f;
+        int threatCount = 0;
         foreach (var creature in creatureSpawner.spawnedCreatures)
         {
             if (creature == null) continue;
             float dist = Vector3.Distance(transform.position, creature.transform.position);
             if (dist < 40f)
+            {
                 threatSum += 1f / Mathf.Max(dist, 1f);
+                threatCount++;
+            }
         }
-        float threatPenalty = -0.05f * threatSum;
-        AddReward(threatPenalty);
-        totalThreatPenalty += threatPenalty;
+        if (threatCount > 0)
+        {
+            float avgThreat = threatSum / threatCount;
+            threatPenaltySum += avgThreat;
+        }
 
-        // 2. 거리 감소 패널티
+        // 거리 변화 누적
         if (prevNearestDist > 0f)
         {
             float delta = currentNearestDist - prevNearestDist;
             if (delta < -0.1f)
             {
-                float distPenalty = Mathf.Clamp(delta * 0.1f, -0.1f, 0f);
-                AddReward(distPenalty);
-                totalDistPenalty += distPenalty;
+                distPenaltySum += -delta; // 음수만 누적
             }
         }
         prevNearestDist = currentNearestDist;
 
-        // 3. 생존 보상
-        float survivalReward = 0.2f * Time.fixedDeltaTime;
+        // 생존 보상은 계속 즉시 적용
+        float survivalReward = 0.4f * Time.fixedDeltaTime;
         AddReward(survivalReward);
         totalSurvivalReward += survivalReward;
 
-        // 4. HP 손실 페널티
+        // HP 손실 페널티 (즉시 적용)
         float hpLoss = previousHP - AgentHp.hp;
         if (hpLoss > 0.01f)
         {
@@ -180,7 +197,7 @@ public class PlayerAgent_2 : Agent
             int hpLossInt = Mathf.FloorToInt(accumulatedHpLoss);
             if (hpLossInt >= 1)
             {
-                float penalty = -2.0f * hpLossInt;
+                float penalty = -1.0f * hpLossInt;
                 AddReward(penalty);
                 totalHpPenalty += penalty;
                 accumulatedHpLoss -= hpLossInt;
@@ -188,28 +205,40 @@ public class PlayerAgent_2 : Agent
         }
         previousHP = AgentHp.hp;
 
-        // 5. 에피소드 종료 판단
-        if (AgentHp.hp <= 0f)
+        // 종료 조건
+        if (AgentHp.hp <= 0f || episodeTimer >= maxEpisodeTime)
         {
             float survivalRatio = Mathf.Clamp01(episodeTimer / maxEpisodeTime);
-            endReward = -10f + survivalRatio * 5f;
+            endReward = AgentHp.hp <= 0f ? -10f + survivalRatio * 5f : +25f;
             AddReward(endReward);
-            PrintRewardSummary();
-            EndEpisode();
-        }
-        else if (episodeTimer >= maxEpisodeTime)
-        {
-            endReward = +25f;
-            AddReward(endReward);
+
+            // 🔥 평균 페널티 적용 (생존 시간 대비)
+            float survivalTime = Mathf.Max(episodeTimer, 1f); // 0으로 나누는 것 방지
+            float threatPenalty = -0.5f * (threatPenaltySum / survivalTime);
+            float distPenalty = -0.2f * (distPenaltySum / survivalTime);
+
+            AddReward(threatPenalty);
+            AddReward(distPenalty);
+            totalThreatPenalty += threatPenalty;
+            totalDistPenalty += distPenalty;
+
             PrintRewardSummary();
             EndEpisode();
         }
     }
 
+
     void PrintRewardSummary()
     {
-        Debug.Log($"[RewardSummary] ThreatPenalty: {totalThreatPenalty:F2}, DistPenalty: {totalDistPenalty:F2}, " +
-                  $"Survive: {totalSurvivalReward:F2}, HP: {totalHpPenalty:F2}, End: {endReward:F2}, " +
-                  $"Final: {GetCumulativeReward():F2}");
+        string summary = $"[RewardSummary] Threat: {totalThreatPenalty:F2}, Dist: {totalDistPenalty:F2}, Survive: {totalSurvivalReward:F2}, HP: {totalHpPenalty:F2}, End: {endReward:F2}, Final: {GetCumulativeReward():F2}";
+
+        Debug.Log(summary);
+
+        string logFolder = Application.dataPath + "/Logs";
+        if (!System.IO.Directory.Exists(logFolder))
+            System.IO.Directory.CreateDirectory(logFolder);
+
+        string logPath = logFolder + "/reward_log.txt";
+        System.IO.File.AppendAllText(logPath, summary + "\n");
     }
 }

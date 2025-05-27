@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using Unity.MLAgents;
 
 public class CreatureSpawner2 : MonoBehaviour
 {
@@ -16,6 +17,16 @@ public class CreatureSpawner2 : MonoBehaviour
     public List<GameObject> spawnedCreatures = new List<GameObject>();
     public List<GameObject> spawnedBullets = new List<GameObject>(); // (옵션)
 
+    private float curriculumSkullSpeed = -1f; // default -1이면 prefab 값 사용
+
+    void Start()
+    {
+        float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 13f);
+        float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
+        int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 2f));
+
+        SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
+    }
     public void SetTargetAgent(Transform agent)
     {
         targetAgent = agent;
@@ -71,6 +82,10 @@ public class CreatureSpawner2 : MonoBehaviour
         {
             skr.ownerAgent = targetAgent;
             skr.spawnerOwner = this;
+
+            // 커리큘럼 적용: 속도 반영
+            if (curriculumSkullSpeed > 0f)
+                skr.moveSpeed = curriculumSkullSpeed;
         }
 
         spawnedCreatures.Add(skull);
@@ -105,5 +120,13 @@ public class CreatureSpawner2 : MonoBehaviour
             .OrderBy(b => Vector3.Distance(targetAgent.position, b.transform.position))
             .Take(count)
             .ToArray();
+    }
+
+    // ✅ 커리큘럼 적용 메서드
+    public void SetCurriculum(float skullSpeed, float spawnInterval, int maxSkulls)
+    {
+        this.curriculumSkullSpeed = skullSpeed;
+        this.spawnInterval = spawnInterval;
+        this.maxCreatures = maxSkulls;
     }
 }

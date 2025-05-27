@@ -1954,14 +1954,6 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
-      propertyPath: spawnRadius
-      value: 100
-      objectReference: {fileID: 0}
-    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
-      propertyPath: maxCreatures
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5709482329236006552, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
       propertyPath: m_RootOrder
       value: -1
@@ -4030,10 +4022,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 1671414585}
     m_Modifications:
-    - target: {fileID: 2872020294287617614, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
-      propertyPath: spawnRadius
-      value: 50
-      objectReference: {fileID: 0}
     - target: {fileID: 4359414826500782677, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
       propertyPath: spawnRadius
       value: 100
@@ -4089,10 +4077,6 @@ PrefabInstance:
     - target: {fileID: 5709482329236006553, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
       propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8230121013192120488, guid: 9fa84934e2972374ba7dbe8da993032f, type: 3}
-      propertyPath: maxEpisodeTime
-      value: 90
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

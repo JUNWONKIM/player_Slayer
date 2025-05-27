@@ -1,0 +1,11 @@
+{
+  "measure": "progress",
+  "thresholds": [0.1, 0.2, 0.3, 0.45, 0.6, 0.75],
+  "min_lesson_length": 100,
+  "signal_smoothing": true,
+  "parameters": {
+    "skullSpeed": [8, 10, 12, 13, 15, 17, 18],
+    "spawnInterval": [5, 4, 3.5, 3, 2.5, 2.5, 2],
+    "maxSkulls": [1, 1, 2, 2, 2, 3, 3]
+  }
+}
