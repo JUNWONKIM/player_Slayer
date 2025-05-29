@@ -6,6 +6,8 @@ using Unity.MLAgents;
 public class CreatureSpawner2 : MonoBehaviour
 {
     public GameObject skullPrefab;
+    public GameObject ghostPrefab; // 👈 고스트 프리팹 추가
+
     public float spawnRadius = 30f;
     public float spawnInterval = 1.5f;
     public int maxCreatures = 3;
@@ -17,16 +19,17 @@ public class CreatureSpawner2 : MonoBehaviour
     public List<GameObject> spawnedCreatures = new List<GameObject>();
     public List<GameObject> spawnedBullets = new List<GameObject>(); // (옵션)
 
-    private float curriculumSkullSpeed = -1f; // default -1이면 prefab 값 사용
+    private float curriculumSkullSpeed = -1f;
 
     void Start()
     {
-        float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 13f);
-        float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
-        int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 2f));
+        //float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 20f);
+        //float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
+        //int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 3));
 
-        SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
+        //SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
     }
+
     public void SetTargetAgent(Transform agent)
     {
         targetAgent = agent;
@@ -38,9 +41,24 @@ public class CreatureSpawner2 : MonoBehaviour
     {
         spawnTimer = 0f;
         CleanupDestroyedObjects();
+
+        // 👇 실제 GameObject도 파괴
+        foreach (var c in spawnedCreatures)
+        {
+            if (c != null)
+                GameObject.Destroy(c);
+        }
+
+        foreach (var b in spawnedBullets)
+        {
+            if (b != null)
+                GameObject.Destroy(b);
+        }
+
         spawnedCreatures.Clear();
-        spawnedBullets.Clear(); // (옵션)
+        spawnedBullets.Clear();
     }
+
 
     void Update()
     {
@@ -52,17 +70,17 @@ public class CreatureSpawner2 : MonoBehaviour
         if (spawnTimer >= spawnInterval && spawnedCreatures.Count < maxCreatures)
         {
             spawnTimer -= spawnInterval;
-            SpawnSkull();
+            SpawnSkullOrGhost(); // 👈 랜덤으로 소환
         }
     }
 
     private void CleanupDestroyedObjects()
     {
         spawnedCreatures.RemoveAll(c => c == null);
-        spawnedBullets.RemoveAll(b => b == null); // (옵션)
+        spawnedBullets.RemoveAll(b => b == null);
     }
 
-    private void SpawnSkull()
+    private void SpawnSkullOrGhost()
     {
         Vector3 currentPos = targetAgent.position;
         Vector3 moveDir = (currentPos - previousAgentPos).normalized;
@@ -75,23 +93,26 @@ public class CreatureSpawner2 : MonoBehaviour
         Vector3 spawnPos = currentPos + spawnDir * spawnRadius;
         spawnPos += new Vector3(Random.Range(-1f, 1f), 0f, Random.Range(-1f, 1f));
 
-        GameObject skull = Instantiate(skullPrefab, spawnPos, Quaternion.identity);
+        // 👇 랜덤하게 해골 또는 고스트 선택
+        GameObject prefabToSpawn = Random.value < 0.5f ? skullPrefab : ghostPrefab;
+        GameObject creature = Instantiate(prefabToSpawn, spawnPos, Quaternion.identity);
 
-        var skr = skull.GetComponent<Skull_RL>();
-        if (skr != null)
+        if (creature.TryGetComponent(out Skull_RL skull))
         {
-            skr.ownerAgent = targetAgent;
-            skr.spawnerOwner = this;
-
-            // 커리큘럼 적용: 속도 반영
+            skull.ownerAgent = targetAgent;
+            skull.spawnerOwner = this;
             if (curriculumSkullSpeed > 0f)
-                skr.moveSpeed = curriculumSkullSpeed;
+                skull.moveSpeed = curriculumSkullSpeed;
+        }
+        else if (creature.TryGetComponent(out Ghost_RL ghost))
+        {
+            ghost.ownerAgent = targetAgent;
+            ghost.spawnerOwner = this;
         }
 
-        spawnedCreatures.Add(skull);
+        spawnedCreatures.Add(creature);
     }
 
-    // ✅ 가장 가까운 적 1개 반환
     public GameObject GetNearestCreature()
     {
         if (targetAgent == null || spawnedCreatures.Count == 0) return null;
@@ -102,7 +123,6 @@ public class CreatureSpawner2 : MonoBehaviour
             .FirstOrDefault();
     }
 
-    // ✅ 주변 크리처 여러 개 반환
     public GameObject[] GetNearestCreatures(int count)
     {
         return spawnedCreatures
@@ -112,7 +132,6 @@ public class CreatureSpawner2 : MonoBehaviour
             .ToArray();
     }
 
-    // ✅ 주변 탄환 관측 (옵션)
     public GameObject[] GetNearestBullets(int count)
     {
         return spawnedBullets
@@ -122,7 +141,6 @@ public class CreatureSpawner2 : MonoBehaviour
             .ToArray();
     }
 
-    // ✅ 커리큘럼 적용 메서드
     public void SetCurriculum(float skullSpeed, float spawnInterval, int maxSkulls)
     {
         this.curriculumSkullSpeed = skullSpeed;

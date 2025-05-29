@@ -634,7 +634,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   bulletPrefab: {fileID: 3153472991145048103, guid: 65002c145c1eb4749b6ef74c52637847, type: 3}
-  fireInterval: 1.5
+  fireInterval: 1.2
   detectionRange: 50
   bulletSpeed: 50
   bulletDamage: 1
@@ -3874,8 +3874,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   skullPrefab: {fileID: 7307231022892869790, guid: ed1b08d13f55e2b489418b4cd30d2a3a, type: 3}
+  ghostPrefab: {fileID: 8252175027606189221, guid: 30b2903530c8d6041932a7307bb0c4db, type: 3}
   spawnRadius: 40
-  spawnInterval: 2.5
+  spawnInterval: 2
   maxCreatures: 4
   spawnedCreatures: []
   spawnedBullets: []
@@ -4057,7 +4058,7 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 5000
-  moveSpeed: 20
+  moveSpeed: 30
   rb: {fileID: 7994056353348560249}
   AgentHp: {fileID: 5709482329628522833}
   maxEpisodeTime: 60

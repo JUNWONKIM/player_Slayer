@@ -1,34 +1,41 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 using System.Collections;
+using Unity.MLAgents; 
 
 public class Ghost_RL : MonoBehaviour
 {
-    public float moveSpeed = 5f; // ÀÌµ¿¼Óµµ
-    public float stoppingDistance = 5f; // °ø°İ »ç°Å¸®
-    public float bulletSpeed = 50f; // Åõ»çÃ¼ ¼Óµµ
-    public GameObject projectilePrefab; // Åõ»çÃ¼ ÇÁ¸®ÆÕ
-    public Transform firePoint; // ¹ß»ç ÁöÁ¡
-    public float fireRate = 1f; // ¹ß»ç ¼Óµµ
-    public float nextFireTime = 0f; // ¹ß»ç ½Ã°£ ±â·Ï
-    public float damageAmount = 1f; // µ¥¹ÌÁö
+    public float moveSpeed = 5f;
+    public float stoppingDistance = 5f;
+    public float bulletSpeed = 50f;
+    public GameObject projectilePrefab;
+    public Transform firePoint;
+    public float fireRate = 1f;
+    public float nextFireTime = 0f;
+    public float damageAmount = 1f;
 
-    public Transform ownerAgent; // ¿ÜºÎ¿¡¼­ ¼³Á¤ÇÒ ÃßÀû ´ë»ó
-    private Transform player; // ³»ºÎ Å¸°Ù ÂüÁ¶
+    public Transform ownerAgent;
+    public CreatureSpawner2 spawnerOwner; // ğŸ‘ˆ ì¶”ê°€
+
+    private Transform player;
     private Rigidbody rb;
     private Animator animator;
-    private bool canDealDamage = true; // µ¥¹ÌÁö¸¦ ÁÙ ¼ö ÀÖ´Â »óÅÂ ¿©ºÎ
+    private bool canDealDamage = true;
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         animator = GetComponent<Animator>();
 
-        // ¿ÜºÎ¿¡¼­ ¼³Á¤µÈ ownerAgent°¡ ÀÖÀ¸¸é ±×°É ÃßÀû, ¾øÀ¸¸é ÅÂ±×·Î Ã£±â
-        if (ownerAgent == null)
-            player = GameObject.FindGameObjectWithTag("Player").transform;
-        else
-            player = ownerAgent;
+        // ğŸ‘‡ ì»¤ë¦¬í˜ëŸ¼ íŒŒë¼ë¯¸í„° ê°€ì ¸ì˜¤ê¸°
+        float rate = Academy.Instance.EnvironmentParameters.GetWithDefault("ghostFireRate", fireRate);
+        float speed = Academy.Instance.EnvironmentParameters.GetWithDefault("bulletSpeed", bulletSpeed);
+
+        fireRate = rate;
+        bulletSpeed = speed;
+
+        player = ownerAgent != null ? ownerAgent : GameObject.FindGameObjectWithTag("Player").transform;
     }
+
 
     void Update()
     {
@@ -37,22 +44,18 @@ public class Ghost_RL : MonoBehaviour
             float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
             if (distanceToPlayer > stoppingDistance)
-            {
                 Move();
-            }
-            else if (distanceToPlayer <= stoppingDistance)
-            {
+            else
                 Attack();
-            }
         }
         else
         {
-            Transform childObject_1 = transform.Find("Ghost");
-            Transform childObject_2 = transform.Find("GhostArmature");
+            Transform ghost = transform.Find("Ghost");
+            Transform armature = transform.Find("GhostArmature");
             Transform effect = transform.Find("Ghost_die");
 
-            childObject_1?.gameObject.SetActive(false);
-            childObject_2?.gameObject.SetActive(false);
+            ghost?.gameObject.SetActive(false);
+            armature?.gameObject.SetActive(false);
             effect?.gameObject.SetActive(true);
         }
     }
@@ -60,11 +63,9 @@ public class Ghost_RL : MonoBehaviour
     void Move()
     {
         animator.SetBool("isAttack", false);
-
         Vector3 lookDirection = (player.position - transform.position).normalized;
         Quaternion rotation = Quaternion.LookRotation(lookDirection);
         rb.MoveRotation(rotation);
-
         rb.MovePosition(transform.position + transform.forward * moveSpeed * Time.deltaTime);
     }
 
@@ -75,17 +76,26 @@ public class Ghost_RL : MonoBehaviour
         if (Time.time >= nextFireTime)
         {
             transform.LookAt(player);
-            Vector3 direction = player.position - firePoint.position;
-            direction.Normalize();
+            Vector3 direction = (player.position - firePoint.position).normalized;
+
             GameObject bullet = Instantiate(projectilePrefab, firePoint.position, Quaternion.identity);
             bullet.GetComponent<Rigidbody>().velocity = direction * bulletSpeed;
+
+            // âœ… ë°ë¯¸ì§€ + ì†Œìœ  ì •ë³´ ì„¤ì •
+            BulletCollisionHandler handler = bullet.AddComponent<BulletCollisionHandler>();
+            handler.damageAmount = damageAmount;
+
+            BulletInfo info = bullet.AddComponent<BulletInfo>();
+            info.ownerAgent = this.ownerAgent;
+
+            if (spawnerOwner != null)
+                spawnerOwner.spawnedBullets.Add(bullet);
+
             Destroy(bullet, 3f);
             nextFireTime = Time.time + 1f / fireRate;
-
-            BulletCollisionHandler collisionHandler = bullet.AddComponent<BulletCollisionHandler>();
-            collisionHandler.damageAmount = damageAmount;
         }
     }
+
     private IEnumerator DamageCooldown()
     {
         canDealDamage = false;
@@ -95,28 +105,20 @@ public class Ghost_RL : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && canDealDamage)
+        if (other.CompareTag("Player") && canDealDamage && ownerAgent != null && other.transform == ownerAgent)
         {
-            // ¿À³Ê¿Í Ãæµ¹ÇÑ °æ¿ì¸¸ µ¥¹ÌÁö Àû¿ë
-            if (ownerAgent != null && other.transform == ownerAgent)
+            AgentHp agentHP = other.GetComponent<AgentHp>();
+            if (agentHP != null)
             {
-                AgentHp agentHP = other.GetComponent<AgentHp>();
-                if (agentHP != null)
-                {
-                    agentHP.TakeDamage(damageAmount);
-                    StartCoroutine(DamageCooldown());
-                }
+                agentHP.TakeDamage(damageAmount);
+                StartCoroutine(DamageCooldown());
             }
         }
     }
+
     public class BulletCollisionHandler : MonoBehaviour
     {
         public float damageAmount = 1f;
-
-        void Start()
-        {
-            Destroy(gameObject, 5f); // 3ÃÊ µÚ ÀÚµ¿ Á¦°Å
-        }
 
         void OnTriggerEnter(Collider other)
         {
@@ -124,8 +126,14 @@ public class Ghost_RL : MonoBehaviour
             if (agentHp != null)
             {
                 agentHp.TakeDamage(damageAmount);
-                Destroy(gameObject); // Áï½Ã Á¦°Å
+                Destroy(gameObject);
             }
         }
     }
-    }
+}
+
+// ğŸ‘‡ ë³„ë„ ìŠ¤í¬ë¦½íŠ¸ íŒŒì¼ë¡œ ì¶”ê°€ í•„ìš”
+public class BulletInfo : MonoBehaviour
+{
+    public Transform ownerAgent;
+}

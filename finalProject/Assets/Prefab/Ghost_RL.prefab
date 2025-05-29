@@ -538,8 +538,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9c1586b408da23a4cb3615a49b96e4da, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxHp: 1
-  currentHp: 0
+  maxHp: 2
+  currentHp: 2
   deathSound: {fileID: 8300000, guid: 9d9fab3f45818f84aabca7b7485b74c5, type: 3}
 --- !u!114 &7234844232241010371
 MonoBehaviour:
@@ -553,15 +553,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0fb2e49893ad398489fa0508d099e57d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 30
-  stoppingDistance: 70
-  bulletSpeed: 20
+  moveSpeed: 50
+  stoppingDistance: 60
+  bulletSpeed: 50
   projectilePrefab: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
   firePoint: {fileID: 8777038329509096991}
-  fireRate: 0.5
+  fireRate: 1
   nextFireTime: 2
   damageAmount: 1
   ownerAgent: {fileID: 0}
+  spawnerOwner: {fileID: 0}
 --- !u!4 &8777038329509096991 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 796652407307068396, guid: 8ee08d04ad5df46fbb2e97260b63420b, type: 3}

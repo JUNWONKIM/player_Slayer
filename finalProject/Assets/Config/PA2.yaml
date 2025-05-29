@@ -2,7 +2,7 @@ environment_parameters:
   skullSpeed:
     curriculum:
       - name: skullSpeed
-        value: 13.0
+        value: 20.0
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
@@ -10,7 +10,7 @@ environment_parameters:
           min_lesson_length: 100
           threshold: 0.7
       - name: skullSpeed
-        value: 15.0
+        value: 25.0
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
@@ -18,7 +18,7 @@ environment_parameters:
           min_lesson_length: 200
           threshold: 0.7
       - name: skullSpeed
-        value: 18.0
+        value: 30.0
 
   spawnInterval:
     curriculum:
@@ -44,7 +44,7 @@ environment_parameters:
   maxSkulls:
     curriculum:
       - name: maxSkulls
-        value: 2
+        value: 3
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
@@ -52,7 +52,28 @@ environment_parameters:
           min_lesson_length: 200
           threshold: 0.75
       - name: maxSkulls
-        value: 3
+        value: 5
+
+  bulletSpeed:
+    curriculum:
+      - name: bulletSpeed
+        value: 40
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 100
+          threshold: 0.7
+      - name: bulletSpeed
+        value: 50
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: true
+          min_lesson_length: 200
+          threshold: 0.7
+      - name: bulletSpeed
+        value: 60
 
 behaviors:
   PlayerAgent:
@@ -73,7 +94,7 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-    max_steps: 10.0e6
+    max_steps: 3.0e6
     time_horizon: 1000
     summary_freq: 10000
     threaded: true
