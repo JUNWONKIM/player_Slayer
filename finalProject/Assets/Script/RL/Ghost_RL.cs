@@ -4,7 +4,7 @@ using Unity.MLAgents;
 
 public class Ghost_RL : MonoBehaviour
 {
-    public float moveSpeed = 5f;
+    public float moveSpeed = 50f;
     public float stoppingDistance = 5f;
     public float bulletSpeed = 50f;
     public GameObject projectilePrefab;
@@ -63,11 +63,16 @@ public class Ghost_RL : MonoBehaviour
     void Move()
     {
         animator.SetBool("isAttack", false);
-        Vector3 lookDirection = (player.position - transform.position).normalized;
-        Quaternion rotation = Quaternion.LookRotation(lookDirection);
-        rb.MoveRotation(rotation);
-        rb.MovePosition(transform.position + transform.forward * moveSpeed * Time.deltaTime);
+
+        Vector3 direction = (player.position - transform.position).normalized;
+        transform.position += direction * moveSpeed * Time.deltaTime;
+
+        // 회전도 해골처럼 자연스럽게 처리
+        Vector3 lookDir = player.position - transform.position;
+        lookDir.y = 0;
+        transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(lookDir), Time.deltaTime * 5f);
     }
+
 
     void Attack()
     {

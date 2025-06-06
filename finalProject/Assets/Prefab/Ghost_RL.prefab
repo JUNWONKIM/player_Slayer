@@ -388,7 +388,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8252175027606189221}
   serializedVersion: 4
-  m_Mass: 0.0000001
+  m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0
   m_CenterOfMass: {x: 0, y: 0, z: 0}
@@ -554,7 +554,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 50
-  stoppingDistance: 60
+  stoppingDistance: 70
   bulletSpeed: 50
   projectilePrefab: {fileID: 6424583148328831481, guid: 9357f4fcc3a73634b9c1ae2923c50fd7, type: 3}
   firePoint: {fileID: 8777038329509096991}

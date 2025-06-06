@@ -23,11 +23,11 @@ public class CreatureSpawner2 : MonoBehaviour
 
     void Start()
     {
-        //float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 20f);
-        //float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
-        //int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 3));
+        float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 22f);
+        float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
+        int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 3));
 
-        //SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
+        SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
     }
 
     public void SetTargetAgent(Transform agent)

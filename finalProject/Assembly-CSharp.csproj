@@ -102,6 +102,7 @@
     <Compile Include="Assets\Script\RL\PlayerAgent.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\BossSound.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\Boss.cs" />
+    <Compile Include="Assets\Script\RL\ClickSpawner.cs" />
     <Compile Include="Assets\Script\MainScene\UI\UI_ButtonManager.cs" />
     <Compile Include="Assets\Script\MainScene\Boss\ATK3.cs" />
     <Compile Include="Assets\Script\MainScene\Creature\Skull.cs" />
@@ -122,9 +123,18 @@
     <Compile Include="Assets\Script\MainScene\Player\PlayerPortal.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\Logs\reward_log.txt" />
+    <None Include="Assets\Logs\cmdlog.txt" />
+    <None Include="Assets\Logs\old\009_reward.txt" />
+    <None Include="Assets\Logs\old\008_reward.txt" />
     <None Include="Assets\Assets\Creatures\Wizards\Shader\PolyArtMaskTint.shader" />
+    <None Include="Assets\Logs\old\011_reward.txt" />
+    <None Include="Assets\Logs\reward_log_full.txt" />
     <None Include="Assets\Assets\UI\Font\_README.txt" />
+    <None Include="Assets\Logs\old\010_reward.txt" />
+    <None Include="Assets\Logs\reward_010.txt" />
+    <None Include="Assets\Logs\reward_008.txt" />
+    <None Include="Assets\Logs\reward_011.txt" />
+    <None Include="Assets\Logs\reward_009.txt" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

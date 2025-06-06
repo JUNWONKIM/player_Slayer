@@ -2,44 +2,31 @@ environment_parameters:
   skullSpeed:
     curriculum:
       - name: skullSpeed
-        value: 20.0
+        value: 23.0
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
-          signal_smoothing: true
+          signal_smoothing: false
           min_lesson_length: 100
-          threshold: 0.7
+          threshold: 0.2
+      - name: skullSpeed
+        value: 24.0
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: false
+          min_lesson_length: 150
+          threshold: 0.4
       - name: skullSpeed
         value: 25.0
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
-          signal_smoothing: true
-          min_lesson_length: 200
-          threshold: 0.7
+          signal_smoothing: false
+          min_lesson_length: 150
+          threshold: 0.6
       - name: skullSpeed
-        value: 30.0
-
-  spawnInterval:
-    curriculum:
-      - name: spawnInterval
-        value: 3.0
-        completion_criteria:
-          measure: progress
-          behavior: PlayerAgent
-          signal_smoothing: true
-          min_lesson_length: 100
-          threshold: 0.7
-      - name: spawnInterval
-        value: 2.5
-        completion_criteria:
-          measure: progress
-          behavior: PlayerAgent
-          signal_smoothing: true
-          min_lesson_length: 200
-          threshold: 0.7
-      - name: spawnInterval
-        value: 2.0
+        value: 26.0  
 
   maxSkulls:
     curriculum:
@@ -48,32 +35,34 @@ environment_parameters:
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
-          signal_smoothing: true
+          signal_smoothing: false
           min_lesson_length: 200
-          threshold: 0.75
+          threshold: 0.4
+      - name: maxSkulls
+        value: 4
+        completion_criteria:
+          measure: progress
+          behavior: PlayerAgent
+          signal_smoothing: false
+          min_lesson_length: 200
+          threshold: 0.6
       - name: maxSkulls
         value: 5
 
   bulletSpeed:
     curriculum:
       - name: bulletSpeed
-        value: 40
+        value: 35
         completion_criteria:
           measure: progress
           behavior: PlayerAgent
-          signal_smoothing: true
+          signal_smoothing: false
           min_lesson_length: 100
-          threshold: 0.7
+          threshold: 0.6
       - name: bulletSpeed
-        value: 50
-        completion_criteria:
-          measure: progress
-          behavior: PlayerAgent
-          signal_smoothing: true
-          min_lesson_length: 200
-          threshold: 0.7
-      - name: bulletSpeed
-        value: 60
+        value: 40
+  
+
 
 behaviors:
   PlayerAgent:
@@ -94,7 +83,7 @@ behaviors:
       extrinsic:
         gamma: 0.99
         strength: 1.0
-    max_steps: 3.0e6
+    max_steps: 5.0e6
     time_horizon: 1000
     summary_freq: 10000
     threaded: true

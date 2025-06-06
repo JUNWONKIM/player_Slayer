@@ -3,6 +3,7 @@ using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Actuators;
 using UnityEngine;
 using System.Linq;
+using System.IO;
 
 public class PlayerAgent_2 : Agent
 {
@@ -35,6 +36,12 @@ public class PlayerAgent_2 : Agent
 
     private Vector3 lastActionMove = Vector3.zero;
 
+    private static int globalEpisodeIndex = 0;
+
+    private float currentSkullSpeed;
+    private float currentSpawnInterval;
+    private int currentMaxSkulls;
+
     public override void Initialize()
     {
         if (rb == null) rb = GetComponent<Rigidbody>();
@@ -44,14 +51,6 @@ public class PlayerAgent_2 : Agent
         initialRotation = transform.rotation;
         previousHP = AgentHp.hp;
 
-        //float skullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 20f);
-        //float spawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
-        //int maxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 3));
-
-        //if (creatureSpawner != null)
-        //{
-        //    creatureSpawner.SetCurriculum(skullSpeed, spawnInterval, maxSkulls);
-        //}
     }
 
     public override void OnEpisodeBegin()
@@ -74,6 +73,16 @@ public class PlayerAgent_2 : Agent
         rb.angularVelocity = Vector3.zero;
         transform.position = initialPosition;
         transform.rotation = initialRotation;
+
+
+        currentSkullSpeed = Academy.Instance.EnvironmentParameters.GetWithDefault("skullSpeed", 20f);
+        currentSpawnInterval = Academy.Instance.EnvironmentParameters.GetWithDefault("spawnInterval", 3f);
+        currentMaxSkulls = Mathf.FloorToInt(Academy.Instance.EnvironmentParameters.GetWithDefault("maxSkulls", 3));
+
+        if (creatureSpawner != null)
+        {
+            creatureSpawner.SetCurriculum(currentSkullSpeed, currentSpawnInterval, currentMaxSkulls);
+        }
 
         if (creatureSpawner != null)
         {
@@ -104,11 +113,7 @@ public class PlayerAgent_2 : Agent
         }
 
         var bullets = creatureSpawner.GetNearestBullets(maxBullets)
-            .Where(b =>
-            {
-                var info = b?.GetComponent<BulletInfo>();
-                return info != null && info.ownerAgent == this.transform;
-            }).ToArray();
+            .Where(b => b?.GetComponent<BulletInfo>()?.ownerAgent == this.transform).ToArray();
 
         foreach (var bullet in bullets)
         {
@@ -145,7 +150,6 @@ public class PlayerAgent_2 : Agent
         creatureSpawner.spawnedCreatures.RemoveAll(c => c == null);
         creatureSpawner.spawnedBullets.RemoveAll(b => b == null);
 
-        // ▶ 위협도 계산 (Skull + Bullet 통합)
         float threatSum = 0f;
         int threatCount = 0;
 
@@ -162,8 +166,7 @@ public class PlayerAgent_2 : Agent
 
         foreach (var bullet in creatureSpawner.spawnedBullets)
         {
-            if (bullet == null) continue;
-            var info = bullet.GetComponent<BulletInfo>();
+            var info = bullet?.GetComponent<BulletInfo>();
             if (info == null || info.ownerAgent != this.transform) continue;
 
             float dist = Vector3.Distance(transform.position, bullet.transform.position);
@@ -181,16 +184,11 @@ public class PlayerAgent_2 : Agent
                 threatPenaltySum += avgThreat;
         }
 
-        // ▶ 거리 변화 계산: Skull만 대상
         GameObject nearestCreature = creatureSpawner.GetNearestCreature();
         float distToCreature = nearestCreature ? Vector3.Distance(transform.position, nearestCreature.transform.position) : float.MaxValue;
-        float currentNearestDist = distToCreature;
+        float currentNearestDist = float.IsFinite(distToCreature) && distToCreature < 9999f ? distToCreature : -1f;
 
-        if (!float.IsFinite(currentNearestDist) || currentNearestDist >= 9999f)
-            currentNearestDist = -1f;
-
-        if (currentNearestDist >= 0f && prevNearestDist >= 0f &&
-            float.IsFinite(currentNearestDist) && float.IsFinite(prevNearestDist))
+        if (currentNearestDist >= 0f && prevNearestDist >= 0f)
         {
             float delta = currentNearestDist - prevNearestDist;
             if (delta < -0.1f)
@@ -200,12 +198,11 @@ public class PlayerAgent_2 : Agent
         }
         prevNearestDist = currentNearestDist;
 
-        // ▶ 생존 보상
-        float survivalReward = 0.4f * Time.fixedDeltaTime;
+        // ▶ Survival reward (increased)
+        float survivalReward = 0.25f * Time.fixedDeltaTime;
         AddReward(survivalReward);
         totalSurvivalReward += survivalReward;
 
-        // ▶ HP 손실 페널티
         float hpLoss = previousHP - AgentHp.hp;
         if (hpLoss > 0.01f)
         {
@@ -213,7 +210,7 @@ public class PlayerAgent_2 : Agent
             int hpLossInt = Mathf.FloorToInt(accumulatedHpLoss);
             if (hpLossInt >= 1)
             {
-                float penalty = -1.0f * hpLossInt;
+                float penalty = -1.0f * hpLossInt; // ▶ HP penalty reduced
                 AddReward(penalty);
                 totalHpPenalty += penalty;
                 accumulatedHpLoss -= hpLossInt;
@@ -221,50 +218,34 @@ public class PlayerAgent_2 : Agent
         }
         previousHP = AgentHp.hp;
 
-        // ▶ 종료 조건 및 최종 보상
         if (AgentHp.hp <= 0f || episodeTimer >= maxEpisodeTime)
         {
             float survivalRatio = Mathf.Clamp01(episodeTimer / maxEpisodeTime);
-            endReward = AgentHp.hp <= 0f ? -10f + survivalRatio * 5f : +25f;
+            endReward = AgentHp.hp <= 0f ? -2f + survivalRatio * 2f : +2f; // ▶ Terminal reward scaled down
             AddReward(endReward);
 
-            float survivalTime = episodeTimer;
-            if (!float.IsFinite(survivalTime) || survivalTime <= 0f)
-                survivalTime = 1f;
+            float survivalTime = Mathf.Max(episodeTimer, 1f);
 
-            float threatPenalty = -0.5f * (threatPenaltySum / survivalTime);
-            float distPenalty = -0.2f * (distPenaltySum / survivalTime);
-
-            if (!float.IsFinite(threatPenalty)) threatPenalty = 0f;
-            if (!float.IsFinite(distPenalty)) distPenalty = 0f;
-
-            if (Mathf.Abs(distPenaltySum) > 1000f)
-            {
-                Debug.LogWarning($"[WARN] distPenaltySum overflow: {distPenaltySum}");
-                distPenaltySum = 0f;
-            }
+            float threatPenalty = -1.5f * (threatPenaltySum / survivalTime); // ▶ Threat penalty reduced
+            float distPenalty = -0.5f * (distPenaltySum / survivalTime);     // ▶ Distance penalty reduced
 
             AddReward(threatPenalty);
             AddReward(distPenalty);
+
             totalThreatPenalty += threatPenalty;
             totalDistPenalty += distPenalty;
 
-            PrintRewardSummary();
+            globalEpisodeIndex++;
+
+            string logFolder = Application.dataPath + "/Logs";
+            if (!Directory.Exists(logFolder)) Directory.CreateDirectory(logFolder);
+            string path = logFolder + "/reward_log_full.txt";
+
+            string summary = $"[Ep {globalEpisodeIndex}] Threat: {totalThreatPenalty:F2}, Dist: {totalDistPenalty:F2}, Survive: {totalSurvivalReward:F2}, HP: {totalHpPenalty:F2}, End: {endReward:F2}, Final: {GetCumulativeReward():F2}, skullSpeed: {currentSkullSpeed}, spawnInterval: {currentSpawnInterval}, maxSkulls: {currentMaxSkulls}\n";
+            File.AppendAllText(path, summary);
+
             EndEpisode();
         }
     }
 
-
-    void PrintRewardSummary()
-    {
-        string summary = $"[RewardSummary] Threat: {totalThreatPenalty:F2}, Dist: {totalDistPenalty:F2}, Survive: {totalSurvivalReward:F2}, HP: {totalHpPenalty:F2}, End: {endReward:F2}, Final: {GetCumulativeReward():F2}";
-        Debug.Log(summary);
-
-        string logFolder = Application.dataPath + "/Logs";
-        if (!System.IO.Directory.Exists(logFolder))
-            System.IO.Directory.CreateDirectory(logFolder);
-
-        string logPath = logFolder + "/reward_log.txt";
-        System.IO.File.AppendAllText(logPath, summary + "\n");
-    }
 }
